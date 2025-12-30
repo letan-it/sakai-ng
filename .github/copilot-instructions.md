@@ -33,8 +33,8 @@ Sakai-NG is an Angular 20 application built with:
 
 ### Angular Conventions
 
-- **Component Selector Prefix**: Use `p-` prefix for element selectors (kebab-case)
-- **Directive Selector Prefix**: Use `p` prefix for attribute selectors (camelCase)
+- **Component Selector Prefix**: Use `app-` prefix for element selectors (kebab-case)
+- **Directive Selector Prefix**: Use `app` prefix for attribute selectors (camelCase)
 - **Component Class Suffix**: No suffix required (configured to allow empty suffix)
 - **Components**: Use standalone components (no NgModule)
 - **File Names**: Use lowercase without .component suffix (e.g., `dashboard.ts` not `dashboard.component.ts`)
