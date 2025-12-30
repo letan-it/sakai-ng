@@ -34,10 +34,13 @@ Sakai-NG is an Angular 20 application built with:
 ### Angular Conventions
 
 - **Component Selector Prefix**: Use `app-` prefix for element selectors (kebab-case)
+  - Note: ESLint config specifies `p-` prefix, but the codebase uses `app-` prefix consistently
 - **Directive Selector Prefix**: Use `app` prefix for attribute selectors (camelCase)
 - **Component Class Suffix**: No suffix required (configured to allow empty suffix)
 - **Components**: Use standalone components (no NgModule)
-- **File Names**: Use lowercase without .component suffix (e.g., `dashboard.ts` not `dashboard.component.ts`)
+  - Include `standalone: true` in component decorator when needed
+- **File Names**: Prefer lowercase without .component suffix (e.g., `dashboard.ts`)
+  - Some legacy files may still use `.component.ts` suffix
 - **Imports**: Place all component dependencies in the `imports` array
 
 ### Template Conventions
@@ -87,7 +90,7 @@ export class ComponentName {}
 ### Standalone Components
 
 - All components should be standalone (no NgModule)
-- Include `standalone: true` when necessary (though it's default in Angular 20)
+- Include `standalone: true` in the component decorator when required
 - Import dependencies directly in the component's `imports` array
 
 ### Layout Structure
@@ -210,8 +213,9 @@ npm run watch
 
 ## Additional Notes
 
-- This project uses Angular 20's latest features including standalone components by default
+- This project uses Angular 20's latest features including standalone components
 - The component class suffix is intentionally empty to allow flexibility
+- The codebase uses `app-` prefix for selectors, overriding the ESLint rule that specifies `p-`
 - Tailwind CSS is configured with PrimeUI integration
 - Use Chart.js (v4.4.2) for data visualizations
 - RxJS (~7.8.2) for reactive programming patterns
