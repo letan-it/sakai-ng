@@ -2,6 +2,12 @@
 
 This document provides custom instructions for GitHub Copilot when working on the Sakai-NG project.
 
+## Language Preference
+
+- **Response Language**: Always respond in Vietnamese (Tiếng Việt)
+- Provide explanations, comments, and documentation in Vietnamese
+- Code comments should be written in Vietnamese when added
+
 ## Project Overview
 
 Sakai-NG is an Angular 20 application built with:
