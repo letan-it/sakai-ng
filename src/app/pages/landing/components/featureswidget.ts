@@ -5,132 +5,103 @@ import { CommonModule } from '@angular/common';
     selector: 'features-widget',
     standalone: true,
     imports: [CommonModule],
-    template: ` <div id="features" class="py-6 px-6 lg:px-20 mt-8 mx-0 lg:mx-20">
-        <div class="grid grid-cols-12 gap-4 justify-center">
-            <div class="col-span-12 text-center mt-20 mb-6">
-                <div class="text-surface-900 dark:text-surface-0 font-normal mb-2 text-4xl">Marvelous Features</div>
-                <span class="text-muted-color text-2xl">Placerat in egestas erat...</span>
+    template: ` <div id="features" class="py-20 px-6 lg:px-20 bg-surface-0 dark:bg-surface-900">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center mb-16">
+                <span class="inline-block bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-full text-sm font-semibold mb-4">
+                    TÍNH NĂNG NỔI BẬT
+                </span>
+                <h2 class="text-4xl md:text-5xl font-bold text-surface-900 dark:text-surface-0 mb-4">
+                    Mọi thứ bạn cần để xây dựng
+                </h2>
+                <p class="text-xl text-surface-600 dark:text-surface-300 max-w-2xl mx-auto">
+                    Template được thiết kế với các tính năng hiện đại và công nghệ tiên tiến nhất
+                </p>
             </div>
 
-            <div class="col-span-12 md:col-span-12 lg:col-span-4 p-0 lg:pr-8 lg:pb-8 mt-6 lg:mt-0">
-                <div style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(253, 228, 165, 0.2), rgba(187, 199, 205, 0.2)), linear-gradient(180deg, rgba(253, 228, 165, 0.2), rgba(187, 199, 205, 0.2))">
-                    <div class="p-4 bg-surface-0 dark:bg-surface-900 h-full" style="border-radius: 8px">
-                        <div class="flex items-center justify-center bg-yellow-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
-                            <i class="pi pi-fw pi-users text-2xl! text-yellow-700"></i>
-                        </div>
-                        <h5 class="mb-2 text-surface-900 dark:text-surface-0">Easy to Use</h5>
-                        <span class="text-surface-600 dark:text-surface-200">Posuere morbi leo urna molestie.</span>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="group p-8 bg-white dark:bg-surface-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-surface-200 dark:border-surface-700 hover:border-purple-500 dark:hover:border-purple-500">
+                    <div class="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-700 rounded-xl mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i class="pi pi-fw pi-bolt text-3xl text-white"></i>
                     </div>
-                </div>
-            </div>
-
-            <div class="col-span-12 md:col-span-12 lg:col-span-4 p-0 lg:pr-8 lg:pb-8 mt-6 lg:mt-0">
-                <div style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(145, 226, 237, 0.2), rgba(251, 199, 145, 0.2)), linear-gradient(180deg, rgba(253, 228, 165, 0.2), rgba(172, 180, 223, 0.2))">
-                    <div class="p-4 bg-surface-0 dark:bg-surface-900 h-full" style="border-radius: 8px">
-                        <div class="flex items-center justify-center bg-cyan-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
-                            <i class="pi pi-fw pi-palette text-2xl! text-cyan-700"></i>
-                        </div>
-                        <h5 class="mb-2 text-surface-900 dark:text-surface-0">Fresh Design</h5>
-                        <span class="text-surface-600 dark:text-surface-200">Semper risus in hendrerit.</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-span-12 md:col-span-12 lg:col-span-4 p-0 lg:pb-8 mt-6 lg:mt-0">
-                <div style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(145, 226, 237, 0.2), rgba(172, 180, 223, 0.2)), linear-gradient(180deg, rgba(172, 180, 223, 0.2), rgba(246, 158, 188, 0.2))">
-                    <div class="p-4 bg-surface-0 dark:bg-surface-900 h-full" style="border-radius: 8px">
-                        <div class="flex items-center justify-center bg-indigo-200" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
-                            <i class="pi pi-fw pi-map text-2xl! text-indigo-700"></i>
-                        </div>
-                        <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Well Documented</div>
-                        <span class="text-surface-600 dark:text-surface-200">Non arcu risus quis varius quam quisque.</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-span-12 md:col-span-12 lg:col-span-4 p-0 lg:pr-8 lg:pb-8 mt-6 lg:mt-0">
-                <div style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(187, 199, 205, 0.2), rgba(251, 199, 145, 0.2)), linear-gradient(180deg, rgba(253, 228, 165, 0.2), rgba(145, 210, 204, 0.2))">
-                    <div class="p-4 bg-surface-0 dark:bg-surface-900 h-full" style="border-radius: 8px">
-                        <div class="flex items-center justify-center bg-slate-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
-                            <i class="pi pi-fw pi-id-card text-2xl! text-slate-700"></i>
-                        </div>
-                        <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Responsive Layout</div>
-                        <span class="text-surface-600 dark:text-surface-200">Nulla malesuada pellentesque elit.</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-span-12 md:col-span-12 lg:col-span-4 p-0 lg:pr-8 lg:pb-8 mt-6 lg:mt-0">
-                <div style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(187, 199, 205, 0.2), rgba(246, 158, 188, 0.2)), linear-gradient(180deg, rgba(145, 226, 237, 0.2), rgba(160, 210, 250, 0.2))">
-                    <div class="p-4 bg-surface-0 dark:bg-surface-900 h-full" style="border-radius: 8px">
-                        <div class="flex items-center justify-center bg-orange-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
-                            <i class="pi pi-fw pi-star text-2xl! text-orange-700"></i>
-                        </div>
-                        <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Clean Code</div>
-                        <span class="text-surface-600 dark:text-surface-200">Condimentum lacinia quis vel eros.</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-span-12 md:col-span-12 lg:col-span-4 p-0 lg:pb-8 mt-6 lg:mt-0">
-                <div style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(251, 199, 145, 0.2), rgba(246, 158, 188, 0.2)), linear-gradient(180deg, rgba(172, 180, 223, 0.2), rgba(212, 162, 221, 0.2))">
-                    <div class="p-4 bg-surface-0 dark:bg-surface-900 h-full" style="border-radius: 8px">
-                        <div class="flex items-center justify-center bg-pink-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
-                            <i class="pi pi-fw pi-moon text-2xl! text-pink-700"></i>
-                        </div>
-                        <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Dark Mode</div>
-                        <span class="text-surface-600 dark:text-surface-200">Convallis tellus id interdum velit laoreet.</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-span-12 md:col-span-12 lg:col-span-4 p-0 lg:pr-8 mt-6 lg:mt-0">
-                <div style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(145, 210, 204, 0.2), rgba(160, 210, 250, 0.2)), linear-gradient(180deg, rgba(187, 199, 205, 0.2), rgba(145, 210, 204, 0.2))">
-                    <div class="p-4 bg-surface-0 dark:bg-surface-900 h-full" style="border-radius: 8px">
-                        <div class="flex items-center justify-center bg-teal-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
-                            <i class="pi pi-fw pi-shopping-cart text-2xl! text-teal-700"></i>
-                        </div>
-                        <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Ready to Use</div>
-                        <span class="text-surface-600 dark:text-surface-200">Mauris sit amet massa vitae.</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-span-12 md:col-span-12 lg:col-span-4 p-0 lg:pr-8 mt-6 lg:mt-0">
-                <div style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(145, 210, 204, 0.2), rgba(212, 162, 221, 0.2)), linear-gradient(180deg, rgba(251, 199, 145, 0.2), rgba(160, 210, 250, 0.2))">
-                    <div class="p-4 bg-surface-0 dark:bg-surface-900 h-full" style="border-radius: 8px">
-                        <div class="flex items-center justify-center bg-blue-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
-                            <i class="pi pi-fw pi-globe text-2xl! text-blue-700"></i>
-                        </div>
-                        <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Modern Practices</div>
-                        <span class="text-surface-600 dark:text-surface-200">Elementum nibh tellus molestie nunc non.</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-span-12 md:col-span-12 lg:col-span-4 p-0 lg-4 mt-6 lg:mt-0">
-                <div style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(160, 210, 250, 0.2), rgba(212, 162, 221, 0.2)), linear-gradient(180deg, rgba(246, 158, 188, 0.2), rgba(212, 162, 221, 0.2))">
-                    <div class="p-4 bg-surface-0 dark:bg-surface-900 h-full" style="border-radius: 8px">
-                        <div class="flex items-center justify-center bg-purple-200 mb-4" style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
-                            <i class="pi pi-fw pi-eye text-2xl! text-purple-700"></i>
-                        </div>
-                        <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Privacy</div>
-                        <span class="text-surface-600 dark:text-surface-200">Neque egestas congue quisque.</span>
-                    </div>
-                </div>
-            </div>
-
-            <div
-                class="col-span-12 mt-20 mb-20 p-2 md:p-20"
-                style="border-radius: 20px; background: linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), radial-gradient(77.36% 256.97% at 77.36% 57.52%, #efe1af 0%, #c3dcfa 100%)"
-            >
-                <div class="flex flex-col justify-center items-center text-center px-4 py-4 md:py-0">
-                    <div class="text-gray-900 mb-2 text-3xl font-semibold">Joséphine Miller</div>
-                    <span class="text-gray-600 text-2xl">Peak Interactive</span>
-                    <p class="text-gray-900 sm:line-height-2 md:line-height-4 text-2xl mt-6" style="max-width: 800px">
-                        “Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.”
+                    <h3 class="text-2xl font-bold mb-3 text-surface-900 dark:text-surface-0">Hiệu suất cao</h3>
+                    <p class="text-surface-600 dark:text-surface-300 leading-relaxed">
+                        Được tối ưu hóa với Angular 20 và build tools hiện đại để đảm bảo tốc độ tải nhanh chóng.
                     </p>
-                    <img src="https://primefaces.org/cdn/templates/sakai/landing/peak-logo.svg" class="mt-6" alt="Company logo" />
+                </div>
+
+                <div class="group p-8 bg-white dark:bg-surface-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-surface-200 dark:border-surface-700 hover:border-blue-500 dark:hover:border-blue-500">
+                    <div class="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i class="pi pi-fw pi-palette text-3xl text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3 text-surface-900 dark:text-surface-0">Thiết kế đẹp mắt</h3>
+                    <p class="text-surface-600 dark:text-surface-300 leading-relaxed">
+                        Giao diện hiện đại với PrimeNG components và Tailwind CSS, tùy chỉnh dễ dàng.
+                    </p>
+                </div>
+
+                <div class="group p-8 bg-white dark:bg-surface-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-surface-200 dark:border-surface-700 hover:border-cyan-500 dark:hover:border-cyan-500">
+                    <div class="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-cyan-500 to-cyan-700 rounded-xl mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i class="pi pi-fw pi-mobile text-3xl text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3 text-surface-900 dark:text-surface-0">Responsive hoàn toàn</h3>
+                    <p class="text-surface-600 dark:text-surface-300 leading-relaxed">
+                        Giao diện tối ưu cho mọi thiết bị, từ mobile đến desktop với Tailwind grid system.
+                    </p>
+                </div>
+
+                <div class="group p-8 bg-white dark:bg-surface-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-surface-200 dark:border-surface-700 hover:border-pink-500 dark:hover:border-pink-500">
+                    <div class="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-pink-500 to-pink-700 rounded-xl mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i class="pi pi-fw pi-moon text-3xl text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3 text-surface-900 dark:text-surface-0">Dark Mode</h3>
+                    <p class="text-surface-600 dark:text-surface-300 leading-relaxed">
+                        Hỗ trợ theme sáng/tối với PrimeUI themes, chuyển đổi mượt mà và trải nghiệm tốt.
+                    </p>
+                </div>
+
+                <div class="group p-8 bg-white dark:bg-surface-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-surface-200 dark:border-surface-700 hover:border-green-500 dark:hover:border-green-500">
+                    <div class="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-green-500 to-green-700 rounded-xl mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i class="pi pi-fw pi-code text-3xl text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3 text-surface-900 dark:text-surface-0">Code sạch sẽ</h3>
+                    <p class="text-surface-600 dark:text-surface-300 leading-relaxed">
+                        Tuân thủ best practices của Angular, TypeScript strict mode và ESLint standards.
+                    </p>
+                </div>
+
+                <div class="group p-8 bg-white dark:bg-surface-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-surface-200 dark:border-surface-700 hover:border-orange-500 dark:hover:border-orange-500">
+                    <div class="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-700 rounded-xl mb-6 group-hover:scale-110 transition-transform duration-300">
+                        <i class="pi pi-fw pi-book text-3xl text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-3 text-surface-900 dark:text-surface-0">Tài liệu chi tiết</h3>
+                    <p class="text-surface-600 dark:text-surface-300 leading-relaxed">
+                        Hướng dẫn đầy đủ, examples rõ ràng giúp bạn dễ dàng tùy chỉnh và mở rộng.
+                    </p>
+                </div>
+            </div>
+
+            <div class="mt-20 p-12 bg-gradient-to-br from-purple-100 to-blue-100 dark:from-surface-800 dark:to-surface-700 rounded-3xl shadow-xl">
+                <div class="text-center max-w-4xl mx-auto">
+                    <div class="mb-6">
+                        <i class="pi pi-star-fill text-yellow-500 text-3xl"></i>
+                        <i class="pi pi-star-fill text-yellow-500 text-3xl mx-1"></i>
+                        <i class="pi pi-star-fill text-yellow-500 text-3xl"></i>
+                        <i class="pi pi-star-fill text-yellow-500 text-3xl mx-1"></i>
+                        <i class="pi pi-star-fill text-yellow-500 text-3xl"></i>
+                    </div>
+                    <blockquote class="text-2xl md:text-3xl font-medium text-surface-900 dark:text-surface-0 mb-6 italic">
+                        "Template Angular tốt nhất tôi từng sử dụng. Thiết kế đẹp, code chất lượng cao và documentation xuất sắc. Highly recommended!"
+                    </blockquote>
+                    <div class="flex items-center justify-center gap-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
+                            JM
+                        </div>
+                        <div class="text-left">
+                            <div class="font-bold text-surface-900 dark:text-surface-0 text-xl">Joséphine Miller</div>
+                            <div class="text-surface-600 dark:text-surface-300">Lead Developer, Peak Interactive</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
