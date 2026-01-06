@@ -15,8 +15,8 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import * as pdfjsLib from 'pdfjs-dist';
 
-// Cấu hình worker cho PDF.js
-pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+// Cấu hình worker cho PDF.js - sử dụng worker local thay vì CDN
+pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 
 // Regex patterns cho email và phone
 const EMAIL_PATTERN = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
@@ -49,6 +49,9 @@ interface MatchResult {
     ],
     providers: [MessageService],
     template: `
+        <!-- Toast for notifications -->
+        <p-toast />
+        
         <!-- Dialog giới thiệu -->
         <p-dialog 
             header="Thông báo" 
@@ -332,6 +335,8 @@ export class Recruitment implements OnInit {
     // Match Result
     matchResult: MatchResult | null = null;
 
+    constructor(private messageService: MessageService) {}
+
     ngOnInit(): void {
         // Hiển thị dialog giới thiệu khi component được khởi tạo
         this.displayIntroDialog = true;
@@ -360,9 +365,20 @@ export class Recruitment implements OnInit {
 
                 // Tự động phát hiện email và phone
                 this.detectEmailAndPhone();
+
+                // Hiển thị thông báo thành công
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Thành công',
+                    detail: 'Đã tải và xử lý file PDF thành công'
+                });
             } catch (error) {
                 console.error('Lỗi khi đọc PDF:', error);
-                alert('Không thể đọc file PDF. Vui lòng thử lại.');
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Lỗi',
+                    detail: 'Không thể đọc file PDF. Vui lòng thử lại hoặc sử dụng file PDF khác.'
+                });
             }
         }
     }
