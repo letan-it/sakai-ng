@@ -3,7 +3,7 @@ import { StyleClassModule } from 'primeng/styleclass';
 import { Router, RouterModule } from '@angular/router';
 import { RippleModule } from 'primeng/ripple';
 import { ButtonModule } from 'primeng/button';
-import {AppFloatingConfigurator} from "@/layout/component/app.floatingconfigurator";
+import { AppFloatingConfigurator } from '@/layout/component/app.floatingconfigurator';
 
 @Component({
     selector: 'topbar-widget',
@@ -59,7 +59,7 @@ import {AppFloatingConfigurator} from "@/layout/component/app.floatingconfigurat
             <div class="flex border-t lg:border-t-0 border-surface py-4 lg:py-0 mt-4 lg:mt-0 gap-3">
                 <button pButton pRipple label="Login" routerLink="/auth/login" [rounded]="true" [text]="true" class="hover:bg-surface-100! dark:hover:bg-surface-700!"></button>
                 <button pButton pRipple label="Register" routerLink="/auth/login" [rounded]="true" class="bg-gradient-to-r! from-purple-600! to-blue-600! border-0! hover:from-purple-700! hover:to-blue-700!"></button>
-                <app-floating-configurator [float]="false"/>
+                <app-floating-configurator [float]="false" />
             </div>
         </div> `
 })

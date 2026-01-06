@@ -8,15 +8,9 @@ import { CommonModule } from '@angular/common';
     template: ` <div id="features" class="py-20 px-6 lg:px-20 bg-surface-0 dark:bg-surface-900">
         <div class="max-w-7xl mx-auto">
             <div class="text-center mb-16">
-                <span class="inline-block bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-full text-sm font-semibold mb-4">
-                    TÍNH NĂNG NỔI BẬT
-                </span>
-                <h2 class="text-4xl md:text-5xl font-bold text-surface-900 dark:text-surface-0 mb-4">
-                    Mọi thứ bạn cần để xây dựng
-                </h2>
-                <p class="text-xl text-surface-600 dark:text-surface-300 max-w-2xl mx-auto">
-                    Template được thiết kế với các tính năng hiện đại và công nghệ tiên tiến nhất
-                </p>
+                <span class="inline-block bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-full text-sm font-semibold mb-4"> TÍNH NĂNG NỔI BẬT </span>
+                <h2 class="text-4xl md:text-5xl font-bold text-surface-900 dark:text-surface-0 mb-4">Mọi thứ bạn cần để xây dựng</h2>
+                <p class="text-xl text-surface-600 dark:text-surface-300 max-w-2xl mx-auto">Template được thiết kế với các tính năng hiện đại và công nghệ tiên tiến nhất</p>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -25,9 +19,7 @@ import { CommonModule } from '@angular/common';
                         <i class="pi pi-fw pi-bolt text-3xl text-white"></i>
                     </div>
                     <h3 class="text-2xl font-bold mb-3 text-surface-900 dark:text-surface-0">Hiệu suất cao</h3>
-                    <p class="text-surface-600 dark:text-surface-300 leading-relaxed">
-                        Được tối ưu hóa với Angular 20 và build tools hiện đại để đảm bảo tốc độ tải nhanh chóng.
-                    </p>
+                    <p class="text-surface-600 dark:text-surface-300 leading-relaxed">Được tối ưu hóa với Angular 20 và build tools hiện đại để đảm bảo tốc độ tải nhanh chóng.</p>
                 </div>
 
                 <div class="group p-8 bg-white dark:bg-surface-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-surface-200 dark:border-surface-700 hover:border-blue-500 dark:hover:border-blue-500">
@@ -35,9 +27,7 @@ import { CommonModule } from '@angular/common';
                         <i class="pi pi-fw pi-palette text-3xl text-white"></i>
                     </div>
                     <h3 class="text-2xl font-bold mb-3 text-surface-900 dark:text-surface-0">Thiết kế đẹp mắt</h3>
-                    <p class="text-surface-600 dark:text-surface-300 leading-relaxed">
-                        Giao diện hiện đại với PrimeNG components và Tailwind CSS, tùy chỉnh dễ dàng.
-                    </p>
+                    <p class="text-surface-600 dark:text-surface-300 leading-relaxed">Giao diện hiện đại với PrimeNG components và Tailwind CSS, tùy chỉnh dễ dàng.</p>
                 </div>
 
                 <div class="group p-8 bg-white dark:bg-surface-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-surface-200 dark:border-surface-700 hover:border-cyan-500 dark:hover:border-cyan-500">
@@ -45,9 +35,7 @@ import { CommonModule } from '@angular/common';
                         <i class="pi pi-fw pi-mobile text-3xl text-white"></i>
                     </div>
                     <h3 class="text-2xl font-bold mb-3 text-surface-900 dark:text-surface-0">Responsive hoàn toàn</h3>
-                    <p class="text-surface-600 dark:text-surface-300 leading-relaxed">
-                        Giao diện tối ưu cho mọi thiết bị, từ mobile đến desktop với Tailwind grid system.
-                    </p>
+                    <p class="text-surface-600 dark:text-surface-300 leading-relaxed">Giao diện tối ưu cho mọi thiết bị, từ mobile đến desktop với Tailwind grid system.</p>
                 </div>
 
                 <div class="group p-8 bg-white dark:bg-surface-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-surface-200 dark:border-surface-700 hover:border-pink-500 dark:hover:border-pink-500">
@@ -55,9 +43,7 @@ import { CommonModule } from '@angular/common';
                         <i class="pi pi-fw pi-moon text-3xl text-white"></i>
                     </div>
                     <h3 class="text-2xl font-bold mb-3 text-surface-900 dark:text-surface-0">Dark Mode</h3>
-                    <p class="text-surface-600 dark:text-surface-300 leading-relaxed">
-                        Hỗ trợ theme sáng/tối với PrimeUI themes, chuyển đổi mượt mà và trải nghiệm tốt.
-                    </p>
+                    <p class="text-surface-600 dark:text-surface-300 leading-relaxed">Hỗ trợ theme sáng/tối với PrimeUI themes, chuyển đổi mượt mà và trải nghiệm tốt.</p>
                 </div>
 
                 <div class="group p-8 bg-white dark:bg-surface-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-surface-200 dark:border-surface-700 hover:border-green-500 dark:hover:border-green-500">
@@ -65,9 +51,7 @@ import { CommonModule } from '@angular/common';
                         <i class="pi pi-fw pi-code text-3xl text-white"></i>
                     </div>
                     <h3 class="text-2xl font-bold mb-3 text-surface-900 dark:text-surface-0">Code sạch sẽ</h3>
-                    <p class="text-surface-600 dark:text-surface-300 leading-relaxed">
-                        Tuân thủ best practices của Angular, TypeScript strict mode và ESLint standards.
-                    </p>
+                    <p class="text-surface-600 dark:text-surface-300 leading-relaxed">Tuân thủ best practices của Angular, TypeScript strict mode và ESLint standards.</p>
                 </div>
 
                 <div class="group p-8 bg-white dark:bg-surface-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-surface-200 dark:border-surface-700 hover:border-orange-500 dark:hover:border-orange-500">
@@ -75,9 +59,7 @@ import { CommonModule } from '@angular/common';
                         <i class="pi pi-fw pi-book text-3xl text-white"></i>
                     </div>
                     <h3 class="text-2xl font-bold mb-3 text-surface-900 dark:text-surface-0">Tài liệu chi tiết</h3>
-                    <p class="text-surface-600 dark:text-surface-300 leading-relaxed">
-                        Hướng dẫn đầy đủ, examples rõ ràng giúp bạn dễ dàng tùy chỉnh và mở rộng.
-                    </p>
+                    <p class="text-surface-600 dark:text-surface-300 leading-relaxed">Hướng dẫn đầy đủ, examples rõ ràng giúp bạn dễ dàng tùy chỉnh và mở rộng.</p>
                 </div>
             </div>
 
@@ -94,9 +76,7 @@ import { CommonModule } from '@angular/common';
                         "Template Angular tốt nhất tôi từng sử dụng. Thiết kế đẹp, code chất lượng cao và documentation xuất sắc. Highly recommended!"
                     </blockquote>
                     <div class="flex items-center justify-center gap-4">
-                        <div class="w-16 h-16 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">
-                            JM
-                        </div>
+                        <div class="w-16 h-16 bg-gradient-to-br from-purple-600 to-blue-600 rounded-full flex items-center justify-center text-white text-2xl font-bold">JM</div>
                         <div class="text-left">
                             <div class="font-bold text-surface-900 dark:text-surface-0 text-xl">Joséphine Miller</div>
                             <div class="text-surface-600 dark:text-surface-300">Lead Developer, Peak Interactive</div>
