@@ -16,7 +16,8 @@ import { ToastModule } from 'primeng/toast';
 import * as pdfjsLib from 'pdfjs-dist';
 
 // Cấu hình worker cho PDF.js - sử dụng worker local thay vì CDN
-pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+const PDF_WORKER_SRC = '/pdf.worker.min.mjs';
+pdfjsLib.GlobalWorkerOptions.workerSrc = PDF_WORKER_SRC;
 
 // Regex patterns cho email và phone
 const EMAIL_PATTERN = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
