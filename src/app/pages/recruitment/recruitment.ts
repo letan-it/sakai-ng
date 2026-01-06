@@ -32,47 +32,19 @@ interface MatchResult {
 
 @Component({
     selector: 'app-recruitment',
-    imports: [
-        CommonModule,
-        FormsModule,
-        ButtonModule,
-        InputTextModule,
-        TextareaModule,
-        FileUploadModule,
-        CardModule,
-        ChipModule,
-        ProgressBarModule,
-        DividerModule,
-        TooltipModule,
-        ToastModule,
-        DialogModule
-    ],
+    imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, TextareaModule, FileUploadModule, CardModule, ChipModule, ProgressBarModule, DividerModule, TooltipModule, ToastModule, DialogModule],
     providers: [MessageService],
     template: `
         <!-- Toast for notifications -->
         <p-toast />
-        
+
         <!-- Dialog giới thiệu -->
-        <p-dialog 
-            header="Thông báo" 
-            [(visible)]="displayIntroDialog" 
-            [modal]="true"
-            [style]="{ width: '450px' }"
-            [closable]="true"
-        >
+        <p-dialog header="Thông báo" [(visible)]="displayIntroDialog" [modal]="true" [style]="{ width: '450px' }" [closable]="true">
             <div class="flex flex-col gap-4">
-                <p class="text-lg leading-relaxed">
-                    Sản phẩm do <strong class="text-primary">AI Agents của LQT</strong> tạo ra, 
-                    sản phẩm này chỉ dùng để <strong>demo giao diện chức năng</strong>.
-                </p>
+                <p class="text-lg leading-relaxed">Sản phẩm do <strong class="text-primary">AI Agents của LQT</strong> tạo ra, sản phẩm này chỉ dùng để <strong>demo giao diện chức năng</strong>.</p>
             </div>
             <ng-template #footer>
-                <p-button 
-                    label="Đã hiểu" 
-                    icon="pi pi-check" 
-                    (onClick)="displayIntroDialog = false"
-                    styleClass="w-full"
-                />
+                <p-button label="Đã hiểu" icon="pi pi-check" (onClick)="displayIntroDialog = false" styleClass="w-full" />
             </ng-template>
         </p-dialog>
 
@@ -83,15 +55,7 @@ interface MatchResult {
                     <div class="flex flex-col gap-4">
                         <div>
                             <label class="block text-sm font-medium mb-2">Upload CV (PDF)</label>
-                            <p-fileUpload
-                                mode="basic"
-                                accept="application/pdf"
-                                [maxFileSize]="5000000"
-                                chooseLabel="Chọn file PDF"
-                                (onSelect)="onFileSelect($event)"
-                                [auto]="true"
-                                styleClass="w-full"
-                            ></p-fileUpload>
+                            <p-fileUpload mode="basic" accept="application/pdf" [maxFileSize]="5000000" chooseLabel="Chọn file PDF" (onSelect)="onFileSelect($event)" [auto]="true" styleClass="w-full"></p-fileUpload>
                         </div>
 
                         <p-divider />
@@ -114,44 +78,20 @@ interface MatchResult {
                     <div class="flex flex-col gap-4">
                         <div>
                             <label class="block text-sm font-medium mb-2">Tiêu đề công việc</label>
-                            <input
-                                pInputText
-                                [(ngModel)]="jobTitle"
-                                placeholder="Ví dụ: Senior Frontend Developer"
-                                class="w-full"
-                            />
+                            <input pInputText [(ngModel)]="jobTitle" placeholder="Ví dụ: Senior Frontend Developer" class="w-full" />
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-2">Kỹ năng yêu cầu (cách nhau bởi dấu phẩy)</label>
-                            <textarea
-                                pTextarea
-                                [(ngModel)]="requiredSkills"
-                                placeholder="Ví dụ: Angular, TypeScript, RxJS, PrimeNG"
-                                rows="3"
-                                class="w-full"
-                            ></textarea>
+                            <textarea pTextarea [(ngModel)]="requiredSkills" placeholder="Ví dụ: Angular, TypeScript, RxJS, PrimeNG" rows="3" class="w-full"></textarea>
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-2">Mô tả công việc</label>
-                            <textarea
-                                pTextarea
-                                [(ngModel)]="jobDescription"
-                                placeholder="Nhập mô tả công việc chi tiết..."
-                                rows="10"
-                                class="w-full"
-                            ></textarea>
+                            <textarea pTextarea [(ngModel)]="jobDescription" placeholder="Nhập mô tả công việc chi tiết..." rows="10" class="w-full"></textarea>
                         </div>
 
-                        <p-button
-                            label="So sánh CV vs JD"
-                            icon="pi pi-search"
-                            (onClick)="compareCV()"
-                            [disabled]="!cvText || !requiredSkills"
-                            styleClass="w-full"
-                            severity="primary"
-                        ></p-button>
+                        <p-button label="So sánh CV vs JD" icon="pi pi-search" (onClick)="compareCV()" [disabled]="!cvText || !requiredSkills" styleClass="w-full" severity="primary"></p-button>
 
                         <div *ngIf="matchResult" class="mt-4">
                             <p-divider />
@@ -170,22 +110,14 @@ interface MatchResult {
                             <div class="mb-4" *ngIf="matchResult.matchedSkills.length > 0">
                                 <label class="block text-sm font-medium mb-2">Kỹ năng phù hợp</label>
                                 <div class="flex flex-wrap gap-2">
-                                    <p-chip
-                                        *ngFor="let skill of matchResult.matchedSkills"
-                                        [label]="skill"
-                                        styleClass="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100"
-                                    />
+                                    <p-chip *ngFor="let skill of matchResult.matchedSkills" [label]="skill" styleClass="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100" />
                                 </div>
                             </div>
 
                             <div *ngIf="matchResult.missingSkills.length > 0">
                                 <label class="block text-sm font-medium mb-2">Kỹ năng còn thiếu</label>
                                 <div class="flex flex-wrap gap-2">
-                                    <p-chip
-                                        *ngFor="let skill of matchResult.missingSkills"
-                                        [label]="skill"
-                                        styleClass="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100"
-                                    />
+                                    <p-chip *ngFor="let skill of matchResult.missingSkills" [label]="skill" styleClass="bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-100" />
                                 </div>
                             </div>
                         </div>
@@ -199,91 +131,40 @@ interface MatchResult {
                     <div class="flex flex-col gap-4">
                         <div>
                             <label class="block text-sm font-medium mb-2">Họ và tên</label>
-                            <input
-                                pInputText
-                                [(ngModel)]="candidateName"
-                                placeholder="Nhập họ tên"
-                                class="w-full"
-                            />
+                            <input pInputText [(ngModel)]="candidateName" placeholder="Nhập họ tên" class="w-full" />
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-2">Email</label>
                             <div class="flex gap-2">
-                                <input
-                                    pInputText
-                                    [(ngModel)]="candidateEmail"
-                                    placeholder="Nhập email"
-                                    class="flex-1"
-                                />
-                                <p-button
-                                    icon="pi pi-bolt"
-                                    (onClick)="autoFillEmail()"
-                                    [disabled]="!cvText"
-                                    severity="secondary"
-                                    [outlined]="true"
-                                    pTooltip="Tự động điền từ CV"
-                                />
+                                <input pInputText [(ngModel)]="candidateEmail" placeholder="Nhập email" class="flex-1" />
+                                <p-button icon="pi pi-bolt" (onClick)="autoFillEmail()" [disabled]="!cvText" severity="secondary" [outlined]="true" pTooltip="Tự động điền từ CV" />
                             </div>
-                            <small *ngIf="suggestedEmail" class="text-muted-color">
-                                Gợi ý: {{ suggestedEmail }}
-                            </small>
+                            <small *ngIf="suggestedEmail" class="text-muted-color"> Gợi ý: {{ suggestedEmail }} </small>
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-2">Số điện thoại</label>
                             <div class="flex gap-2">
-                                <input
-                                    pInputText
-                                    [(ngModel)]="candidatePhone"
-                                    placeholder="Nhập số điện thoại"
-                                    class="flex-1"
-                                />
-                                <p-button
-                                    icon="pi pi-bolt"
-                                    (onClick)="autoFillPhone()"
-                                    [disabled]="!cvText"
-                                    severity="secondary"
-                                    [outlined]="true"
-                                    pTooltip="Tự động điền từ CV"
-                                />
+                                <input pInputText [(ngModel)]="candidatePhone" placeholder="Nhập số điện thoại" class="flex-1" />
+                                <p-button icon="pi pi-bolt" (onClick)="autoFillPhone()" [disabled]="!cvText" severity="secondary" [outlined]="true" pTooltip="Tự động điền từ CV" />
                             </div>
-                            <small *ngIf="suggestedPhone" class="text-muted-color">
-                                Gợi ý: {{ suggestedPhone }}
-                            </small>
+                            <small *ngIf="suggestedPhone" class="text-muted-color"> Gợi ý: {{ suggestedPhone }} </small>
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-2">Kỹ năng</label>
-                            <textarea
-                                pTextarea
-                                [(ngModel)]="candidateSkills"
-                                placeholder="Nhập kỹ năng (cách nhau bởi dấu phẩy)"
-                                rows="3"
-                                class="w-full"
-                            ></textarea>
+                            <textarea pTextarea [(ngModel)]="candidateSkills" placeholder="Nhập kỹ năng (cách nhau bởi dấu phẩy)" rows="3" class="w-full"></textarea>
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-2">Kinh nghiệm</label>
-                            <textarea
-                                pTextarea
-                                [(ngModel)]="candidateExperience"
-                                placeholder="Nhập kinh nghiệm làm việc"
-                                rows="5"
-                                class="w-full"
-                            ></textarea>
+                            <textarea pTextarea [(ngModel)]="candidateExperience" placeholder="Nhập kinh nghiệm làm việc" rows="5" class="w-full"></textarea>
                         </div>
 
                         <div>
                             <label class="block text-sm font-medium mb-2">Học vấn</label>
-                            <textarea
-                                pTextarea
-                                [(ngModel)]="candidateEducation"
-                                placeholder="Nhập trình độ học vấn"
-                                rows="3"
-                                class="w-full"
-                            ></textarea>
+                            <textarea pTextarea [(ngModel)]="candidateEducation" placeholder="Nhập trình độ học vấn" rows="3" class="w-full"></textarea>
                         </div>
                     </div>
                 </p-card>
