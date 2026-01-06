@@ -1,19 +1,28 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { TextareaModule } from 'primeng/textarea';
-import { FileUploadModule } from 'primeng/fileupload';
+import { FileUploadModule, FileSelectEvent } from 'primeng/fileupload';
 import { CardModule } from 'primeng/card';
 import { ChipModule } from 'primeng/chip';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { DividerModule } from 'primeng/divider';
 import { TooltipModule } from 'primeng/tooltip';
+import { DialogModule } from 'primeng/dialog';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 import * as pdfjsLib from 'pdfjs-dist';
 
 // Cấu hình worker cho PDF.js
 pdfjsLib.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+
+// Regex patterns cho email và phone
+const EMAIL_PATTERN = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+// Vietnamese phone pattern: hỗ trợ các đầu số phổ biến của VN
+// Ví dụ: 0912345678, +84912345678, 84912345678
+const VIETNAMESE_PHONE_PATTERN = /(?:\+84|84|0)(?:3[2-9]|5[689]|7[06-9]|8[1-9]|9[0-9])\d{7}/g;
 
 interface MatchResult {
     percentage: number;
@@ -34,9 +43,36 @@ interface MatchResult {
         ChipModule,
         ProgressBarModule,
         DividerModule,
-        TooltipModule
+        TooltipModule,
+        ToastModule,
+        DialogModule
     ],
+    providers: [MessageService],
     template: `
+        <!-- Dialog giới thiệu -->
+        <p-dialog 
+            header="Thông báo" 
+            [(visible)]="displayIntroDialog" 
+            [modal]="true"
+            [style]="{ width: '450px' }"
+            [closable]="true"
+        >
+            <div class="flex flex-col gap-4">
+                <p class="text-lg leading-relaxed">
+                    Sản phẩm do <strong class="text-primary">AI Agents của LQT</strong> tạo ra, 
+                    sản phẩm này chỉ dùng để <strong>demo giao diện chức năng</strong>.
+                </p>
+            </div>
+            <ng-template #footer>
+                <p-button 
+                    label="Đã hiểu" 
+                    icon="pi pi-check" 
+                    (onClick)="displayIntroDialog = false"
+                    styleClass="w-full"
+                />
+            </ng-template>
+        </p-dialog>
+
         <div class="grid grid-cols-12 gap-6">
             <!-- Cột 1: CV Content -->
             <div class="col-span-12 lg:col-span-4">
@@ -268,7 +304,10 @@ interface MatchResult {
         `
     ]
 })
-export class Recruitment {
+export class Recruitment implements OnInit {
+    // Dialog state
+    displayIntroDialog = false;
+
     // CV Data
     cvText = '';
     highlightedCvText = '';
@@ -292,6 +331,11 @@ export class Recruitment {
 
     // Match Result
     matchResult: MatchResult | null = null;
+
+    ngOnInit(): void {
+        // Hiển thị dialog giới thiệu khi component được khởi tạo
+        this.displayIntroDialog = true;
+    }
 
     async onFileSelect(event: any): Promise<void> {
         const file = event.files[0];
