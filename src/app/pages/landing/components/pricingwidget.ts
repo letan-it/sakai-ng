@@ -9,15 +9,9 @@ import { RippleModule } from 'primeng/ripple';
         <div id="pricing" class="py-20 px-6 lg:px-20 bg-surface-0 dark:bg-surface-900">
             <div class="max-w-7xl mx-auto">
                 <div class="text-center mb-16">
-                    <span class="inline-block bg-gradient-to-r from-green-600 to-emerald-600 text-white px-4 py-2 rounded-full text-sm font-semibold mb-4">
-                        GIÁ CẢ MINH BẠCH
-                    </span>
-                    <h2 class="text-4xl md:text-5xl font-bold text-surface-900 dark:text-surface-0 mb-4">
-                        Chọn gói phù hợp với bạn
-                    </h2>
-                    <p class="text-xl text-surface-600 dark:text-surface-300 max-w-2xl mx-auto">
-                        Linh hoạt, không ràng buộc, hủy bất cứ lúc nào
-                    </p>
+                    <span class="inline-block bg-gradient-to-r from-green-600 to-emerald-600 text-white px-4 py-2 rounded-full text-sm font-semibold mb-4"> GIÁ CẢ MINH BẠCH </span>
+                    <h2 class="text-4xl md:text-5xl font-bold text-surface-900 dark:text-surface-0 mb-4">Chọn gói phù hợp với bạn</h2>
+                    <p class="text-xl text-surface-600 dark:text-surface-300 max-w-2xl mx-auto">Linh hoạt, không ràng buộc, hủy bất cứ lúc nào</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -27,7 +21,7 @@ import { RippleModule } from 'primeng/ripple';
                             <h3 class="text-2xl font-bold text-surface-900 dark:text-surface-0 mb-2">Free</h3>
                             <p class="text-surface-600 dark:text-surface-300">Cho cá nhân và dự án nhỏ</p>
                         </div>
-                        
+
                         <div class="flex items-center justify-center mb-8">
                             <div class="w-24 h-24 bg-gradient-to-br from-blue-100 to-blue-200 dark:from-blue-900/50 dark:to-blue-800/50 rounded-2xl flex items-center justify-center">
                                 <i class="pi pi-box text-4xl text-blue-600 dark:text-blue-400"></i>
@@ -41,13 +35,7 @@ import { RippleModule } from 'primeng/ripple';
                             </div>
                         </div>
 
-                        <button 
-                            pButton 
-                            pRipple 
-                            label="Bắt đầu miễn phí" 
-                            [outlined]="true"
-                            class="w-full mb-8 py-3! text-lg! border-2!">
-                        </button>
+                        <button pButton pRipple label="Bắt đầu miễn phí" [outlined]="true" class="w-full mb-8 py-3! text-lg! border-2!"></button>
 
                         <ul class="space-y-4">
                             <li class="flex items-start gap-3">
@@ -72,16 +60,14 @@ import { RippleModule } from 'primeng/ripple';
                     <!-- Startup Plan - Featured -->
                     <div class="group relative p-8 bg-gradient-to-br from-purple-600 to-blue-600 rounded-3xl shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-105">
                         <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                            <span class="bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 px-6 py-2 rounded-full text-sm font-bold shadow-lg">
-                                PHỔ BIẾN NHẤT
-                            </span>
+                            <span class="bg-gradient-to-r from-yellow-400 to-orange-400 text-gray-900 px-6 py-2 rounded-full text-sm font-bold shadow-lg"> PHỔ BIẾN NHẤT </span>
                         </div>
 
                         <div class="text-center mb-8 mt-4">
                             <h3 class="text-2xl font-bold text-white mb-2">Startup</h3>
                             <p class="text-white/80">Cho startup và doanh nghiệp nhỏ</p>
                         </div>
-                        
+
                         <div class="flex items-center justify-center mb-8">
                             <div class="w-24 h-24 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center">
                                 <i class="pi pi-star text-4xl text-white"></i>
@@ -95,12 +81,7 @@ import { RippleModule } from 'primeng/ripple';
                             </div>
                         </div>
 
-                        <button 
-                            pButton 
-                            pRipple 
-                            label="Bắt đầu ngay" 
-                            class="w-full mb-8 py-3! text-lg! bg-white! text-purple-600! hover:bg-gray-100! border-0!">
-                        </button>
+                        <button pButton pRipple label="Bắt đầu ngay" class="w-full mb-8 py-3! text-lg! bg-white! text-purple-600! hover:bg-gray-100! border-0!"></button>
 
                         <ul class="space-y-4">
                             <li class="flex items-start gap-3">
@@ -132,7 +113,7 @@ import { RippleModule } from 'primeng/ripple';
                             <h3 class="text-2xl font-bold text-surface-900 dark:text-surface-0 mb-2">Enterprise</h3>
                             <p class="text-surface-600 dark:text-surface-300">Cho doanh nghiệp lớn</p>
                         </div>
-                        
+
                         <div class="flex items-center justify-center mb-8">
                             <div class="w-24 h-24 bg-gradient-to-br from-purple-100 to-purple-200 dark:from-purple-900/50 dark:to-purple-800/50 rounded-2xl flex items-center justify-center">
                                 <i class="pi pi-briefcase text-4xl text-purple-600 dark:text-purple-400"></i>
@@ -146,13 +127,7 @@ import { RippleModule } from 'primeng/ripple';
                             </div>
                         </div>
 
-                        <button 
-                            pButton 
-                            pRipple 
-                            label="Liên hệ tư vấn" 
-                            [outlined]="true"
-                            class="w-full mb-8 py-3! text-lg! border-2!">
-                        </button>
+                        <button pButton pRipple label="Liên hệ tư vấn" [outlined]="true" class="w-full mb-8 py-3! text-lg! border-2!"></button>
 
                         <ul class="space-y-4">
                             <li class="flex items-start gap-3">
@@ -180,9 +155,7 @@ import { RippleModule } from 'primeng/ripple';
                 </div>
 
                 <div class="mt-16 text-center">
-                    <p class="text-surface-600 dark:text-surface-300 text-lg">
-                        Tất cả gói đều bao gồm <span class="font-semibold text-surface-900 dark:text-surface-0">30 ngày hoàn tiền</span> nếu không hài lòng
-                    </p>
+                    <p class="text-surface-600 dark:text-surface-300 text-lg">Tất cả gói đều bao gồm <span class="font-semibold text-surface-900 dark:text-surface-0">30 ngày hoàn tiền</span> nếu không hài lòng</p>
                 </div>
             </div>
         </div>

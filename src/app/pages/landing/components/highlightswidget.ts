@@ -6,15 +6,9 @@ import { Component } from '@angular/core';
         <div id="highlights" class="py-20 px-6 lg:px-20 bg-gradient-to-b from-surface-0 to-surface-50 dark:from-surface-900 dark:to-surface-800">
             <div class="max-w-7xl mx-auto">
                 <div class="text-center mb-16">
-                    <span class="inline-block bg-gradient-to-r from-cyan-600 to-blue-600 text-white px-4 py-2 rounded-full text-sm font-semibold mb-4">
-                        ĐA NỀN TẢNG
-                    </span>
-                    <h2 class="text-4xl md:text-5xl font-bold text-surface-900 dark:text-surface-0 mb-4">
-                        Mạnh mẽ trên mọi thiết bị
-                    </h2>
-                    <p class="text-xl text-surface-600 dark:text-surface-300 max-w-2xl mx-auto">
-                        Trải nghiệm tối ưu cho người dùng trên mọi nền tảng
-                    </p>
+                    <span class="inline-block bg-gradient-to-r from-cyan-600 to-blue-600 text-white px-4 py-2 rounded-full text-sm font-semibold mb-4"> ĐA NỀN TẢNG </span>
+                    <h2 class="text-4xl md:text-5xl font-bold text-surface-900 dark:text-surface-0 mb-4">Mạnh mẽ trên mọi thiết bị</h2>
+                    <p class="text-xl text-surface-600 dark:text-surface-300 max-w-2xl mx-auto">Trải nghiệm tối ưu cho người dùng trên mọi nền tảng</p>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-24">
@@ -42,12 +36,9 @@ import { Component } from '@angular/core';
                                 <i class="pi pi-fw pi-desktop text-5xl text-white"></i>
                             </div>
                         </div>
-                        <h3 class="text-3xl md:text-4xl font-bold text-surface-900 dark:text-surface-0 mb-6">
-                            Desktop Experience
-                        </h3>
+                        <h3 class="text-3xl md:text-4xl font-bold text-surface-900 dark:text-surface-0 mb-6">Desktop Experience</h3>
                         <p class="text-xl text-surface-600 dark:text-surface-300 leading-relaxed mb-6">
-                            Giao diện desktop với layout rộng rãi, tận dụng tối đa không gian màn hình. 
-                            Hỗ trợ keyboard shortcuts và các tính năng nâng cao cho power users.
+                            Giao diện desktop với layout rộng rãi, tận dụng tối đa không gian màn hình. Hỗ trợ keyboard shortcuts và các tính năng nâng cao cho power users.
                         </p>
                         <ul class="space-y-4">
                             <li class="flex items-start gap-3">
@@ -73,13 +64,8 @@ import { Component } from '@angular/core';
                                 <i class="pi pi-fw pi-mobile text-5xl text-white"></i>
                             </div>
                         </div>
-                        <h3 class="text-3xl md:text-4xl font-bold text-surface-900 dark:text-surface-0 mb-6">
-                            Mobile First Design
-                        </h3>
-                        <p class="text-xl text-surface-600 dark:text-surface-300 leading-relaxed mb-6">
-                            Được thiết kế với mobile-first approach, đảm bảo trải nghiệm mượt mà trên 
-                            smartphone và tablet với touch gestures tự nhiên.
-                        </p>
+                        <h3 class="text-3xl md:text-4xl font-bold text-surface-900 dark:text-surface-0 mb-6">Mobile First Design</h3>
+                        <p class="text-xl text-surface-600 dark:text-surface-300 leading-relaxed mb-6">Được thiết kế với mobile-first approach, đảm bảo trải nghiệm mượt mà trên smartphone và tablet với touch gestures tự nhiên.</p>
                         <ul class="space-y-4">
                             <li class="flex items-start gap-3">
                                 <i class="pi pi-check-circle text-2xl text-green-500 mt-1"></i>

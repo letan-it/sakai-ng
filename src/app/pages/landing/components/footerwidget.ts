@@ -18,7 +18,10 @@ import { Router, RouterModule } from '@angular/router';
                                     class="fill-purple-600 dark:fill-purple-400"
                                 />
                                 <mask id="mask0_1413_1551" style="mask-type: alpha" maskUnits="userSpaceOnUse" x="0" y="8" width="54" height="11">
-                                    <path d="M27 18.3652C10.5114 19.1944 0 8.88892 0 8.88892C0 8.88892 16.5176 14.5866 27 14.5866C37.4824 14.5866 54 8.88892 54 8.88892C54 8.88892 43.4886 17.5361 27 18.3652Z" class="fill-purple-600 dark:fill-purple-400" />
+                                    <path
+                                        d="M27 18.3652C10.5114 19.1944 0 8.88892 0 8.88892C0 8.88892 16.5176 14.5866 27 14.5866C37.4824 14.5866 54 8.88892 54 8.88892C54 8.88892 43.4886 17.5361 27 18.3652Z"
+                                        class="fill-purple-600 dark:fill-purple-400"
+                                    />
                                 </mask>
                                 <g mask="url(#mask0_1413_1551)">
                                     <path
@@ -29,18 +32,21 @@ import { Router, RouterModule } from '@angular/router';
                             </svg>
                             <h4 class="font-bold text-2xl text-surface-900 dark:text-surface-0">SAKAI</h4>
                         </a>
-                        <p class="text-surface-600 dark:text-surface-300 mb-6 leading-relaxed">
-                            Template Angular hiện đại với PrimeNG và Tailwind CSS. 
-                            Xây dựng ứng dụng web đẹp mắt và hiệu suất cao.
-                        </p>
+                        <p class="text-surface-600 dark:text-surface-300 mb-6 leading-relaxed">Template Angular hiện đại với PrimeNG và Tailwind CSS. Xây dựng ứng dụng web đẹp mắt và hiệu suất cao.</p>
                         <div class="flex gap-3">
-                            <a class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-200 dark:bg-surface-700 hover:bg-purple-600 dark:hover:bg-purple-600 text-surface-700 dark:text-surface-200 hover:text-white transition-all cursor-pointer">
+                            <a
+                                class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-200 dark:bg-surface-700 hover:bg-purple-600 dark:hover:bg-purple-600 text-surface-700 dark:text-surface-200 hover:text-white transition-all cursor-pointer"
+                            >
                                 <i class="pi pi-github text-xl"></i>
                             </a>
-                            <a class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-200 dark:bg-surface-700 hover:bg-purple-600 dark:hover:bg-purple-600 text-surface-700 dark:text-surface-200 hover:text-white transition-all cursor-pointer">
+                            <a
+                                class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-200 dark:bg-surface-700 hover:bg-purple-600 dark:hover:bg-purple-600 text-surface-700 dark:text-surface-200 hover:text-white transition-all cursor-pointer"
+                            >
                                 <i class="pi pi-twitter text-xl"></i>
                             </a>
-                            <a class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-200 dark:bg-surface-700 hover:bg-purple-600 dark:hover:bg-purple-600 text-surface-700 dark:text-surface-200 hover:text-white transition-all cursor-pointer">
+                            <a
+                                class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-200 dark:bg-surface-700 hover:bg-purple-600 dark:hover:bg-purple-600 text-surface-700 dark:text-surface-200 hover:text-white transition-all cursor-pointer"
+                            >
                                 <i class="pi pi-discord text-xl"></i>
                             </a>
                         </div>
@@ -72,10 +78,12 @@ import { Router, RouterModule } from '@angular/router';
                                 <h4 class="font-bold text-lg mb-4 text-surface-900 dark:text-surface-0">Community</h4>
                                 <ul class="space-y-3">
                                     <li><a class="text-surface-600 dark:text-surface-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors cursor-pointer">Discord</a></li>
-                                    <li><a class="text-surface-600 dark:text-surface-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors cursor-pointer flex items-center gap-2">
-                                        Events
-                                        <span class="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-2 py-0.5 rounded text-xs font-semibold">NEW</span>
-                                    </a></li>
+                                    <li>
+                                        <a class="text-surface-600 dark:text-surface-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors cursor-pointer flex items-center gap-2">
+                                            Events
+                                            <span class="bg-gradient-to-r from-purple-500 to-blue-500 text-white px-2 py-0.5 rounded text-xs font-semibold">NEW</span>
+                                        </a>
+                                    </li>
                                     <li><a class="text-surface-600 dark:text-surface-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors cursor-pointer">FAQ</a></li>
                                     <li><a class="text-surface-600 dark:text-surface-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors cursor-pointer">Blog</a></li>
                                 </ul>
@@ -95,9 +103,7 @@ import { Router, RouterModule } from '@angular/router';
 
                 <div class="border-t border-surface-200 dark:border-surface-800 mt-12 pt-8">
                     <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                        <p class="text-surface-600 dark:text-surface-300 text-sm text-center md:text-left">
-                            © 2024 Sakai-NG. All rights reserved. Made with ❤️ using Angular & PrimeNG
-                        </p>
+                        <p class="text-surface-600 dark:text-surface-300 text-sm text-center md:text-left">© 2024 Sakai-NG. All rights reserved. Made with ❤️ using Angular & PrimeNG</p>
                         <div class="flex gap-6 text-sm">
                             <a class="text-surface-600 dark:text-surface-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors cursor-pointer">Privacy</a>
                             <a class="text-surface-600 dark:text-surface-300 hover:text-purple-600 dark:hover:text-purple-400 transition-colors cursor-pointer">Terms</a>
