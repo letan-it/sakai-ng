@@ -38,7 +38,7 @@ const SKILL_SYNONYMS: Record<string, string[]> = {
     sql: ['structured query language'],
     nosql: ['no sql'],
     'ci/cd': ['continuous integration', 'continuous deployment'],
-    git: ['github', 'gitlab', 'version control']
+    git: ['version control']
 };
 
 /**

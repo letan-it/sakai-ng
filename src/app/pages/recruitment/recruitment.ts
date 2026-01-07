@@ -179,6 +179,10 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = PDF_WORKER_SRC;
     ]
 })
 export class Recruitment implements OnInit {
+    // Ngưỡng phần trăm phù hợp / Match percentage thresholds
+    private readonly HIGH_MATCH_THRESHOLD = 70;
+    private readonly MEDIUM_MATCH_THRESHOLD = 40;
+
     // Dialog state
     displayIntroDialog = false;
 
@@ -277,7 +281,7 @@ export class Recruitment implements OnInit {
             this.highlightSkills(this.matchResult.matchedSkills);
 
             // Hiển thị thông báo kết quả
-            const severity = this.matchResult.percentage >= 70 ? 'success' : this.matchResult.percentage >= 40 ? 'info' : 'warn';
+            const severity = this.matchResult.percentage >= this.HIGH_MATCH_THRESHOLD ? 'success' : this.matchResult.percentage >= this.MEDIUM_MATCH_THRESHOLD ? 'info' : 'warn';
 
             this.messageService.add({
                 severity: severity,
