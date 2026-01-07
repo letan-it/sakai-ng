@@ -281,7 +281,7 @@ export class Recruitment implements OnInit {
             this.highlightSkills(this.matchResult.matchedSkills);
 
             // Hiển thị thông báo kết quả
-            const severity = this.matchResult.percentage >= this.HIGH_MATCH_THRESHOLD ? 'success' : this.matchResult.percentage >= this.MEDIUM_MATCH_THRESHOLD ? 'info' : 'warn';
+            const severity = this.getSeverityLevel(this.matchResult.percentage);
 
             this.messageService.add({
                 severity: severity,
@@ -296,6 +296,22 @@ export class Recruitment implements OnInit {
                 detail: 'Không thể so sánh CV với JD'
             });
         }
+    }
+
+    /**
+     * Xác định mức độ nghiêm trọng dựa trên phần trăm phù hợp
+     * Determine severity level based on match percentage
+     */
+    private getSeverityLevel(percentage: number): 'success' | 'info' | 'warn' {
+        if (percentage >= this.HIGH_MATCH_THRESHOLD) {
+            return 'success';
+        }
+
+        if (percentage >= this.MEDIUM_MATCH_THRESHOLD) {
+            return 'info';
+        }
+
+        return 'warn';
     }
 
     /**
