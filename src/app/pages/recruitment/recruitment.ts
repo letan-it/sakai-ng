@@ -14,22 +14,11 @@ import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import * as pdfjsLib from 'pdfjs-dist';
+import { detectVietnamesePhones, detectEmails, compareCV as compareCVUtil, MatchResult } from '@/utils';
 
 // Cấu hình worker cho PDF.js - sử dụng worker local thay vì CDN
 const PDF_WORKER_SRC = '/pdf.worker.min.mjs';
 pdfjsLib.GlobalWorkerOptions.workerSrc = PDF_WORKER_SRC;
-
-// Regex patterns cho email và phone
-const EMAIL_PATTERN = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
-// Vietnamese phone pattern: hỗ trợ các đầu số phổ biến của VN
-// Ví dụ: 0912345678, +84912345678, 84912345678
-const VIETNAMESE_PHONE_PATTERN = /(?:\+84|84|0)(?:3[2-9]|5[689]|7[06-9]|8[1-9]|9[0-9])\d{7}/g;
-
-interface MatchResult {
-    percentage: number;
-    matchedSkills: string[];
-    missingSkills: string[];
-}
 
 @Component({
     selector: 'app-recruitment',
@@ -190,6 +179,10 @@ interface MatchResult {
     ]
 })
 export class Recruitment implements OnInit {
+    // Ngưỡng phần trăm phù hợp / Match percentage thresholds
+    private readonly HIGH_MATCH_THRESHOLD = 70;
+    private readonly MEDIUM_MATCH_THRESHOLD = 40;
+
     // Dialog state
     displayIntroDialog = false;
 
@@ -265,43 +258,72 @@ export class Recruitment implements OnInit {
         }
     }
 
+    /**
+     * So sánh CV với Job Description
+     * Compare CV with Job Description
+     */
     compareCV(): void {
         if (!this.cvText || !this.requiredSkills) {
+            this.messageService.add({
+                severity: 'warn',
+                summary: 'Thiếu thông tin',
+                detail: 'Vui lòng upload CV và nhập kỹ năng yêu cầu'
+            });
+
             return;
         }
 
-        const skills = this.requiredSkills
-            .split(',')
-            .map((s) => s.trim())
-            .filter((s) => s.length > 0);
+        try {
+            // Sử dụng utility function để so sánh
+            this.matchResult = compareCVUtil(this.cvText, this.requiredSkills);
 
-        const normalizedCV = this.normalizeText(this.cvText);
-        const matchedSkills: string[] = [];
-        const missingSkills: string[] = [];
+            // Highlight matched skills trong CV
+            this.highlightSkills(this.matchResult.matchedSkills);
 
-        skills.forEach((skill) => {
-            const normalizedSkill = this.normalizeText(skill);
+            // Hiển thị thông báo kết quả
+            const severity = this.getSeverityLevel(this.matchResult.percentage);
 
-            if (normalizedCV.includes(normalizedSkill)) {
-                matchedSkills.push(skill);
-            } else {
-                missingSkills.push(skill);
-            }
-        });
-
-        const percentage = skills.length > 0 ? Math.round((matchedSkills.length / skills.length) * 100) : 0;
-
-        this.matchResult = {
-            percentage,
-            matchedSkills,
-            missingSkills
-        };
-
-        // Highlight matched skills trong CV
-        this.highlightSkills(matchedSkills);
+            this.messageService.add({
+                severity: severity,
+                summary: 'Kết quả so sánh',
+                detail: `Độ phù hợp: ${this.matchResult.percentage}%`
+            });
+        } catch (error) {
+            console.error('Lỗi khi so sánh CV:', error);
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Lỗi',
+                detail: 'Không thể so sánh CV với JD'
+            });
+        }
     }
 
+    /**
+     * Xác định mức độ nghiêm trọng dựa trên phần trăm phù hợp
+     * Determine severity level based on match percentage
+     */
+    private getSeverityLevel(percentage: number): 'success' | 'info' | 'warn' {
+        if (percentage >= this.HIGH_MATCH_THRESHOLD) {
+            return 'success';
+        }
+
+        if (percentage >= this.MEDIUM_MATCH_THRESHOLD) {
+            return 'info';
+        }
+
+        return 'warn';
+    }
+
+    /**
+     * Highlight các kỹ năng phù hợp trong CV text
+     * Highlight matched skills in CV text
+     */
     highlightSkills(skills: string[]): void {
+        if (!skills || skills.length === 0) {
+            this.highlightedCvText = this.escapeHtml(this.cvText);
+            return;
+        }
+
         let highlightedText = this.escapeHtml(this.cvText);
 
         skills.forEach((skill) => {
@@ -313,15 +335,10 @@ export class Recruitment implements OnInit {
         this.highlightedCvText = highlightedText;
     }
 
-    normalizeText(text: string): string {
-        return text
-            .toLowerCase()
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .replace(/đ/g, 'd')
-            .replace(/Đ/g, 'D');
-    }
-
+    /**
+     * Escape HTML để hiển thị an toàn
+     * Escape HTML for safe display
+     */
     escapeHtml(text: string): string {
         const div = document.createElement('div');
 
@@ -330,64 +347,99 @@ export class Recruitment implements OnInit {
         return div.innerHTML.replace(/\n/g, '<br>');
     }
 
+    /**
+     * Escape regex special characters
+     * Escape các ký tự đặc biệt trong regex
+     */
     escapeRegex(text: string): string {
         return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
-    const rawNumberRegex = /[\d\s.-]{9,}/g;
+
+    /**
+     * Tự động phát hiện email và số điện thoại từ CV text
+     * Auto-detect email and phone number from CV text
+     */
     detectEmailAndPhone(): void {
-    // EMAIL
-    const emailRegex =
-      /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
-    const emailMatches = this.cvText.match(emailRegex);
-    if (emailMatches?.length) {
-        this.suggestedEmail = emailMatches[0];
-    }
-
-    // PHONE – LAYER 1
-    const phoneRegex =
-      /(?:\+84|84|\(0\)|0)(?:[\s.-]*)?(?:3[2-9]|5[689]|7[06-9]|8[1-9]|9\d)(?:[\s.-]*\d){7}/g;
-
-    const matches = this.cvText.match(phoneRegex);
-    if (matches?.length) {
-        const phone = normalizePhone(matches[0]);
-        if (phone) {
-            this.suggestedPhone = phone;
+        if (!this.cvText || this.cvText.trim().length === 0) {
             return;
         }
-    }
 
-    // PHONE – FALLBACK
-    const fallback = this.fallbackDetectPhone(this.cvText);
-    if (fallback) {
-        this.suggestedPhone = fallback;
-    }
-}
-    fallbackDetectPhone(text: string): string | null {
-    const candidates = text.match(this.rawNumberRegex);
-    if (!candidates) return null;
+        try {
+            // Phát hiện EMAIL - sử dụng utility function
+            const emailResults = detectEmails(this.cvText);
 
-    for (const c of candidates) {
-        const normalized = normalizePhone(c);
-        if (
-            normalized &&
-            /^(03|05|07|08|09)/.test(normalized)
-        ) {
-            return normalized;
+            if (emailResults && emailResults.length > 0) {
+                this.suggestedEmail = emailResults[0].normalized;
+            }
+
+            // Phát hiện PHONE - sử dụng utility function
+            const phoneResults = detectVietnamesePhones(this.cvText);
+
+            if (phoneResults && phoneResults.length > 0) {
+                this.suggestedPhone = phoneResults[0].normalized;
+            }
+        } catch (error) {
+            console.error('Lỗi khi phát hiện email/phone:', error);
         }
     }
 
-    return null;
-}
-
+    /**
+     * Tự động điền email từ gợi ý
+     * Auto-fill email from suggestion
+     */
     autoFillEmail(): void {
-        if (this.suggestedEmail) {
-            this.candidateEmail = this.suggestedEmail;
+        try {
+            if (this.suggestedEmail) {
+                this.candidateEmail = this.suggestedEmail;
+                this.messageService.add({
+                    severity: 'info',
+                    summary: 'Đã điền email',
+                    detail: `Email: ${this.suggestedEmail}`
+                });
+            } else {
+                this.messageService.add({
+                    severity: 'warn',
+                    summary: 'Không tìm thấy email',
+                    detail: 'Không tìm thấy email trong CV'
+                });
+            }
+        } catch (error) {
+            console.error('Lỗi khi tự động điền email:', error);
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Lỗi',
+                detail: 'Không thể tự động điền email'
+            });
         }
     }
 
+    /**
+     * Tự động điền số điện thoại từ gợi ý
+     * Auto-fill phone from suggestion
+     */
     autoFillPhone(): void {
-        if (this.suggestedPhone) {
-            this.candidatePhone = this.suggestedPhone;
+        try {
+            if (this.suggestedPhone) {
+                this.candidatePhone = this.suggestedPhone;
+                this.messageService.add({
+                    severity: 'info',
+                    summary: 'Đã điền số điện thoại',
+                    detail: `SĐT: ${this.suggestedPhone}`
+                });
+            } else {
+                this.messageService.add({
+                    severity: 'warn',
+                    summary: 'Không tìm thấy số điện thoại',
+                    detail: 'Không tìm thấy số điện thoại trong CV'
+                });
+            }
+        } catch (error) {
+            console.error('Lỗi khi tự động điền SĐT:', error);
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Lỗi',
+                detail: 'Không thể tự động điền số điện thoại'
+            });
         }
     }
 }
