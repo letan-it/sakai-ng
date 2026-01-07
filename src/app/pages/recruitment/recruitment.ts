@@ -335,22 +335,33 @@ export class Recruitment implements OnInit {
     }
 
     detectEmailAndPhone(): void {
-        // Detect email
-        const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
-        const emailMatches = this.cvText.match(emailRegex);
+    // EMAIL
+    const emailRegex =
+      /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+    const emailMatches = this.cvText.match(emailRegex);
+    if (emailMatches?.length) {
+        this.suggestedEmail = emailMatches[0];
+    }
 
-        if (emailMatches && emailMatches.length > 0) {
-            this.suggestedEmail = emailMatches[0];
-        }
+    // PHONE – LAYER 1
+    const phoneRegex =
+      /(?:\+84|84|\(0\)|0)(?:[\s.-]*)?(?:3[2-9]|5[689]|7[06-9]|8[1-9]|9\d)(?:[\s.-]*\d){7}/g;
 
-        // Detect Vietnamese phone number
-        const phoneRegex = /(?:\+84|84|0)(?:3[2-9]|5[689]|7[06-9]|8[1-9]|9[0-9])\d{7}/g;
-        const phoneMatches = this.cvText.match(phoneRegex);
-
-        if (phoneMatches && phoneMatches.length > 0) {
-            this.suggestedPhone = phoneMatches[0];
+    const matches = this.cvText.match(phoneRegex);
+    if (matches?.length) {
+        const phone = normalizePhone(matches[0]);
+        if (phone) {
+            this.suggestedPhone = phone;
+            return;
         }
     }
+
+    // PHONE – FALLBACK
+    const fallback = fallbackDetectPhone(this.cvText);
+    if (fallback) {
+        this.suggestedPhone = fallback;
+    }
+}
 
     autoFillEmail(): void {
         if (this.suggestedEmail) {
