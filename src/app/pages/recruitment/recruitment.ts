@@ -333,7 +333,7 @@ export class Recruitment implements OnInit {
     escapeRegex(text: string): string {
         return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
-const rawNumberRegex = /[\d\s.-]{9,}/g;
+    const rawNumberRegex = /[\d\s.-]{9,}/g;
     detectEmailAndPhone(): void {
     // EMAIL
     const emailRegex =
@@ -357,13 +357,13 @@ const rawNumberRegex = /[\d\s.-]{9,}/g;
     }
 
     // PHONE – FALLBACK
-    const fallback = fallbackDetectPhone(this.cvText);
+    const fallback = this.fallbackDetectPhone(this.cvText);
     if (fallback) {
         this.suggestedPhone = fallback;
     }
 }
-    function fallbackDetectPhone(text: string): string | null {
-    const candidates = text.match(rawNumberRegex);
+    fallbackDetectPhone(text: string): string | null {
+    const candidates = text.match(this.rawNumberRegex);
     if (!candidates) return null;
 
     for (const c of candidates) {
