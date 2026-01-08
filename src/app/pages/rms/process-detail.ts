@@ -230,29 +230,29 @@ import { RMSDataService } from '@/services/rms-data.service';
             <div class="space-y-4">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium mb-2">Số vòng *</label>
+                        <label class="block text-sm font-medium mb-2">Số vòng <span style="color:red">*</span></label>
                         <p-inputNumber [(ngModel)]="roundForm.round_number" [min]="1" [max]="10" class="w-full" />
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium mb-2">Trạng thái *</label>
+                        <label class="block text-sm font-medium mb-2">Trạng thái <span style="color:red">*</span></label>
                         <p-select [(ngModel)]="roundForm.status" [options]="roundStatusOptions" optionLabel="label" optionValue="value" class="w-full" />
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium mb-2">Tên vòng phỏng vấn *</label>
+                    <label class="block text-sm font-medium mb-2">Tên vòng phỏng vấn <span style="color:red">*</span></label>
                     <input pInputText [(ngModel)]="roundForm.round_name" class="w-full" placeholder="VD: Technical Interview" />
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium mb-2">Người phỏng vấn *</label>
+                    <label class="block text-sm font-medium mb-2">Người phỏng vấn <span style="color:red">*</span></label>
                     <input pInputText [(ngModel)]="roundForm.interviewer_name" class="w-full" placeholder="VD: Nguyễn Văn A" />
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium mb-2">Ngày giờ phỏng vấn *</label>
-                    <p-datePicker [(ngModel)]="roundForm.scheduled_date" [showTime]="true" dateFormat="yy-mm-dd" [showIcon]="true" class="w-full" />
+                    <label class="block text-sm font-medium mb-2">Ngày giờ phỏng vấn <span style="color:red">*</span></label>
+                    <p-datePicker appendTo="body" [(ngModel)]="roundForm.scheduled_date" [showTime]="true" dateFormat="yy-mm-dd" [showIcon]="true" class="w-full" />
                 </div>
             </div>
 
@@ -269,12 +269,12 @@ import { RMSDataService } from '@/services/rms-data.service';
             <div class="space-y-4">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium mb-2">Trạng thái tham dự *</label>
-                        <p-select [(ngModel)]="resultForm.attendance_status" [options]="attendanceOptions" optionLabel="label" optionValue="value" class="w-full" />
+                        <label class="block text-sm font-medium mb-2">Trạng thái tham dự <span style="color:red">*</span></label>
+                        <p-select appendTo="body" [(ngModel)]="resultForm.attendance_status" [options]="attendanceOptions" optionLabel="label" optionValue="value" class="w-full" />
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium mb-2">Kết quả *</label>
+                        <label class="block text-sm font-medium mb-2">Kết quả <span style="color:red">*</span></label>
                         <p-select [(ngModel)]="resultForm.outcome" [options]="outcomeOptions" optionLabel="label" optionValue="value" class="w-full" />
                     </div>
                 </div>
