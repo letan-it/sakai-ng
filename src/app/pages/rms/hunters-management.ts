@@ -116,7 +116,7 @@ import { Hunter } from '@/models/rms.models';
         </div>
 
         <!-- Dialog Thêm/Sửa Hunter -->
-        <p-dialog [(visible)]="displayDialog" [header]="isEditMode ? 'Sửa Hunter' : 'Thêm Hunter mới'" [modal]="true" [style]="{ width: '500px' }">
+        <p-dialog maskStyleClass="backdrop-blur-sm" styleClass="!border-0" [(visible)]="displayDialog" [header]="isEditMode ? 'Sửa Hunter' : 'Thêm Hunter mới'" [modal]="true" [style]="{ width: '500px' }">
             <div class="space-y-4">
                 <div>
                     <label class="block text-sm font-medium mb-2">Tên *</label>
