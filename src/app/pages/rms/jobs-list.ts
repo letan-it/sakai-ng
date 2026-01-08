@@ -8,9 +8,9 @@ import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputTextareaModule } from 'primeng/inputtextarea';
+import { TextareaModule } from 'primeng/textarea';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -19,7 +19,7 @@ import { Job, Customer } from '@/models/rms.models';
 
 @Component({
     selector: 'app-jobs-list',
-    imports: [CommonModule, RouterModule, FormsModule, CardModule, TableModule, TagModule, ButtonModule, DialogModule, InputTextModule, InputTextareaModule, InputNumberModule, DropdownModule, ConfirmDialogModule, ToastModule],
+    imports: [CommonModule, RouterModule, FormsModule, CardModule, TableModule, TagModule, ButtonModule, DialogModule, InputTextModule, TextareaModule, InputNumberModule, SelectModule, ConfirmDialogModule, ToastModule],
     providers: [ConfirmationService, MessageService],
     template: `
         <div class="card">
@@ -70,7 +70,7 @@ import { Job, Customer } from '@/models/rms.models';
                         <td>
                             <div class="flex gap-1">
                                 <p-button label="Xem" icon="pi pi-eye" [text]="true" size="small" [routerLink]="['/rms/jobs', job.id]" />
-                                <p-button label="Sửa" icon="pi pi-pencil" [text]="true" size="small" severity="warning" (onClick)="openEditDialog(job)" />
+                                <p-button label="Sửa" icon="pi pi-pencil" [text]="true" size="small" severity="warn" (onClick)="openEditDialog(job)" />
                                 <p-button label="Xóa" icon="pi pi-trash" [text]="true" size="small" severity="danger" (onClick)="confirmDelete(job)" />
                             </div>
                         </td>
@@ -95,7 +95,7 @@ import { Job, Customer } from '@/models/rms.models';
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium mb-2">Khách hàng *</label>
-                        <p-dropdown
+                        <p-select
                             [(ngModel)]="jobForm.customer_id"
                             [options]="customers"
                             optionLabel="name"
@@ -107,7 +107,7 @@ import { Job, Customer } from '@/models/rms.models';
 
                     <div>
                         <label class="block text-sm font-medium mb-2">Trạng thái *</label>
-                        <p-dropdown [(ngModel)]="jobForm.status" [options]="statusOptions" optionLabel="label" optionValue="value" placeholder="Chọn trạng thái" class="w-full" />
+                        <p-select [(ngModel)]="jobForm.status" [options]="statusOptions" optionLabel="label" optionValue="value" placeholder="Chọn trạng thái" class="w-full" />
                     </div>
                 </div>
 

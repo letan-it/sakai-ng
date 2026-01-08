@@ -10,10 +10,10 @@ import { TimelineModule } from 'primeng/timeline';
 import { StepperModule } from 'primeng/stepper';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputTextareaModule } from 'primeng/inputtextarea';
+import { TextareaModule } from 'primeng/textarea';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { DropdownModule } from 'primeng/dropdown';
-import { CalendarModule } from 'primeng/calendar';
+import { SelectModule } from 'primeng/select';
+import { DatePickerModule } from 'primeng/datepicker';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -21,7 +21,7 @@ import { RMSDataService } from '@/services/rms-data.service';
 
 @Component({
     selector: 'app-process-detail',
-    imports: [CommonModule, RouterModule, FormsModule, CardModule, TagModule, ButtonModule, DividerModule, TimelineModule, StepperModule, DialogModule, InputTextModule, InputTextareaModule, InputNumberModule, DropdownModule, CalendarModule, ConfirmDialogModule, ToastModule],
+    imports: [CommonModule, RouterModule, FormsModule, CardModule, TagModule, ButtonModule, DividerModule, TimelineModule, StepperModule, DialogModule, InputTextModule, TextareaModule, InputNumberModule, SelectModule, DatePickerModule, ConfirmDialogModule, ToastModule],
     providers: [ConfirmationService, MessageService],
     template: `
         <div class="grid grid-cols-12 gap-6" *ngIf="process">
@@ -126,7 +126,7 @@ import { RMSDataService } from '@/services/rms-data.service';
                                     </div>
                                     <div class="flex gap-2 items-center">
                                         <p-tag [value]="round.status" [severity]="getRoundStatusSeverity(round.status)" />
-                                        <p-button icon="pi pi-pencil" [text]="true" size="small" severity="warning" (onClick)="openEditRoundDialog(round)" />
+                                        <p-button icon="pi pi-pencil" [text]="true" size="small" severity="warn" (onClick)="openEditRoundDialog(round)" />
                                         <p-button icon="pi pi-trash" [text]="true" size="small" severity="danger" (onClick)="confirmDeleteRound(round)" />
                                     </div>
                                 </div>
@@ -182,7 +182,7 @@ import { RMSDataService } from '@/services/rms-data.service';
                                             icon="pi pi-pencil"
                                             [text]="true"
                                             size="small"
-                                            severity="warning"
+                                            severity="warn"
                                             (onClick)="openUpdateResultDialog(round)"
                                             pTooltip="Cập nhật kết quả"
                                         />
@@ -236,7 +236,7 @@ import { RMSDataService } from '@/services/rms-data.service';
 
                     <div>
                         <label class="block text-sm font-medium mb-2">Trạng thái *</label>
-                        <p-dropdown [(ngModel)]="roundForm.status" [options]="roundStatusOptions" optionLabel="label" optionValue="value" class="w-full" />
+                        <p-select [(ngModel)]="roundForm.status" [options]="roundStatusOptions" optionLabel="label" optionValue="value" class="w-full" />
                     </div>
                 </div>
 
@@ -252,7 +252,7 @@ import { RMSDataService } from '@/services/rms-data.service';
 
                 <div>
                     <label class="block text-sm font-medium mb-2">Ngày giờ phỏng vấn *</label>
-                    <p-calendar [(ngModel)]="roundForm.scheduled_date" [showTime]="true" dateFormat="yy-mm-dd" [showIcon]="true" class="w-full" />
+                    <p-datePicker [(ngModel)]="roundForm.scheduled_date" [showTime]="true" dateFormat="yy-mm-dd" [showIcon]="true" class="w-full" />
                 </div>
             </div>
 
@@ -270,12 +270,12 @@ import { RMSDataService } from '@/services/rms-data.service';
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium mb-2">Trạng thái tham dự *</label>
-                        <p-dropdown [(ngModel)]="resultForm.attendance_status" [options]="attendanceOptions" optionLabel="label" optionValue="value" class="w-full" />
+                        <p-select [(ngModel)]="resultForm.attendance_status" [options]="attendanceOptions" optionLabel="label" optionValue="value" class="w-full" />
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium mb-2">Kết quả *</label>
-                        <p-dropdown [(ngModel)]="resultForm.outcome" [options]="outcomeOptions" optionLabel="label" optionValue="value" class="w-full" />
+                        <p-select [(ngModel)]="resultForm.outcome" [options]="outcomeOptions" optionLabel="label" optionValue="value" class="w-full" />
                     </div>
                 </div>
 
@@ -547,10 +547,6 @@ export class ProcessDetail implements OnInit {
             Fail: 'danger',
             Pending: 'warning'
         };
-
-        return severityMap[outcome] || 'secondary';
-    }
-}
 
         return severityMap[outcome] || 'secondary';
     }

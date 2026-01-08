@@ -61,7 +61,7 @@ import { Hunter } from '@/models/rms.models';
 
                         <div class="flex gap-2">
                             <p-button label="Xem ứng viên" icon="pi pi-users" [outlined]="true" styleClass="flex-1" (onClick)="loadHunterCandidates(hunter.id)" />
-                            <p-button icon="pi pi-pencil" [outlined]="true" severity="warning" (onClick)="openEditDialog(hunter)" />
+                            <p-button icon="pi pi-pencil" [outlined]="true" severity="warn" (onClick)="openEditDialog(hunter)" />
                             <p-button icon="pi pi-trash" [outlined]="true" severity="danger" (onClick)="confirmDelete(hunter)" />
                         </div>
                     </p-card>

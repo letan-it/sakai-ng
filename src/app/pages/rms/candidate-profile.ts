@@ -12,10 +12,10 @@ import { DividerModule } from 'primeng/divider';
 import { TimelineModule } from 'primeng/timeline';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputTextareaModule } from 'primeng/inputtextarea';
+import { TextareaModule } from 'primeng/textarea';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { DropdownModule } from 'primeng/dropdown';
-import { CalendarModule } from 'primeng/calendar';
+import { SelectModule } from 'primeng/select';
+import { DatePickerModule } from 'primeng/datepicker';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -24,7 +24,7 @@ import { CandidateWithDetails, CandidateExperience, Skill } from '@/models/rms.m
 
 @Component({
     selector: 'app-candidate-profile',
-    imports: [CommonModule, RouterModule, FormsModule, CardModule, TableModule, TagModule, ChipModule, ProgressBarModule, ButtonModule, DividerModule, TimelineModule, DialogModule, InputTextModule, InputTextareaModule, InputNumberModule, DropdownModule, CalendarModule, ConfirmDialogModule, ToastModule],
+    imports: [CommonModule, RouterModule, FormsModule, CardModule, TableModule, TagModule, ChipModule, ProgressBarModule, ButtonModule, DividerModule, TimelineModule, DialogModule, InputTextModule, TextareaModule, InputNumberModule, SelectModule, DatePickerModule, ConfirmDialogModule, ToastModule],
     providers: [ConfirmationService, MessageService],
     template: `
         <div class="grid grid-cols-12 gap-6" *ngIf="candidate">
@@ -39,7 +39,7 @@ import { CandidateWithDetails, CandidateExperience, Skill } from '@/models/rms.m
                     </div>
                     <div class="flex gap-2">
                         <p-tag [value]="candidate.status" [severity]="getStatusSeverity(candidate.status)" styleClass="text-lg px-4 py-2" />
-                        <p-button label="Sửa" icon="pi pi-pencil" severity="warning" [outlined]="true" (onClick)="openEditCandidateDialog()" />
+                        <p-button label="Sửa" icon="pi pi-pencil" severity="warn" [outlined]="true" (onClick)="openEditCandidateDialog()" />
                         <p-button label="Xóa" icon="pi pi-trash" severity="danger" [outlined]="true" (onClick)="confirmDeleteCandidate()" />
                         <p-button label="Quay lại" icon="pi pi-arrow-left" [text]="true" [routerLink]="['/rms/candidates']" />
                     </div>
@@ -124,7 +124,7 @@ import { CandidateWithDetails, CandidateExperience, Skill } from '@/models/rms.m
                                     </div>
                                     <div class="flex gap-2 items-center">
                                         <p-chip [label]="formatDateRange(exp)" styleClass="bg-primary-100 text-primary-800 dark:bg-primary-900 dark:text-primary-100" />
-                                        <p-button icon="pi pi-pencil" [text]="true" size="small" severity="warning" (onClick)="openEditExperienceDialog(exp)" />
+                                        <p-button icon="pi pi-pencil" [text]="true" size="small" severity="warn" (onClick)="openEditExperienceDialog(exp)" />
                                         <p-button icon="pi pi-trash" [text]="true" size="small" severity="danger" (onClick)="confirmDeleteExperience(exp)" />
                                     </div>
                                 </div>
@@ -222,7 +222,7 @@ import { CandidateWithDetails, CandidateExperience, Skill } from '@/models/rms.m
 
                     <div>
                         <label class="block text-sm font-medium mb-2">Trạng thái *</label>
-                        <p-dropdown [(ngModel)]="candidateForm.status" [options]="statusOptions" optionLabel="label" optionValue="value" class="w-full" />
+                        <p-select [(ngModel)]="candidateForm.status" [options]="statusOptions" optionLabel="label" optionValue="value" class="w-full" />
                     </div>
                 </div>
 
@@ -245,7 +245,7 @@ import { CandidateWithDetails, CandidateExperience, Skill } from '@/models/rms.m
             <div class="space-y-4">
                 <div>
                     <label class="block text-sm font-medium mb-2">Kỹ năng *</label>
-                    <p-dropdown [(ngModel)]="skillForm.skill_id" [options]="availableSkills" optionLabel="name" optionValue="id" placeholder="Chọn kỹ năng" class="w-full" />
+                    <p-select [(ngModel)]="skillForm.skill_id" [options]="availableSkills" optionLabel="name" optionValue="id" placeholder="Chọn kỹ năng" class="w-full" />
                 </div>
 
                 <div>
@@ -283,12 +283,12 @@ import { CandidateWithDetails, CandidateExperience, Skill } from '@/models/rms.m
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium mb-2">Ngày bắt đầu *</label>
-                        <p-calendar [(ngModel)]="experienceForm.start_date" dateFormat="yy-mm-dd" [showIcon]="true" class="w-full" />
+                        <p-datePicker [(ngModel)]="experienceForm.start_date" dateFormat="yy-mm-dd" [showIcon]="true" class="w-full" />
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium mb-2">Ngày kết thúc</label>
-                        <p-calendar [(ngModel)]="experienceForm.end_date" dateFormat="yy-mm-dd" [showIcon]="true" class="w-full" placeholder="Để trống nếu đang làm" />
+                        <p-datePicker [(ngModel)]="experienceForm.end_date" dateFormat="yy-mm-dd" [showIcon]="true" class="w-full" placeholder="Để trống nếu đang làm" />
                     </div>
                 </div>
 

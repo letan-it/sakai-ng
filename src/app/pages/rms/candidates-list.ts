@@ -8,8 +8,8 @@ import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
-import { InputTextareaModule } from 'primeng/inputtextarea';
-import { DropdownModule } from 'primeng/dropdown';
+import { TextareaModule } from 'primeng/textarea';
+import { SelectModule } from 'primeng/select';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -18,7 +18,7 @@ import { Candidate } from '@/models/rms.models';
 
 @Component({
     selector: 'app-candidates-list',
-    imports: [CommonModule, RouterModule, FormsModule, CardModule, TableModule, TagModule, ButtonModule, DialogModule, InputTextModule, InputTextareaModule, DropdownModule, ConfirmDialogModule, ToastModule],
+    imports: [CommonModule, RouterModule, FormsModule, CardModule, TableModule, TagModule, ButtonModule, DialogModule, InputTextModule, TextareaModule, SelectModule, ConfirmDialogModule, ToastModule],
     providers: [ConfirmationService, MessageService],
     template: `
         <div class="card">
@@ -75,7 +75,7 @@ import { Candidate } from '@/models/rms.models';
                         <td>
                             <div class="flex gap-1">
                                 <p-button label="Chi tiết" icon="pi pi-eye" [text]="true" size="small" [routerLink]="['/rms/candidates', candidate.id]" />
-                                <p-button label="Sửa" icon="pi pi-pencil" [text]="true" size="small" severity="warning" (onClick)="openEditDialog(candidate)" />
+                                <p-button label="Sửa" icon="pi pi-pencil" [text]="true" size="small" severity="warn" (onClick)="openEditDialog(candidate)" />
                                 <p-button label="Xóa" icon="pi pi-trash" [text]="true" size="small" severity="danger" (onClick)="confirmDelete(candidate)" />
                             </div>
                         </td>
@@ -117,7 +117,7 @@ import { Candidate } from '@/models/rms.models';
 
                     <div>
                         <label class="block text-sm font-medium mb-2">Trạng thái *</label>
-                        <p-dropdown [(ngModel)]="candidateForm.status" [options]="statusOptions" optionLabel="label" optionValue="value" placeholder="Chọn trạng thái" class="w-full" />
+                        <p-select [(ngModel)]="candidateForm.status" [options]="statusOptions" optionLabel="label" optionValue="value" placeholder="Chọn trạng thái" class="w-full" />
                     </div>
                 </div>
 
