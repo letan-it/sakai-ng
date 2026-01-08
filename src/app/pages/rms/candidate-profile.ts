@@ -190,7 +190,7 @@ import { CandidateWithDetails, CandidateExperience, Skill } from '@/models/rms.m
         </div>
 
         <!-- Dialog Sửa Thông tin Ứng viên -->
-        <p-dialog [(visible)]="displayEditDialog" header="Sửa Thông tin Ứng viên" [modal]="true" [style]="{ width: '600px' }">
+        <p-dialog maskStyleClass="backdrop-blur-sm" styleClass="!border-0" [(visible)]="displayEditDialog" header="Sửa Thông tin Ứng viên" [modal]="true" [style]="{ width: '600px' }">
             <div class="space-y-4">
                 <div>
                     <label class="block text-sm font-medium mb-2">Họ và tên <span style="color:red">*</span></label>
@@ -241,7 +241,7 @@ import { CandidateWithDetails, CandidateExperience, Skill } from '@/models/rms.m
         </p-dialog>
 
         <!-- Dialog Thêm Kỹ năng -->
-        <p-dialog [(visible)]="displaySkillDialog" header="Thêm Kỹ năng" [modal]="true" [style]="{ width: '500px' }">
+        <p-dialog maskStyleClass="backdrop-blur-sm" styleClass="!border-0" [(visible)]="displaySkillDialog" header="Thêm Kỹ năng" [modal]="true" [style]="{ width: '500px' }">
             <div class="space-y-4">
                 <div>
                     <label class="block text-sm font-medium mb-2">Kỹ năng <span style="color:red">*</span></label>
@@ -268,7 +268,7 @@ import { CandidateWithDetails, CandidateExperience, Skill } from '@/models/rms.m
         </p-dialog>
 
         <!-- Dialog Thêm/Sửa Kinh nghiệm -->
-        <p-dialog [(visible)]="displayExperienceDialog" [header]="isEditExperience ? 'Sửa Kinh nghiệm' : 'Thêm Kinh nghiệm'" [modal]="true" [style]="{ width: '600px' }">
+        <p-dialog maskStyleClass="backdrop-blur-sm" styleClass="!border-0" [(visible)]="displayExperienceDialog" [header]="isEditExperience ? 'Sửa Kinh nghiệm' : 'Thêm Kinh nghiệm'" [modal]="true" [style]="{ width: '600px' }">
             <div class="space-y-4">
                 <div>
                     <label class="block text-sm font-medium mb-2">Vị trí <span style="color:red">*</span></label>
