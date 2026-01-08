@@ -1,0 +1,678 @@
+{
+  "customers": [
+    {
+      "id": 1,
+      "name": "TechViet Solutions",
+      "industry": "Software Development",
+      "location": "Ho Chi Minh City",
+      "contact_email": "hr@techviet.com",
+      "contact_phone": "+84 28 1234 5678",
+      "created_at": "2024-01-15T08:00:00Z",
+      "updated_at": "2024-01-15T08:00:00Z"
+    },
+    {
+      "id": 2,
+      "name": "Digital Finance Corp",
+      "industry": "Financial Technology",
+      "location": "Ha Noi",
+      "contact_email": "recruitment@digitalfinance.vn",
+      "contact_phone": "+84 24 9876 5432",
+      "created_at": "2024-02-10T09:30:00Z",
+      "updated_at": "2024-02-10T09:30:00Z"
+    },
+    {
+      "id": 3,
+      "name": "E-Commerce Viet",
+      "industry": "E-Commerce",
+      "location": "Da Nang",
+      "contact_email": "jobs@ecommerceviet.com",
+      "contact_phone": "+84 236 555 1234",
+      "created_at": "2024-03-05T10:00:00Z",
+      "updated_at": "2024-03-05T10:00:00Z"
+    }
+  ],
+  "jobs": [
+    {
+      "id": 1,
+      "customer_id": 1,
+      "title": "Senior Frontend Developer",
+      "description": "Chúng tôi đang tìm kiếm một Senior Frontend Developer có kinh nghiệm với Angular và TypeScript để xây dựng các ứng dụng web hiện đại.",
+      "location": "Ho Chi Minh City",
+      "salary_min": 25000000,
+      "salary_max": 40000000,
+      "education_level": "Bachelor's Degree",
+      "experience_min": 3,
+      "experience_max": 7,
+      "status": "Open",
+      "created_at": "2024-06-01T08:00:00Z",
+      "updated_at": "2024-06-01T08:00:00Z"
+    },
+    {
+      "id": 2,
+      "customer_id": 1,
+      "title": "Backend Developer (Java)",
+      "description": "Cần tuyển Backend Developer có kinh nghiệm với Java Spring Boot, Microservices và Cloud technologies.",
+      "location": "Ho Chi Minh City",
+      "salary_min": 20000000,
+      "salary_max": 35000000,
+      "education_level": "Bachelor's Degree",
+      "experience_min": 2,
+      "experience_max": 5,
+      "status": "Open",
+      "created_at": "2024-06-05T09:00:00Z",
+      "updated_at": "2024-06-05T09:00:00Z"
+    },
+    {
+      "id": 3,
+      "customer_id": 2,
+      "title": "Full Stack Developer",
+      "description": "Tìm kiếm Full Stack Developer có kinh nghiệm cả Frontend (React/Angular) và Backend (Node.js/Python).",
+      "location": "Ha Noi",
+      "salary_min": 22000000,
+      "salary_max": 38000000,
+      "education_level": "Bachelor's Degree",
+      "experience_min": 3,
+      "experience_max": 6,
+      "status": "Open",
+      "created_at": "2024-06-10T10:00:00Z",
+      "updated_at": "2024-06-10T10:00:00Z"
+    },
+    {
+      "id": 4,
+      "customer_id": 3,
+      "title": "DevOps Engineer",
+      "description": "Cần tuyển DevOps Engineer có kinh nghiệm với Docker, Kubernetes, CI/CD và Cloud platforms (AWS/Azure).",
+      "location": "Da Nang",
+      "salary_min": 23000000,
+      "salary_max": 37000000,
+      "education_level": "Bachelor's Degree",
+      "experience_min": 2,
+      "experience_max": 5,
+      "status": "Open",
+      "created_at": "2024-06-12T11:00:00Z",
+      "updated_at": "2024-06-12T11:00:00Z"
+    },
+    {
+      "id": 5,
+      "customer_id": 2,
+      "title": "UI/UX Designer",
+      "description": "Tìm kiếm UI/UX Designer có khả năng thiết kế giao diện đẹp, user-friendly với kinh nghiệm Figma, Adobe XD.",
+      "location": "Ha Noi",
+      "salary_min": 15000000,
+      "salary_max": 28000000,
+      "education_level": "Bachelor's Degree",
+      "experience_min": 2,
+      "experience_max": 4,
+      "status": "Closed",
+      "created_at": "2024-05-20T08:30:00Z",
+      "updated_at": "2024-06-15T14:00:00Z"
+    }
+  ],
+  "skills": [
+    { "id": 1, "name": "Angular", "category": "Frontend", "created_at": "2024-01-01T00:00:00Z" },
+    { "id": 2, "name": "TypeScript", "category": "Programming Language", "created_at": "2024-01-01T00:00:00Z" },
+    { "id": 3, "name": "JavaScript", "category": "Programming Language", "created_at": "2024-01-01T00:00:00Z" },
+    { "id": 4, "name": "RxJS", "category": "Frontend", "created_at": "2024-01-01T00:00:00Z" },
+    { "id": 5, "name": "PrimeNG", "category": "UI Framework", "created_at": "2024-01-01T00:00:00Z" },
+    { "id": 6, "name": "Tailwind CSS", "category": "CSS Framework", "created_at": "2024-01-01T00:00:00Z" },
+    { "id": 7, "name": "Java", "category": "Programming Language", "created_at": "2024-01-01T00:00:00Z" },
+    { "id": 8, "name": "Spring Boot", "category": "Backend", "created_at": "2024-01-01T00:00:00Z" },
+    { "id": 9, "name": "Microservices", "category": "Architecture", "created_at": "2024-01-01T00:00:00Z" },
+    { "id": 10, "name": "Docker", "category": "DevOps", "created_at": "2024-01-01T00:00:00Z" },
+    { "id": 11, "name": "Kubernetes", "category": "DevOps", "created_at": "2024-01-01T00:00:00Z" },
+    { "id": 12, "name": "AWS", "category": "Cloud", "created_at": "2024-01-01T00:00:00Z" },
+    { "id": 13, "name": "React", "category": "Frontend", "created_at": "2024-01-01T00:00:00Z" },
+    { "id": 14, "name": "Node.js", "category": "Backend", "created_at": "2024-01-01T00:00:00Z" },
+    { "id": 15, "name": "Python", "category": "Programming Language", "created_at": "2024-01-01T00:00:00Z" },
+    { "id": 16, "name": "Figma", "category": "Design Tool", "created_at": "2024-01-01T00:00:00Z" },
+    { "id": 17, "name": "Adobe XD", "category": "Design Tool", "created_at": "2024-01-01T00:00:00Z" },
+    { "id": 18, "name": "HTML/CSS", "category": "Frontend", "created_at": "2024-01-01T00:00:00Z" },
+    { "id": 19, "name": "Git", "category": "Version Control", "created_at": "2024-01-01T00:00:00Z" },
+    { "id": 20, "name": "CI/CD", "category": "DevOps", "created_at": "2024-01-01T00:00:00Z" }
+  ],
+  "jobSkills": [
+    { "id": 1, "job_id": 1, "skill_id": 1, "importance_level": 5 },
+    { "id": 2, "job_id": 1, "skill_id": 2, "importance_level": 5 },
+    { "id": 3, "job_id": 1, "skill_id": 3, "importance_level": 4 },
+    { "id": 4, "job_id": 1, "skill_id": 4, "importance_level": 4 },
+    { "id": 5, "job_id": 1, "skill_id": 5, "importance_level": 3 },
+    { "id": 6, "job_id": 1, "skill_id": 6, "importance_level": 3 },
+    { "id": 7, "job_id": 2, "skill_id": 7, "importance_level": 5 },
+    { "id": 8, "job_id": 2, "skill_id": 8, "importance_level": 5 },
+    { "id": 9, "job_id": 2, "skill_id": 9, "importance_level": 4 },
+    { "id": 10, "job_id": 2, "skill_id": 10, "importance_level": 3 },
+    { "id": 11, "job_id": 3, "skill_id": 1, "importance_level": 4 },
+    { "id": 12, "job_id": 3, "skill_id": 13, "importance_level": 4 },
+    { "id": 13, "job_id": 3, "skill_id": 14, "importance_level": 5 },
+    { "id": 14, "job_id": 3, "skill_id": 15, "importance_level": 4 },
+    { "id": 15, "job_id": 4, "skill_id": 10, "importance_level": 5 },
+    { "id": 16, "job_id": 4, "skill_id": 11, "importance_level": 5 },
+    { "id": 17, "job_id": 4, "skill_id": 12, "importance_level": 4 },
+    { "id": 18, "job_id": 4, "skill_id": 20, "importance_level": 4 },
+    { "id": 19, "job_id": 5, "skill_id": 16, "importance_level": 5 },
+    { "id": 20, "job_id": 5, "skill_id": 17, "importance_level": 4 },
+    { "id": 21, "job_id": 5, "skill_id": 18, "importance_level": 4 }
+  ],
+  "candidates": [
+    {
+      "id": 1,
+      "full_name": "Nguyễn Văn An",
+      "email": "nguyen.van.an@email.com",
+      "phone": "+84 901 234 567",
+      "cv_link": "https://example.com/cv/nguyen-van-an.pdf",
+      "location": "Ho Chi Minh City",
+      "current_position": "Senior Frontend Developer",
+      "status": "Interviewing",
+      "created_at": "2024-06-02T10:30:00Z",
+      "updated_at": "2024-06-15T14:20:00Z"
+    },
+    {
+      "id": 2,
+      "full_name": "Trần Thị Bình",
+      "email": "tran.thi.binh@email.com",
+      "phone": "+84 902 345 678",
+      "cv_link": "https://example.com/cv/tran-thi-binh.pdf",
+      "location": "Ha Noi",
+      "current_position": "Full Stack Developer",
+      "status": "Interviewing",
+      "created_at": "2024-06-11T09:15:00Z",
+      "updated_at": "2024-06-18T11:30:00Z"
+    },
+    {
+      "id": 3,
+      "full_name": "Lê Văn Cường",
+      "email": "le.van.cuong@email.com",
+      "phone": "+84 903 456 789",
+      "cv_link": "https://example.com/cv/le-van-cuong.pdf",
+      "location": "Ho Chi Minh City",
+      "current_position": "Java Developer",
+      "status": "Pending",
+      "created_at": "2024-06-08T13:45:00Z",
+      "updated_at": "2024-06-08T13:45:00Z"
+    },
+    {
+      "id": 4,
+      "full_name": "Phạm Thị Dung",
+      "email": "pham.thi.dung@email.com",
+      "phone": "+84 904 567 890",
+      "cv_link": "https://example.com/cv/pham-thi-dung.pdf",
+      "location": "Da Nang",
+      "current_position": "DevOps Engineer",
+      "status": "Interviewing",
+      "created_at": "2024-06-13T08:20:00Z",
+      "updated_at": "2024-06-20T10:15:00Z"
+    },
+    {
+      "id": 5,
+      "full_name": "Hoàng Văn Em",
+      "email": "hoang.van.em@email.com",
+      "phone": "+84 905 678 901",
+      "cv_link": "https://example.com/cv/hoang-van-em.pdf",
+      "location": "Ha Noi",
+      "current_position": "UI/UX Designer",
+      "status": "Hired",
+      "created_at": "2024-05-22T11:00:00Z",
+      "updated_at": "2024-06-15T16:00:00Z"
+    },
+    {
+      "id": 6,
+      "full_name": "Võ Thị Phương",
+      "email": "vo.thi.phuong@email.com",
+      "phone": "+84 906 789 012",
+      "cv_link": "https://example.com/cv/vo-thi-phuong.pdf",
+      "location": "Ho Chi Minh City",
+      "current_position": "Frontend Developer",
+      "status": "Rejected",
+      "created_at": "2024-06-03T14:30:00Z",
+      "updated_at": "2024-06-10T09:00:00Z"
+    }
+  ],
+  "candidateSkills": [
+    { "id": 1, "candidate_id": 1, "skill_id": 1, "proficiency_level": 5, "years_of_experience": 4 },
+    { "id": 2, "candidate_id": 1, "skill_id": 2, "proficiency_level": 5, "years_of_experience": 4 },
+    { "id": 3, "candidate_id": 1, "skill_id": 3, "proficiency_level": 5, "years_of_experience": 5 },
+    { "id": 4, "candidate_id": 1, "skill_id": 4, "proficiency_level": 4, "years_of_experience": 3 },
+    { "id": 5, "candidate_id": 1, "skill_id": 5, "proficiency_level": 4, "years_of_experience": 2 },
+    { "id": 6, "candidate_id": 2, "skill_id": 1, "proficiency_level": 4, "years_of_experience": 3 },
+    { "id": 7, "candidate_id": 2, "skill_id": 13, "proficiency_level": 4, "years_of_experience": 3 },
+    { "id": 8, "candidate_id": 2, "skill_id": 14, "proficiency_level": 5, "years_of_experience": 4 },
+    { "id": 9, "candidate_id": 2, "skill_id": 15, "proficiency_level": 4, "years_of_experience": 3 },
+    { "id": 10, "candidate_id": 3, "skill_id": 7, "proficiency_level": 5, "years_of_experience": 3 },
+    { "id": 11, "candidate_id": 3, "skill_id": 8, "proficiency_level": 4, "years_of_experience": 2 },
+    { "id": 12, "candidate_id": 3, "skill_id": 9, "proficiency_level": 3, "years_of_experience": 2 },
+    { "id": 13, "candidate_id": 4, "skill_id": 10, "proficiency_level": 5, "years_of_experience": 3 },
+    { "id": 14, "candidate_id": 4, "skill_id": 11, "proficiency_level": 4, "years_of_experience": 2 },
+    { "id": 15, "candidate_id": 4, "skill_id": 12, "proficiency_level": 4, "years_of_experience": 3 },
+    { "id": 16, "candidate_id": 4, "skill_id": 20, "proficiency_level": 5, "years_of_experience": 3 },
+    { "id": 17, "candidate_id": 5, "skill_id": 16, "proficiency_level": 5, "years_of_experience": 3 },
+    { "id": 18, "candidate_id": 5, "skill_id": 17, "proficiency_level": 4, "years_of_experience": 2 },
+    { "id": 19, "candidate_id": 5, "skill_id": 18, "proficiency_level": 5, "years_of_experience": 4 },
+    { "id": 20, "candidate_id": 6, "skill_id": 1, "proficiency_level": 3, "years_of_experience": 2 },
+    { "id": 21, "candidate_id": 6, "skill_id": 13, "proficiency_level": 4, "years_of_experience": 2 }
+  ],
+  "candidateExperiences": [
+    {
+      "id": 1,
+      "candidate_id": 1,
+      "company_name": "ABC Technology",
+      "position": "Senior Frontend Developer",
+      "start_date": "2022-01-01",
+      "end_date": null,
+      "description": "Phát triển ứng dụng web với Angular, TypeScript, và PrimeNG. Tối ưu hiệu suất và trải nghiệm người dùng."
+    },
+    {
+      "id": 2,
+      "candidate_id": 1,
+      "company_name": "XYZ Software",
+      "position": "Frontend Developer",
+      "start_date": "2020-06-01",
+      "end_date": "2021-12-31",
+      "description": "Xây dựng giao diện người dùng với React và Vue.js. Tham gia dự án e-commerce và fintech."
+    },
+    {
+      "id": 3,
+      "candidate_id": 2,
+      "company_name": "FinTech Innovations",
+      "position": "Full Stack Developer",
+      "start_date": "2021-03-01",
+      "end_date": null,
+      "description": "Phát triển full stack với Angular frontend và Node.js backend. Làm việc với microservices architecture."
+    },
+    {
+      "id": 4,
+      "candidate_id": 3,
+      "company_name": "Enterprise Solutions",
+      "position": "Java Developer",
+      "start_date": "2021-09-01",
+      "end_date": null,
+      "description": "Phát triển backend services với Java Spring Boot, PostgreSQL và Redis."
+    },
+    {
+      "id": 5,
+      "candidate_id": 4,
+      "company_name": "Cloud Services Inc",
+      "position": "DevOps Engineer",
+      "start_date": "2021-07-01",
+      "end_date": null,
+      "description": "Quản lý infrastructure trên AWS, triển khai CI/CD pipelines với Jenkins và GitLab CI."
+    },
+    {
+      "id": 6,
+      "candidate_id": 5,
+      "company_name": "Design Studio Pro",
+      "position": "UI/UX Designer",
+      "start_date": "2021-05-01",
+      "end_date": "2024-06-01",
+      "description": "Thiết kế giao diện người dùng cho mobile và web applications. Sử dụng Figma và Adobe XD."
+    }
+  ],
+  "hunters": [
+    {
+      "id": 1,
+      "name": "Mai Thị Hương",
+      "email": "mai.thi.huong@recruitment.com",
+      "phone": "+84 911 222 333",
+      "specialization": "IT & Software Development",
+      "created_at": "2024-01-10T08:00:00Z",
+      "updated_at": "2024-01-10T08:00:00Z"
+    },
+    {
+      "id": 2,
+      "name": "Đỗ Văn Kiên",
+      "email": "do.van.kien@recruitment.com",
+      "phone": "+84 912 333 444",
+      "specialization": "Technical Roles",
+      "created_at": "2024-01-15T09:00:00Z",
+      "updated_at": "2024-01-15T09:00:00Z"
+    },
+    {
+      "id": 3,
+      "name": "Bùi Thị Lan",
+      "email": "bui.thi.lan@recruitment.com",
+      "phone": "+84 913 444 555",
+      "specialization": "Design & Creative",
+      "created_at": "2024-02-01T10:00:00Z",
+      "updated_at": "2024-02-01T10:00:00Z"
+    }
+  ],
+  "candidateJobs": [
+    {
+      "id": 1,
+      "candidate_id": 1,
+      "job_id": 1,
+      "hunter_id": 1,
+      "applied_date": "2024-06-02T10:30:00Z",
+      "current_status": "Interviewing"
+    },
+    {
+      "id": 2,
+      "candidate_id": 2,
+      "job_id": 3,
+      "hunter_id": 1,
+      "applied_date": "2024-06-11T09:15:00Z",
+      "current_status": "Interviewing"
+    },
+    {
+      "id": 3,
+      "candidate_id": 3,
+      "job_id": 2,
+      "hunter_id": 2,
+      "applied_date": "2024-06-08T13:45:00Z",
+      "current_status": "Applied"
+    },
+    {
+      "id": 4,
+      "candidate_id": 4,
+      "job_id": 4,
+      "hunter_id": 2,
+      "applied_date": "2024-06-13T08:20:00Z",
+      "current_status": "Interviewing"
+    },
+    {
+      "id": 5,
+      "candidate_id": 5,
+      "job_id": 5,
+      "hunter_id": 3,
+      "applied_date": "2024-05-22T11:00:00Z",
+      "current_status": "Hired"
+    },
+    {
+      "id": 6,
+      "candidate_id": 6,
+      "job_id": 1,
+      "hunter_id": 1,
+      "applied_date": "2024-06-03T14:30:00Z",
+      "current_status": "Rejected"
+    }
+  ],
+  "matchingScores": [
+    {
+      "id": 1,
+      "candidate_id": 1,
+      "job_id": 1,
+      "overall_score": 92.5,
+      "skill_match_score": 95.0,
+      "experience_match_score": 90.0,
+      "education_match_score": 92.5,
+      "calculated_at": "2024-06-02T11:00:00Z"
+    },
+    {
+      "id": 2,
+      "candidate_id": 2,
+      "job_id": 3,
+      "overall_score": 88.0,
+      "skill_match_score": 90.0,
+      "experience_match_score": 85.0,
+      "education_match_score": 89.0,
+      "calculated_at": "2024-06-11T10:00:00Z"
+    },
+    {
+      "id": 3,
+      "candidate_id": 3,
+      "job_id": 2,
+      "overall_score": 75.5,
+      "skill_match_score": 80.0,
+      "experience_match_score": 70.0,
+      "education_match_score": 77.0,
+      "calculated_at": "2024-06-08T14:00:00Z"
+    },
+    {
+      "id": 4,
+      "candidate_id": 4,
+      "job_id": 4,
+      "overall_score": 90.0,
+      "skill_match_score": 92.0,
+      "experience_match_score": 88.0,
+      "education_match_score": 90.0,
+      "calculated_at": "2024-06-13T09:00:00Z"
+    },
+    {
+      "id": 5,
+      "candidate_id": 5,
+      "job_id": 5,
+      "overall_score": 94.0,
+      "skill_match_score": 95.0,
+      "experience_match_score": 92.0,
+      "education_match_score": 95.0,
+      "calculated_at": "2024-05-22T12:00:00Z"
+    },
+    {
+      "id": 6,
+      "candidate_id": 6,
+      "job_id": 1,
+      "overall_score": 65.0,
+      "skill_match_score": 68.0,
+      "experience_match_score": 60.0,
+      "education_match_score": 67.0,
+      "calculated_at": "2024-06-03T15:00:00Z"
+    }
+  ],
+  "recruitmentProcesses": [
+    {
+      "id": 1,
+      "candidate_job_id": 1,
+      "process_name": "Quy trình tuyển dụng Senior Frontend Developer",
+      "status": "In Progress",
+      "started_at": "2024-06-03T08:00:00Z",
+      "completed_at": null
+    },
+    {
+      "id": 2,
+      "candidate_job_id": 2,
+      "process_name": "Quy trình tuyển dụng Full Stack Developer",
+      "status": "In Progress",
+      "started_at": "2024-06-12T09:00:00Z",
+      "completed_at": null
+    },
+    {
+      "id": 3,
+      "candidate_job_id": 4,
+      "process_name": "Quy trình tuyển dụng DevOps Engineer",
+      "status": "In Progress",
+      "started_at": "2024-06-14T10:00:00Z",
+      "completed_at": null
+    },
+    {
+      "id": 4,
+      "candidate_job_id": 5,
+      "process_name": "Quy trình tuyển dụng UI/UX Designer",
+      "status": "Completed",
+      "started_at": "2024-05-23T08:00:00Z",
+      "completed_at": "2024-06-15T15:00:00Z"
+    }
+  ],
+  "interviewRounds": [
+    {
+      "id": 1,
+      "recruitment_process_id": 1,
+      "round_number": 1,
+      "round_name": "Phone Screening",
+      "interviewer_name": "Mai Thị Hương",
+      "scheduled_date": "2024-06-05T10:00:00Z",
+      "status": "Completed"
+    },
+    {
+      "id": 2,
+      "recruitment_process_id": 1,
+      "round_number": 2,
+      "round_name": "Technical Interview",
+      "interviewer_name": "Trần Văn Minh",
+      "scheduled_date": "2024-06-10T14:00:00Z",
+      "status": "Completed"
+    },
+    {
+      "id": 3,
+      "recruitment_process_id": 1,
+      "round_number": 3,
+      "round_name": "HR Interview",
+      "interviewer_name": "Nguyễn Thị Hoa",
+      "scheduled_date": "2024-06-17T09:00:00Z",
+      "status": "Scheduled"
+    },
+    {
+      "id": 4,
+      "recruitment_process_id": 2,
+      "round_number": 1,
+      "round_name": "Phone Screening",
+      "interviewer_name": "Mai Thị Hương",
+      "scheduled_date": "2024-06-14T11:00:00Z",
+      "status": "Completed"
+    },
+    {
+      "id": 5,
+      "recruitment_process_id": 2,
+      "round_number": 2,
+      "round_name": "Technical Interview",
+      "interviewer_name": "Lê Văn Tùng",
+      "scheduled_date": "2024-06-19T15:00:00Z",
+      "status": "Scheduled"
+    },
+    {
+      "id": 6,
+      "recruitment_process_id": 3,
+      "round_number": 1,
+      "round_name": "Phone Screening",
+      "interviewer_name": "Đỗ Văn Kiên",
+      "scheduled_date": "2024-06-16T10:00:00Z",
+      "status": "Completed"
+    },
+    {
+      "id": 7,
+      "recruitment_process_id": 3,
+      "round_number": 2,
+      "round_name": "Technical Interview",
+      "interviewer_name": "Phạm Văn Hùng",
+      "scheduled_date": "2024-06-21T14:00:00Z",
+      "status": "Scheduled"
+    },
+    {
+      "id": 8,
+      "recruitment_process_id": 4,
+      "round_number": 1,
+      "round_name": "Portfolio Review",
+      "interviewer_name": "Bùi Thị Lan",
+      "scheduled_date": "2024-05-25T10:00:00Z",
+      "status": "Completed"
+    },
+    {
+      "id": 9,
+      "recruitment_process_id": 4,
+      "round_number": 2,
+      "round_name": "Design Challenge",
+      "interviewer_name": "Võ Thị Mai",
+      "scheduled_date": "2024-06-01T14:00:00Z",
+      "status": "Completed"
+    },
+    {
+      "id": 10,
+      "recruitment_process_id": 4,
+      "round_number": 3,
+      "round_name": "Final Interview",
+      "interviewer_name": "Nguyễn Văn Đức",
+      "scheduled_date": "2024-06-10T09:00:00Z",
+      "status": "Completed"
+    }
+  ],
+  "candidateRounds": [
+    {
+      "id": 1,
+      "candidate_id": 1,
+      "interview_round_id": 1,
+      "attendance_status": "Attended",
+      "score": 90.0,
+      "feedback": "Ứng viên có kiến thức tốt về Angular và TypeScript. Giao tiếp rõ ràng.",
+      "outcome": "Pass",
+      "evaluated_at": "2024-06-05T11:00:00Z"
+    },
+    {
+      "id": 2,
+      "candidate_id": 1,
+      "interview_round_id": 2,
+      "attendance_status": "Attended",
+      "score": 92.0,
+      "feedback": "Kỹ năng coding xuất sắc. Giải quyết vấn đề hiệu quả. Hiểu rõ RxJS và state management.",
+      "outcome": "Pass",
+      "evaluated_at": "2024-06-10T16:00:00Z"
+    },
+    {
+      "id": 3,
+      "candidate_id": 1,
+      "interview_round_id": 3,
+      "attendance_status": "Scheduled",
+      "score": null,
+      "feedback": null,
+      "outcome": "Pending",
+      "evaluated_at": null
+    },
+    {
+      "id": 4,
+      "candidate_id": 2,
+      "interview_round_id": 4,
+      "attendance_status": "Attended",
+      "score": 88.0,
+      "feedback": "Kinh nghiệm full stack tốt. Có khả năng làm việc với cả frontend và backend.",
+      "outcome": "Pass",
+      "evaluated_at": "2024-06-14T12:00:00Z"
+    },
+    {
+      "id": 5,
+      "candidate_id": 2,
+      "interview_round_id": 5,
+      "attendance_status": "Scheduled",
+      "score": null,
+      "feedback": null,
+      "outcome": "Pending",
+      "evaluated_at": null
+    },
+    {
+      "id": 6,
+      "candidate_id": 4,
+      "interview_round_id": 6,
+      "attendance_status": "Attended",
+      "score": 91.0,
+      "feedback": "Kiến thức DevOps vững chắc. Có kinh nghiệm thực tế với Docker và Kubernetes.",
+      "outcome": "Pass",
+      "evaluated_at": "2024-06-16T11:00:00Z"
+    },
+    {
+      "id": 7,
+      "candidate_id": 4,
+      "interview_round_id": 7,
+      "attendance_status": "Scheduled",
+      "score": null,
+      "feedback": null,
+      "outcome": "Pending",
+      "evaluated_at": null
+    },
+    {
+      "id": 8,
+      "candidate_id": 5,
+      "interview_round_id": 8,
+      "attendance_status": "Attended",
+      "score": 95.0,
+      "feedback": "Portfolio rất ấn tượng. Thiết kế sáng tạo và user-friendly.",
+      "outcome": "Pass",
+      "evaluated_at": "2024-05-25T11:30:00Z"
+    },
+    {
+      "id": 9,
+      "candidate_id": 5,
+      "interview_round_id": 9,
+      "attendance_status": "Attended",
+      "score": 94.0,
+      "feedback": "Hoàn thành design challenge xuất sắc. Sử dụng thành thạo Figma.",
+      "outcome": "Pass",
+      "evaluated_at": "2024-06-01T16:00:00Z"
+    },
+    {
+      "id": 10,
+      "candidate_id": 5,
+      "interview_round_id": 10,
+      "attendance_status": "Attended",
+      "score": 93.0,
+      "feedback": "Phù hợp về văn hóa công ty. Có khả năng làm việc nhóm tốt.",
+      "outcome": "Pass",
+      "evaluated_at": "2024-06-10T10:30:00Z"
+    }
+  ]
+}
