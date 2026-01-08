@@ -1,0 +1,155 @@
+// Recruitment Management System (RMS) - Entity Relationship Diagram
+// Sử dụng dbdiagram.io syntax
+
+Table Customers {
+  id int [pk, increment]
+  name varchar(255)
+  industry varchar(100)
+  location varchar(255)
+  contact_email varchar(255)
+  contact_phone varchar(50)
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table Jobs {
+  id int [pk, increment]
+  customer_id int [ref: > Customers.id]
+  title varchar(255)
+  description text
+  location varchar(255)
+  salary_min decimal(12,2)
+  salary_max decimal(12,2)
+  education_level varchar(100)
+  experience_min int // years
+  experience_max int // years
+  status varchar(50) // 'Open', 'Closed'
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table Skills {
+  id int [pk, increment]
+  name varchar(100) [unique]
+  category varchar(100)
+  created_at timestamp
+}
+
+Table JobSkills {
+  id int [pk, increment]
+  job_id int [ref: > Jobs.id]
+  skill_id int [ref: > Skills.id]
+  importance_level int // 1-5, 5 là quan trọng nhất
+  created_at timestamp
+}
+
+Table Candidates {
+  id int [pk, increment]
+  full_name varchar(255)
+  email varchar(255) [unique]
+  phone varchar(50)
+  cv_link varchar(500)
+  location varchar(255)
+  current_position varchar(255)
+  status varchar(50) // 'Pending', 'Interviewing', 'Hired', 'Rejected'
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table CandidateSkills {
+  id int [pk, increment]
+  candidate_id int [ref: > Candidates.id]
+  skill_id int [ref: > Skills.id]
+  proficiency_level int // 1-5, 5 là thành thạo nhất
+  years_of_experience int
+  created_at timestamp
+}
+
+Table CandidateExperiences {
+  id int [pk, increment]
+  candidate_id int [ref: > Candidates.id]
+  company_name varchar(255)
+  position varchar(255)
+  start_date date
+  end_date date // null nếu đang làm việc
+  description text
+  created_at timestamp
+}
+
+Table Hunters {
+  id int [pk, increment]
+  name varchar(255)
+  email varchar(255) [unique]
+  phone varchar(50)
+  specialization varchar(255)
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table CandidateJobs {
+  id int [pk, increment]
+  candidate_id int [ref: > Candidates.id]
+  job_id int [ref: > Jobs.id]
+  hunter_id int [ref: > Hunters.id]
+  applied_date timestamp
+  current_status varchar(50) // 'Applied', 'Screening', 'Interviewing', 'Offered', 'Hired', 'Rejected'
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table MatchingScores {
+  id int [pk, increment]
+  candidate_id int [ref: > Candidates.id]
+  job_id int [ref: > Jobs.id]
+  overall_score decimal(5,2) // 0-100
+  skill_match_score decimal(5,2)
+  experience_match_score decimal(5,2)
+  education_match_score decimal(5,2)
+  calculated_at timestamp
+}
+
+Table RecruitmentProcesses {
+  id int [pk, increment]
+  candidate_job_id int [ref: > CandidateJobs.id]
+  process_name varchar(255)
+  status varchar(50) // 'In Progress', 'Completed', 'Cancelled'
+  started_at timestamp
+  completed_at timestamp
+  created_at timestamp
+}
+
+Table InterviewRounds {
+  id int [pk, increment]
+  recruitment_process_id int [ref: > RecruitmentProcesses.id]
+  round_number int
+  round_name varchar(255) // 'Phone Screening', 'Technical Interview', 'HR Interview', 'Final Interview'
+  interviewer_name varchar(255)
+  scheduled_date timestamp
+  status varchar(50) // 'Scheduled', 'Completed', 'Cancelled'
+  created_at timestamp
+}
+
+Table CandidateRounds {
+  id int [pk, increment]
+  candidate_id int [ref: > Candidates.id]
+  interview_round_id int [ref: > InterviewRounds.id]
+  attendance_status varchar(50) // 'Scheduled', 'Attended', 'No-show', 'Cancelled'
+  score decimal(5,2) // 0-100
+  feedback text
+  outcome varchar(50) // 'Pass', 'Fail', 'Pending'
+  evaluated_at timestamp
+  created_at timestamp
+}
+
+// Relationships Summary:
+// - Customers có nhiều Jobs (1:N)
+// - Jobs thuộc về 1 Customer (N:1)
+// - Jobs có nhiều Skills qua JobSkills (N:N)
+// - Candidates có nhiều Skills qua CandidateSkills (N:N)
+// - Candidates có nhiều Experiences (1:N)
+// - Candidates ứng tuyển nhiều Jobs qua CandidateJobs (N:N)
+// - Hunters quản lý nhiều CandidateJobs (1:N)
+// - MatchingScores tính toán độ phù hợp giữa Candidate và Job
+// - RecruitmentProcesses quản lý quy trình tuyển dụng cho CandidateJob
+// - InterviewRounds là các vòng phỏng vấn trong RecruitmentProcess
+// - CandidateRounds lưu kết quả của Candidate trong từng InterviewRound
