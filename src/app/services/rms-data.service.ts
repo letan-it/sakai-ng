@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, map } from 'rxjs';
-import { RMSData, Job, Candidate, JobWithDetails, CandidateWithDetails, MatchingScore, Hunter, RecruitmentProcess, InterviewRound, CandidateRound } from '@/models/rms.models';
+import { RMSData, Job, Candidate, JobWithDetails, CandidateWithDetails, MatchingScore, Hunter, RecruitmentProcess, InterviewRound, CandidateRound, CandidateSkill, CandidateExperience, Skill, JobSkill } from '@/models/rms.models';
 
 @Injectable({
     providedIn: 'root'
@@ -234,5 +234,332 @@ export class RMSDataService {
 
     getCandidateInterviewRounds(candidateId: number): Observable<CandidateRound[]> {
         return this.data$.pipe(map((data) => data?.candidateRounds.filter((cr) => cr.candidate_id === candidateId) || []));
+    }
+
+    // ========== CRUD Operations for Jobs ==========
+
+    createJob(job: Omit<Job, 'id' | 'created_at' | 'updated_at'>): void {
+        const data = this.dataSubject.value;
+
+        if (!data) return;
+
+        const newId = Math.max(...data.jobs.map((j) => j.id), 0) + 1;
+        const now = new Date().toISOString();
+        const newJob: Job = {
+            ...job,
+            id: newId,
+            created_at: now,
+            updated_at: now
+        };
+
+        data.jobs.push(newJob);
+        this.dataSubject.next({ ...data });
+    }
+
+    updateJob(id: number, updates: Partial<Job>): void {
+        const data = this.dataSubject.value;
+
+        if (!data) return;
+
+        const index = data.jobs.findIndex((j) => j.id === id);
+
+        if (index !== -1) {
+            data.jobs[index] = {
+                ...data.jobs[index],
+                ...updates,
+                updated_at: new Date().toISOString()
+            };
+            this.dataSubject.next({ ...data });
+        }
+    }
+
+    deleteJob(id: number): void {
+        const data = this.dataSubject.value;
+
+        if (!data) return;
+
+        data.jobs = data.jobs.filter((j) => j.id !== id);
+        data.jobSkills = data.jobSkills.filter((js) => js.job_id !== id);
+        data.matchingScores = data.matchingScores.filter((ms) => ms.job_id !== id);
+        data.candidateJobs = data.candidateJobs.filter((cj) => cj.job_id !== id);
+        this.dataSubject.next({ ...data });
+    }
+
+    // ========== CRUD Operations for Candidates ==========
+
+    createCandidate(candidate: Omit<Candidate, 'id' | 'created_at' | 'updated_at'>): void {
+        const data = this.dataSubject.value;
+
+        if (!data) return;
+
+        const newId = Math.max(...data.candidates.map((c) => c.id), 0) + 1;
+        const now = new Date().toISOString();
+        const newCandidate: Candidate = {
+            ...candidate,
+            id: newId,
+            created_at: now,
+            updated_at: now
+        };
+
+        data.candidates.push(newCandidate);
+        this.dataSubject.next({ ...data });
+    }
+
+    updateCandidate(id: number, updates: Partial<Candidate>): void {
+        const data = this.dataSubject.value;
+
+        if (!data) return;
+
+        const index = data.candidates.findIndex((c) => c.id === id);
+
+        if (index !== -1) {
+            data.candidates[index] = {
+                ...data.candidates[index],
+                ...updates,
+                updated_at: new Date().toISOString()
+            };
+            this.dataSubject.next({ ...data });
+        }
+    }
+
+    deleteCandidate(id: number): void {
+        const data = this.dataSubject.value;
+
+        if (!data) return;
+
+        data.candidates = data.candidates.filter((c) => c.id !== id);
+        data.candidateSkills = data.candidateSkills.filter((cs) => cs.candidate_id !== id);
+        data.candidateExperiences = data.candidateExperiences.filter((ce) => ce.candidate_id !== id);
+        data.matchingScores = data.matchingScores.filter((ms) => ms.candidate_id !== id);
+        data.candidateJobs = data.candidateJobs.filter((cj) => cj.candidate_id !== id);
+        data.candidateRounds = data.candidateRounds.filter((cr) => cr.candidate_id !== id);
+        this.dataSubject.next({ ...data });
+    }
+
+    // ========== CRUD Operations for Candidate Skills ==========
+
+    addCandidateSkill(candidateSkill: Omit<CandidateSkill, 'id' | 'created_at'>): void {
+        const data = this.dataSubject.value;
+
+        if (!data) return;
+
+        const newId = Math.max(...data.candidateSkills.map((cs) => cs.id), 0) + 1;
+        const newSkill: CandidateSkill & { created_at: string } = {
+            ...candidateSkill,
+            id: newId,
+            created_at: new Date().toISOString()
+        };
+
+        data.candidateSkills.push(newSkill as any);
+        this.dataSubject.next({ ...data });
+    }
+
+    removeCandidateSkill(id: number): void {
+        const data = this.dataSubject.value;
+
+        if (!data) return;
+
+        data.candidateSkills = data.candidateSkills.filter((cs) => cs.id !== id);
+        this.dataSubject.next({ ...data });
+    }
+
+    // ========== CRUD Operations for Candidate Experiences ==========
+
+    addCandidateExperience(experience: Omit<CandidateExperience, 'id' | 'created_at'>): void {
+        const data = this.dataSubject.value;
+
+        if (!data) return;
+
+        const newId = Math.max(...data.candidateExperiences.map((ce) => ce.id), 0) + 1;
+        const newExperience: CandidateExperience & { created_at: string } = {
+            ...experience,
+            id: newId,
+            created_at: new Date().toISOString()
+        };
+
+        data.candidateExperiences.push(newExperience as any);
+        this.dataSubject.next({ ...data });
+    }
+
+    updateCandidateExperience(id: number, updates: Partial<CandidateExperience>): void {
+        const data = this.dataSubject.value;
+
+        if (!data) return;
+
+        const index = data.candidateExperiences.findIndex((ce) => ce.id === id);
+
+        if (index !== -1) {
+            data.candidateExperiences[index] = {
+                ...data.candidateExperiences[index],
+                ...updates
+            };
+            this.dataSubject.next({ ...data });
+        }
+    }
+
+    deleteCandidateExperience(id: number): void {
+        const data = this.dataSubject.value;
+
+        if (!data) return;
+
+        data.candidateExperiences = data.candidateExperiences.filter((ce) => ce.id !== id);
+        this.dataSubject.next({ ...data });
+    }
+
+    // ========== CRUD Operations for Hunters ==========
+
+    createHunter(hunter: Omit<Hunter, 'id' | 'created_at' | 'updated_at'>): void {
+        const data = this.dataSubject.value;
+
+        if (!data) return;
+
+        const newId = Math.max(...data.hunters.map((h) => h.id), 0) + 1;
+        const now = new Date().toISOString();
+        const newHunter: Hunter = {
+            ...hunter,
+            id: newId,
+            created_at: now,
+            updated_at: now
+        };
+
+        data.hunters.push(newHunter);
+        this.dataSubject.next({ ...data });
+    }
+
+    updateHunter(id: number, updates: Partial<Hunter>): void {
+        const data = this.dataSubject.value;
+
+        if (!data) return;
+
+        const index = data.hunters.findIndex((h) => h.id === id);
+
+        if (index !== -1) {
+            data.hunters[index] = {
+                ...data.hunters[index],
+                ...updates,
+                updated_at: new Date().toISOString()
+            };
+            this.dataSubject.next({ ...data });
+        }
+    }
+
+    deleteHunter(id: number): void {
+        const data = this.dataSubject.value;
+
+        if (!data) return;
+
+        data.hunters = data.hunters.filter((h) => h.id !== id);
+        this.dataSubject.next({ ...data });
+    }
+
+    // ========== CRUD Operations for Interview Rounds ==========
+
+    createInterviewRound(round: Omit<InterviewRound, 'id' | 'created_at'>): void {
+        const data = this.dataSubject.value;
+
+        if (!data) return;
+
+        const newId = Math.max(...data.interviewRounds.map((ir) => ir.id), 0) + 1;
+        const newRound: InterviewRound & { created_at: string } = {
+            ...round,
+            id: newId,
+            created_at: new Date().toISOString()
+        };
+
+        data.interviewRounds.push(newRound as any);
+        this.dataSubject.next({ ...data });
+    }
+
+    updateInterviewRound(id: number, updates: Partial<InterviewRound>): void {
+        const data = this.dataSubject.value;
+
+        if (!data) return;
+
+        const index = data.interviewRounds.findIndex((ir) => ir.id === id);
+
+        if (index !== -1) {
+            data.interviewRounds[index] = {
+                ...data.interviewRounds[index],
+                ...updates
+            };
+            this.dataSubject.next({ ...data });
+        }
+    }
+
+    deleteInterviewRound(id: number): void {
+        const data = this.dataSubject.value;
+
+        if (!data) return;
+
+        data.interviewRounds = data.interviewRounds.filter((ir) => ir.id !== id);
+        data.candidateRounds = data.candidateRounds.filter((cr) => cr.interview_round_id !== id);
+        this.dataSubject.next({ ...data });
+    }
+
+    // ========== Update Candidate Round Result ==========
+
+    updateCandidateRound(candidateId: number, roundId: number, updates: Partial<CandidateRound>): void {
+        const data = this.dataSubject.value;
+
+        if (!data) return;
+
+        const index = data.candidateRounds.findIndex((cr) => cr.candidate_id === candidateId && cr.interview_round_id === roundId);
+
+        if (index !== -1) {
+            data.candidateRounds[index] = {
+                ...data.candidateRounds[index],
+                ...updates,
+                evaluated_at: new Date().toISOString()
+            };
+        } else {
+            const newId = Math.max(...data.candidateRounds.map((cr) => cr.id), 0) + 1;
+            const newRound: CandidateRound & { created_at: string } = {
+                id: newId,
+                candidate_id: candidateId,
+                interview_round_id: roundId,
+                attendance_status: 'Scheduled',
+                score: null,
+                feedback: null,
+                outcome: 'Pending',
+                evaluated_at: null,
+                created_at: new Date().toISOString(),
+                ...updates
+            };
+
+            data.candidateRounds.push(newRound as any);
+        }
+
+        this.dataSubject.next({ ...data });
+    }
+
+    // ========== Helper Methods ==========
+
+    getSkills(): Observable<Skill[]> {
+        return this.data$.pipe(map((data) => data?.skills || []));
+    }
+
+    addJobSkill(jobSkill: Omit<JobSkill, 'id' | 'created_at'>): void {
+        const data = this.dataSubject.value;
+
+        if (!data) return;
+
+        const newId = Math.max(...data.jobSkills.map((js) => js.id), 0) + 1;
+        const newJobSkill: JobSkill & { created_at: string } = {
+            ...jobSkill,
+            id: newId,
+            created_at: new Date().toISOString()
+        };
+
+        data.jobSkills.push(newJobSkill as any);
+        this.dataSubject.next({ ...data });
+    }
+
+    removeJobSkill(id: number): void {
+        const data = this.dataSubject.value;
+
+        if (!data) return;
+
+        data.jobSkills = data.jobSkills.filter((js) => js.id !== id);
+        this.dataSubject.next({ ...data });
     }
 }
