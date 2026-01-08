@@ -111,7 +111,7 @@ import { Candidate } from '@/models/rms.models';
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium mb-2">Địa điểm <span style="color:red">*<span></label>
+                        <label class="block text-sm font-medium mb-2">Địa điểm <span style="color:red">*</span></label>
                         <input pInputText [(ngModel)]="candidateForm.location" class="w-full" placeholder="VD: Ho Chi Minh City" />
                     </div>
 
