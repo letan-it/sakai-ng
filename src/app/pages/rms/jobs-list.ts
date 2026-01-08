@@ -80,7 +80,7 @@ import { Job, Customer } from '@/models/rms.models';
         </div>
 
         <!-- Dialog Thêm/Sửa Công việc -->
-        <p-dialog [(visible)]="displayDialog" [header]="isEditMode ? 'Sửa Công việc' : 'Thêm Công việc mới'" [modal]="true" [style]="{ width: '600px' }">
+        <p-dialog maskStyleClass="backdrop-blur-sm" styleClass="!border-0 !bg-transparent" [(visible)]="displayDialog" [header]="isEditMode ? 'Sửa Công việc' : 'Thêm Công việc mới'" [modal]="true" [style]="{ width: '600px' }">
             <div class="space-y-4">
                 <div>
                     <label class="block text-sm font-medium mb-2">Tiêu đề <span style="color:red">*</span></label>
