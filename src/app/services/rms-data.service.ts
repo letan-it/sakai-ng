@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, map } from 'rxjs';
-import { RMSData, Job, Candidate, JobWithDetails, CandidateWithDetails, MatchingScore, Hunter, RecruitmentProcess, InterviewRound, CandidateRound, CandidateSkill, CandidateExperience, Skill, JobSkill } from '@/models/rms.models';
+import { RMSData, Job, Candidate, JobWithDetails, CandidateWithDetails, MatchingScore, Hunter, RecruitmentProcess, InterviewRound, CandidateRound, CandidateSkill, CandidateExperience, Skill, JobSkill, CandidateJob } from '@/models/rms.models';
 
 @Injectable({
     providedIn: 'root'
@@ -561,5 +561,70 @@ export class RMSDataService {
 
         data.jobSkills = data.jobSkills.filter((js) => js.id !== id);
         this.dataSubject.next({ ...data });
+    }
+
+    // ========== CRUD Operations for CandidateJobs ==========
+
+    getCandidateJobs(): Observable<CandidateJob[]> {
+        return this.data$.pipe(map((data) => data?.candidateJobs || []));
+    }
+
+    getCandidateJobsByJobId(jobId: number): Observable<CandidateJob[]> {
+        return this.data$.pipe(map((data) => data?.candidateJobs.filter((cj) => cj.job_id === jobId) || []));
+    }
+
+    getCandidateJobsByCandidateId(candidateId: number): Observable<CandidateJob[]> {
+        return this.data$.pipe(map((data) => data?.candidateJobs.filter((cj) => cj.candidate_id === candidateId) || []));
+    }
+
+    addCandidateToJob(candidateJob: Omit<CandidateJob, 'id'>): void {
+        const data = this.dataSubject.value;
+
+        if (!data) return;
+
+        const newId = Math.max(...data.candidateJobs.map((cj) => cj.id), 0) + 1;
+        const newCandidateJob: CandidateJob = {
+            ...candidateJob,
+            id: newId
+        };
+
+        data.candidateJobs.push(newCandidateJob);
+        this.dataSubject.next({ ...data });
+    }
+
+    updateCandidateJob(id: number, updates: Partial<CandidateJob>): void {
+        const data = this.dataSubject.value;
+
+        if (!data) return;
+
+        const index = data.candidateJobs.findIndex((cj) => cj.id === id);
+
+        if (index !== -1) {
+            data.candidateJobs[index] = {
+                ...data.candidateJobs[index],
+                ...updates
+            };
+            this.dataSubject.next({ ...data });
+        }
+    }
+
+    removeCandidateJob(id: number): void {
+        const data = this.dataSubject.value;
+
+        if (!data) return;
+
+        data.candidateJobs = data.candidateJobs.filter((cj) => cj.id !== id);
+        this.dataSubject.next({ ...data });
+    }
+
+    // Kiểm tra xem candidate đã được thêm vào job chưa
+    isCandidateInJob(candidateId: number, jobId: number): Observable<boolean> {
+        return this.data$.pipe(
+            map((data) => {
+                if (!data) return false;
+
+                return data.candidateJobs.some((cj) => cj.candidate_id === candidateId && cj.job_id === jobId);
+            })
+        );
     }
 }

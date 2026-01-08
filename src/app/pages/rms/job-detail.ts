@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { CardModule } from 'primeng/card';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
@@ -8,14 +9,21 @@ import { ChipModule } from 'primeng/chip';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
+import { DialogModule } from 'primeng/dialog';
+import { SelectModule } from 'primeng/select';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 import { RMSDataService } from '@/services/rms-data.service';
-import { JobWithDetails } from '@/models/rms.models';
+import { JobWithDetails, Candidate, Hunter } from '@/models/rms.models';
 
 @Component({
     selector: 'app-job-detail',
-    imports: [CommonModule, RouterModule, CardModule, TableModule, TagModule, ChipModule, ProgressBarModule, ButtonModule, DividerModule],
+    imports: [CommonModule, RouterModule, FormsModule, CardModule, TableModule, TagModule, ChipModule, ProgressBarModule, ButtonModule, DividerModule, DialogModule, SelectModule, ToastModule],
+    providers: [MessageService],
     template: `
         <div class="grid grid-cols-12 gap-6" *ngIf="job">
+            <p-toast />
+
             <div class="col-span-12">
                 <div class="flex justify-between items-start">
                     <div>
@@ -109,6 +117,13 @@ import { JobWithDetails } from '@/models/rms.models';
             <!-- Ứng viên đã ứng tuyển -->
             <div class="col-span-12">
                 <p-card header="Ứng viên đã ứng tuyển">
+                    <ng-template #header>
+                        <div class="flex justify-between items-center p-4">
+                            <h3 class="text-xl font-semibold">Ứng viên đã ứng tuyển</h3>
+                            <p-button label="Thêm Ứng viên" icon="pi pi-user-plus" (onClick)="openAddCandidateDialog()" severity="success" />
+                        </div>
+                    </ng-template>
+
                     <p-table [value]="job.candidates || []" [tableStyle]="{ 'min-width': '50rem' }">
                         <ng-template #header>
                             <tr>
@@ -153,22 +168,161 @@ import { JobWithDetails } from '@/models/rms.models';
                 </p-card>
             </div>
         </div>
+
+        <!-- Dialog Thêm Ứng viên -->
+        <p-dialog [(visible)]="displayAddCandidateDialog" header="Thêm Ứng viên vào Công việc" [modal]="true" [style]="{ width: '700px' }">
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium mb-2">Chọn Ứng viên *</label>
+                    <p-select 
+                        [(ngModel)]="selectedCandidateId" 
+                        [options]="availableCandidates" 
+                        optionLabel="full_name" 
+                        optionValue="id" 
+                        placeholder="Chọn ứng viên từ danh sách" 
+                        class="w-full"
+                        [filter]="true"
+                        filterBy="full_name,email,current_position"
+                    >
+                        <ng-template #item let-candidate>
+                            <div class="flex items-center gap-3 py-2">
+                                <div>
+                                    <div class="font-semibold">{{ candidate.full_name }}</div>
+                                    <div class="text-sm text-surface-600 dark:text-surface-400">{{ candidate.current_position }} - {{ candidate.location }}</div>
+                                    <div class="text-xs text-surface-500 dark:text-surface-500">{{ candidate.email }}</div>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </p-select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium mb-2">Headhunter phụ trách *</label>
+                    <p-select 
+                        [(ngModel)]="selectedHunterId" 
+                        [options]="hunters" 
+                        optionLabel="name" 
+                        optionValue="id" 
+                        placeholder="Chọn headhunter" 
+                        class="w-full"
+                    >
+                        <ng-template #item let-hunter>
+                            <div>
+                                <div class="font-semibold">{{ hunter.name }}</div>
+                                <div class="text-sm text-surface-600 dark:text-surface-400">{{ hunter.specialization }}</div>
+                            </div>
+                        </ng-template>
+                    </p-select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium mb-2">Trạng thái ban đầu *</label>
+                    <p-select 
+                        [(ngModel)]="selectedStatus" 
+                        [options]="statusOptions" 
+                        optionLabel="label" 
+                        optionValue="value" 
+                        placeholder="Chọn trạng thái" 
+                        class="w-full"
+                    />
+                </div>
+            </div>
+
+            <ng-template #footer>
+                <div class="flex justify-end gap-2 mt-4">
+                    <p-button label="Hủy" icon="pi pi-times" [text]="true" (onClick)="closeAddCandidateDialog()" />
+                    <p-button label="Thêm Ứng viên" icon="pi pi-check" (onClick)="addCandidateToJob()" />
+                </div>
+            </ng-template>
+        </p-dialog>
     `
 })
 export class JobDetail implements OnInit {
     job: JobWithDetails | null = null;
+    displayAddCandidateDialog = false;
+    availableCandidates: Candidate[] = [];
+    hunters: Hunter[] = [];
+    selectedCandidateId: number | null = null;
+    selectedHunterId: number | null = null;
+    selectedStatus: 'Applied' | 'Screening' | 'Interviewing' | 'Offered' | 'Hired' | 'Rejected' = 'Applied';
+
+    statusOptions = [
+        { label: 'Đã ứng tuyển', value: 'Applied' },
+        { label: 'Sàng lọc', value: 'Screening' },
+        { label: 'Phỏng vấn', value: 'Interviewing' },
+        { label: 'Đã đề nghị', value: 'Offered' },
+        { label: 'Đã tuyển', value: 'Hired' },
+        { label: 'Từ chối', value: 'Rejected' }
+    ];
 
     constructor(
         private route: ActivatedRoute,
-        private rmsService: RMSDataService
+        private rmsService: RMSDataService,
+        private messageService: MessageService
     ) {}
 
     ngOnInit(): void {
         const id = Number(this.route.snapshot.paramMap.get('id'));
 
+        this.loadJob(id);
+        this.loadHunters();
+    }
+
+    loadJob(id: number): void {
         this.rmsService.getJobById(id).subscribe((job) => {
             this.job = job || null;
+            this.loadAvailableCandidates(id);
         });
+    }
+
+    loadAvailableCandidates(jobId: number): void {
+        this.rmsService.getCandidates().subscribe((allCandidates) => {
+            this.rmsService.getCandidateJobsByJobId(jobId).subscribe((candidateJobs) => {
+                const assignedCandidateIds = candidateJobs.map((cj) => cj.candidate_id);
+
+                this.availableCandidates = allCandidates.filter((c) => !assignedCandidateIds.includes(c.id));
+            });
+        });
+    }
+
+    loadHunters(): void {
+        this.rmsService.getHunters().subscribe((hunters) => {
+            this.hunters = hunters;
+        });
+    }
+
+    openAddCandidateDialog(): void {
+        this.selectedCandidateId = null;
+        this.selectedHunterId = null;
+        this.selectedStatus = 'Applied';
+        this.displayAddCandidateDialog = true;
+    }
+
+    closeAddCandidateDialog(): void {
+        this.displayAddCandidateDialog = false;
+    }
+
+    addCandidateToJob(): void {
+        if (!this.selectedCandidateId || !this.selectedHunterId || !this.job) {
+            this.messageService.add({ severity: 'error', summary: 'Lỗi', detail: 'Vui lòng chọn đầy đủ thông tin' });
+
+            return;
+        }
+
+        const newCandidateJob = {
+            candidate_id: this.selectedCandidateId,
+            job_id: this.job.id,
+            hunter_id: this.selectedHunterId,
+            applied_date: new Date().toISOString(),
+            current_status: this.selectedStatus
+        };
+
+        this.rmsService.addCandidateToJob(newCandidateJob);
+        this.messageService.add({ severity: 'success', summary: 'Thành công', detail: 'Đã thêm ứng viên vào công việc' });
+
+        this.closeAddCandidateDialog();
+
+        this.loadJob(this.job.id);
     }
 
     formatSalary(amount: number): string {
