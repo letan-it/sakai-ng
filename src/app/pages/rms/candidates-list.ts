@@ -85,7 +85,7 @@ import { Candidate } from '@/models/rms.models';
         </div>
 
         <!-- Dialog Thêm/Sửa Ứng viên -->
-        <p-dialog [(visible)]="displayDialog" [header]="isEditMode ? 'Sửa Ứng viên' : 'Thêm Ứng viên mới'" [modal]="true" [style]="{ width: '600px' }">
+        <p-dialog maskStyleClass="backdrop-blur-sm" styleClass="!border-0" [(visible)]="displayDialog" [header]="isEditMode ? 'Sửa Ứng viên' : 'Thêm Ứng viên mới'" [modal]="true" [style]="{ width: '600px' }">
             <div class="space-y-4">
                 <div>
                     <label class="block text-sm font-medium mb-2">Họ và tên <span style="color:red">*</span></label>
