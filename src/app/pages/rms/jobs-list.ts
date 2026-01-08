@@ -83,19 +83,19 @@ import { Job, Customer } from '@/models/rms.models';
         <p-dialog [(visible)]="displayDialog" [header]="isEditMode ? 'Sửa Công việc' : 'Thêm Công việc mới'" [modal]="true" [style]="{ width: '600px' }">
             <div class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium mb-2">Tiêu đề *</label>
+                    <label class="block text-sm font-medium mb-2">Tiêu đề <span style="color:red">*</span></label>
                     <input pInputText [(ngModel)]="jobForm.title" class="w-full" placeholder="VD: Senior Frontend Developer" />
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium mb-2">Mô tả *</label>
+                    <label class="block text-sm font-medium mb-2">Mô tả <span style="color:red">*</span></label>
                     <textarea pInputTextarea [(ngModel)]="jobForm.description" rows="4" class="w-full" placeholder="Mô tả chi tiết về công việc..."></textarea>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium mb-2">Khách hàng *</label>
-                        <p-select
+                        <label class="block text-sm font-medium mb-2">Khách hàng <span style="color:red">*</span></label>
+                        <p-select appendTo="body"
                             [(ngModel)]="jobForm.customer_id"
                             [options]="customers"
                             optionLabel="name"
@@ -106,41 +106,41 @@ import { Job, Customer } from '@/models/rms.models';
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium mb-2">Trạng thái *</label>
-                        <p-select [(ngModel)]="jobForm.status" [options]="statusOptions" optionLabel="label" optionValue="value" placeholder="Chọn trạng thái" class="w-full" />
+                        <label class="block text-sm font-medium mb-2">Trạng thái <span style="color:red">*</span></label>
+                        <p-select appendTo="body" [(ngModel)]="jobForm.status" [options]="statusOptions" optionLabel="label" optionValue="value" placeholder="Chọn trạng thái" class="w-full" />
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium mb-2">Địa điểm *</label>
+                    <label class="block text-sm font-medium mb-2">Địa điểm <span style="color:red">*</span></label>
                     <input pInputText [(ngModel)]="jobForm.location" class="w-full" placeholder="VD: Ho Chi Minh City" />
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium mb-2">Lương tối thiểu (VND) *</label>
+                        <label class="block text-sm font-medium mb-2">Lương tối thiểu (VND) <span style="color:red">*</span></label>
                         <p-inputNumber [(ngModel)]="jobForm.salary_min" mode="decimal" [min]="0" class="w-full" />
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium mb-2">Lương tối đa (VND) *</label>
+                        <label class="block text-sm font-medium mb-2">Lương tối đa (VND) <span style="color:red">*</span></label>
                         <p-inputNumber [(ngModel)]="jobForm.salary_max" mode="decimal" [min]="0" class="w-full" />
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium mb-2">Trình độ học vấn *</label>
+                    <label class="block text-sm font-medium mb-2">Trình độ học vấn <span style="color:red">*</span></label>
                     <input pInputText [(ngModel)]="jobForm.education_level" class="w-full" placeholder="VD: Bachelor's Degree" />
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium mb-2">Kinh nghiệm tối thiểu (năm) *</label>
+                        <label class="block text-sm font-medium mb-2">Kinh nghiệm tối thiểu (năm) <span style="color:red">*</span></label>
                         <p-inputNumber [(ngModel)]="jobForm.experience_min" [min]="0" [max]="50" class="w-full" />
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium mb-2">Kinh nghiệm tối đa (năm) *</label>
+                        <label class="block text-sm font-medium mb-2">Kinh nghiệm tối đa (năm) <span style="color:red">*</span></label>
                         <p-inputNumber [(ngModel)]="jobForm.experience_max" [min]="0" [max]="50" class="w-full" />
                     </div>
                 </div>
