@@ -106,7 +106,7 @@ import { CandidateWithDetails, CandidateExperience } from '@/models/rms.models';
 
                 <!-- Công việc đã ứng tuyển -->
                 <p-card header="Công việc đã Ứng tuyển" styleClass="mt-6">
-                    <p-table [value]="candidate.jobs" [tableStyle]="{ 'min-width': '40rem' }">
+                    <p-table [value]="candidate.jobs || []" [tableStyle]="{ 'min-width': '40rem' }">
                         <ng-template #header>
                             <tr>
                                 <th>Tiêu đề công việc</th>

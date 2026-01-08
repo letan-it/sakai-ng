@@ -109,7 +109,7 @@ import { JobWithDetails } from '@/models/rms.models';
             <!-- Ứng viên đã ứng tuyển -->
             <div class="col-span-12">
                 <p-card header="Ứng viên đã ứng tuyển">
-                    <p-table [value]="job.candidates" [tableStyle]="{ 'min-width': '50rem' }">
+                    <p-table [value]="job.candidates || []" [tableStyle]="{ 'min-width': '50rem' }">
                         <ng-template #header>
                             <tr>
                                 <th>Tên ứng viên</th>
