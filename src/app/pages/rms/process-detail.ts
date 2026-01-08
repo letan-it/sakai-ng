@@ -226,7 +226,7 @@ import { RMSDataService } from '@/services/rms-data.service';
         </div>
 
         <!-- Dialog Thêm/Sửa Vòng phỏng vấn -->
-        <p-dialog [(visible)]="displayRoundDialog" [header]="isEditRound ? 'Sửa Vòng phỏng vấn' : 'Thêm Vòng phỏng vấn'" [modal]="true" [style]="{ width: '600px' }">
+        <p-dialog maskStyleClass="backdrop-blur-sm" styleClass="!border-0" [(visible)]="displayRoundDialog" [header]="isEditRound ? 'Sửa Vòng phỏng vấn' : 'Thêm Vòng phỏng vấn'" [modal]="true" [style]="{ width: '600px' }">
             <div class="space-y-4">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
@@ -265,7 +265,7 @@ import { RMSDataService } from '@/services/rms-data.service';
         </p-dialog>
 
         <!-- Dialog Cập nhật Kết quả -->
-        <p-dialog [(visible)]="displayResultDialog" header="Cập nhật Kết quả Phỏng vấn" [modal]="true" [style]="{ width: '600px' }">
+        <p-dialog maskStyleClass="backdrop-blur-sm" styleClass="!border-0" [(visible)]="displayResultDialog" header="Cập nhật Kết quả Phỏng vấn" [modal]="true" [style]="{ width: '600px' }">
             <div class="space-y-4">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
