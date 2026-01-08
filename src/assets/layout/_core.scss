@@ -19,6 +19,11 @@ a {
     text-decoration: none;
 }
 
+.p-overflow-hidden {
+    overflow: hidden !important;
+    padding-right: 0 !important;
+}
+
 .layout-wrapper {
     min-height: 100vh;
 }
