@@ -582,7 +582,7 @@ export class RMSDataService {
 
         if (!data) return;
 
-        const newId = Math.max(...data.candidateJobs.map((cj) => cj.id), 0) + 1;
+        const newId = data.candidateJobs.length > 0 ? Math.max(...data.candidateJobs.map((cj) => cj.id)) + 1 : 1;
         const newCandidateJob: CandidateJob = {
             ...candidateJob,
             id: newId

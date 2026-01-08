@@ -13,6 +13,7 @@ import { DialogModule } from 'primeng/dialog';
 import { SelectModule } from 'primeng/select';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { combineLatest } from 'rxjs';
 import { RMSDataService } from '@/services/rms-data.service';
 import { JobWithDetails, Candidate, Hunter } from '@/models/rms.models';
 
@@ -276,12 +277,10 @@ export class JobDetail implements OnInit {
     }
 
     loadAvailableCandidates(jobId: number): void {
-        this.rmsService.getCandidates().subscribe((allCandidates) => {
-            this.rmsService.getCandidateJobsByJobId(jobId).subscribe((candidateJobs) => {
-                const assignedCandidateIds = candidateJobs.map((cj) => cj.candidate_id);
+        combineLatest([this.rmsService.getCandidates(), this.rmsService.getCandidateJobsByJobId(jobId)]).subscribe(([allCandidates, candidateJobs]) => {
+            const assignedCandidateIds = candidateJobs.map((cj) => cj.candidate_id);
 
-                this.availableCandidates = allCandidates.filter((c) => !assignedCandidateIds.includes(c.id));
-            });
+            this.availableCandidates = allCandidates.filter((c) => !assignedCandidateIds.includes(c.id));
         });
     }
 
