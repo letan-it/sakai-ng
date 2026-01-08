@@ -88,24 +88,24 @@ import { Candidate } from '@/models/rms.models';
         <p-dialog [(visible)]="displayDialog" [header]="isEditMode ? 'Sửa Ứng viên' : 'Thêm Ứng viên mới'" [modal]="true" [style]="{ width: '600px' }">
             <div class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium mb-2">Họ và tên *</label>
+                    <label class="block text-sm font-medium mb-2">Họ và tên <span style="color:red">*</span></label>
                     <input pInputText [(ngModel)]="candidateForm.full_name" class="w-full" placeholder="VD: Nguyễn Văn A" />
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium mb-2">Email *</label>
+                        <label class="block text-sm font-medium mb-2">Email <span style="color:red">*</span></label>
                         <input pInputText [(ngModel)]="candidateForm.email" type="email" class="w-full" placeholder="email@example.com" />
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium mb-2">Số điện thoại *</label>
+                        <label class="block text-sm font-medium mb-2">Số điện thoại <span style="color:red">*</span></label>
                         <input pInputText [(ngModel)]="candidateForm.phone" class="w-full" placeholder="+84 xxx xxx xxx" />
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium mb-2">Vị trí hiện tại *</label>
+                    <label class="block text-sm font-medium mb-2">Vị trí hiện tại <span style="color:red">*</span></label>
                     <input pInputText [(ngModel)]="candidateForm.current_position" class="w-full" placeholder="VD: Senior Developer" />
                 </div>
 
@@ -116,7 +116,7 @@ import { Candidate } from '@/models/rms.models';
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium mb-2">Trạng thái *</label>
+                        <label class="block text-sm font-medium mb-2">Trạng thái <span style="color:red">*</span></label>
                         <p-select appendTo="body" [(ngModel)]="candidateForm.status" [options]="statusOptions" optionLabel="label" optionValue="value" placeholder="Chọn trạng thái" class="w-full" />
                     </div>
                 </div>
