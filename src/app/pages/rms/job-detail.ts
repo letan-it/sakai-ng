@@ -171,7 +171,7 @@ import { JobWithDetails, Candidate, Hunter } from '@/models/rms.models';
         </div>
 
         <!-- Dialog Thêm Ứng viên -->
-        <p-dialog [(visible)]="displayAddCandidateDialog" header="Thêm Ứng viên vào Công việc" [modal]="true" [style]="{ width: '700px' }">
+        <p-dialog maskStyleClass="backdrop-blur-sm" styleClass="!border-0" [(visible)]="displayAddCandidateDialog" header="Thêm Ứng viên vào Công việc" [modal]="true" [style]="{ width: '700px' }">
             <div class="space-y-4">
                 <div>
                     <label class="block text-sm font-medium mb-2">Chọn Ứng viên <span style="color:red">*</span></label>
