@@ -174,8 +174,9 @@ import { JobWithDetails, Candidate, Hunter } from '@/models/rms.models';
         <p-dialog [(visible)]="displayAddCandidateDialog" header="Thêm Ứng viên vào Công việc" [modal]="true" [style]="{ width: '700px' }">
             <div class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium mb-2">Chọn Ứng viên *</label>
+                    <label class="block text-sm font-medium mb-2">Chọn Ứng viên <span style="color:red">*</span></label>
                     <p-select 
+                    appendTo="body"
                         [(ngModel)]="selectedCandidateId" 
                         [options]="availableCandidates" 
                         optionLabel="full_name" 
@@ -198,8 +199,9 @@ import { JobWithDetails, Candidate, Hunter } from '@/models/rms.models';
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium mb-2">Headhunter phụ trách *</label>
+                    <label class="block text-sm font-medium mb-2">Headhunter phụ trách <span style="color:red">*</span></label>
                     <p-select 
+                    appendTo="body"
                         [(ngModel)]="selectedHunterId" 
                         [options]="hunters" 
                         optionLabel="name" 
@@ -217,8 +219,9 @@ import { JobWithDetails, Candidate, Hunter } from '@/models/rms.models';
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium mb-2">Trạng thái ban đầu *</label>
+                    <label class="block text-sm font-medium mb-2">Trạng thái ban đầu <span style="color:red">*</span></label>
                     <p-select 
+                    appendTo="body"
                         [(ngModel)]="selectedStatus" 
                         [options]="statusOptions" 
                         optionLabel="label" 
