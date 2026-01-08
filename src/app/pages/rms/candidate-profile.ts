@@ -193,36 +193,36 @@ import { CandidateWithDetails, CandidateExperience, Skill } from '@/models/rms.m
         <p-dialog [(visible)]="displayEditDialog" header="Sửa Thông tin Ứng viên" [modal]="true" [style]="{ width: '600px' }">
             <div class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium mb-2">Họ và tên *</label>
+                    <label class="block text-sm font-medium mb-2">Họ và tên <span style="color:red">*</span></label>
                     <input pInputText [(ngModel)]="candidateForm.full_name" class="w-full" />
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium mb-2">Email *</label>
+                        <label class="block text-sm font-medium mb-2">Email <span style="color:red">*</span></label>
                         <input pInputText [(ngModel)]="candidateForm.email" type="email" class="w-full" />
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium mb-2">Số điện thoại *</label>
+                        <label class="block text-sm font-medium mb-2">Số điện thoại <span style="color:red">*</span></label>
                         <input pInputText [(ngModel)]="candidateForm.phone" class="w-full" />
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium mb-2">Vị trí hiện tại *</label>
+                    <label class="block text-sm font-medium mb-2">Vị trí hiện tại <span style="color:red">*</span></label>
                     <input pInputText [(ngModel)]="candidateForm.current_position" class="w-full" />
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium mb-2">Địa điểm *</label>
+                        <label class="block text-sm font-medium mb-2">Địa điểm <span style="color:red">*</span></label>
                         <input pInputText [(ngModel)]="candidateForm.location" class="w-full" />
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium mb-2">Trạng thái *</label>
-                        <p-select [(ngModel)]="candidateForm.status" [options]="statusOptions" optionLabel="label" optionValue="value" class="w-full" />
+                        <label class="block text-sm font-medium mb-2">Trạng thái <span style="color:red">*</span></label>
+                        <p-select appendTo="body" [(ngModel)]="candidateForm.status" [options]="statusOptions" optionLabel="label" optionValue="value" class="w-full" />
                     </div>
                 </div>
 
@@ -244,17 +244,17 @@ import { CandidateWithDetails, CandidateExperience, Skill } from '@/models/rms.m
         <p-dialog [(visible)]="displaySkillDialog" header="Thêm Kỹ năng" [modal]="true" [style]="{ width: '500px' }">
             <div class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium mb-2">Kỹ năng *</label>
-                    <p-select [(ngModel)]="skillForm.skill_id" [options]="availableSkills" optionLabel="name" optionValue="id" placeholder="Chọn kỹ năng" class="w-full" />
+                    <label class="block text-sm font-medium mb-2">Kỹ năng <span style="color:red">*</span></label>
+                    <p-select appendTo="body" [(ngModel)]="skillForm.skill_id" [options]="availableSkills" optionLabel="name" optionValue="id" placeholder="Chọn kỹ năng" class="w-full" />
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium mb-2">Trình độ (1-5) *</label>
+                    <label class="block text-sm font-medium mb-2">Trình độ (1-5) <span style="color:red">*</span></label>
                     <p-inputNumber [(ngModel)]="skillForm.proficiency_level" [min]="1" [max]="5" class="w-full" />
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium mb-2">Số năm kinh nghiệm *</label>
+                    <label class="block text-sm font-medium mb-2">Số năm kinh nghiệm <span style="color:red">*</span></label>
                     <p-inputNumber [(ngModel)]="skillForm.years_of_experience" [min]="0" [max]="50" class="w-full" />
                 </div>
             </div>
@@ -271,24 +271,24 @@ import { CandidateWithDetails, CandidateExperience, Skill } from '@/models/rms.m
         <p-dialog [(visible)]="displayExperienceDialog" [header]="isEditExperience ? 'Sửa Kinh nghiệm' : 'Thêm Kinh nghiệm'" [modal]="true" [style]="{ width: '600px' }">
             <div class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium mb-2">Vị trí *</label>
+                    <label class="block text-sm font-medium mb-2">Vị trí <span style="color:red">*</span></label>
                     <input pInputText [(ngModel)]="experienceForm.position" class="w-full" placeholder="VD: Senior Developer" />
                 </div>
 
                 <div>
-                    <label class="block text-sm font-medium mb-2">Công ty *</label>
+                    <label class="block text-sm font-medium mb-2">Công ty <span style="color:red">*</span></label>
                     <input pInputText [(ngModel)]="experienceForm.company_name" class="w-full" placeholder="VD: Tech Company" />
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium mb-2">Ngày bắt đầu *</label>
-                        <p-datePicker [(ngModel)]="experienceForm.start_date" dateFormat="yy-mm-dd" [showIcon]="true" class="w-full" />
+                        <label class="block text-sm font-medium mb-2">Ngày bắt đầu <span style="color:red">*</span></label>
+                        <p-datePicker appendTo="body" [(ngModel)]="experienceForm.start_date" dateFormat="yy-mm-dd" [showIcon]="true" class="w-full" />
                     </div>
 
                     <div>
                         <label class="block text-sm font-medium mb-2">Ngày kết thúc</label>
-                        <p-datePicker [(ngModel)]="experienceForm.end_date" dateFormat="yy-mm-dd" [showIcon]="true" class="w-full" placeholder="Để trống nếu đang làm" />
+                        <p-datePicker appendTo="body" [(ngModel)]="experienceForm.end_date" dateFormat="yy-mm-dd" [showIcon]="true" class="w-full" placeholder="Để trống nếu đang làm" />
                     </div>
                 </div>
 
