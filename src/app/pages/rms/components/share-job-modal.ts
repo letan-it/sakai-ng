@@ -258,7 +258,13 @@ Tuyển dụng nhân tài - Xây dựng tương lai
 
             // Create download link
             const link = document.createElement('a');
-            const fileName = `tuyen-dung-${this.job.title.toLowerCase().replace(/\s+/g, '-')}-${Date.now()}.png`;
+            // Sanitize filename by removing special characters and limiting length
+            const sanitizedTitle = this.job.title
+                .toLowerCase()
+                .replace(/[^a-z0-9\s-]/g, '')
+                .replace(/\s+/g, '-')
+                .substring(0, 50);
+            const fileName = `tuyen-dung-${sanitizedTitle}-${Date.now()}.png`;
 
             link.download = fileName;
             link.href = dataUrl;
