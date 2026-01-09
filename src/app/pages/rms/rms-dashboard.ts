@@ -112,34 +112,10 @@ import { Candidate, MatchingScore } from '@/models/rms.models';
             <div class="col-span-12">
                 <p-card header="Truy cập nhanh">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <button
-                            pButton
-                            label="Danh sách Công việc"
-                            icon="pi pi-briefcase"
-                            [routerLink]="['/rms/jobs']"
-                            class="w-full p-button-outlined"
-                        ></button>
-                        <button
-                            pButton
-                            label="Danh sách Ứng viên"
-                            icon="pi pi-users"
-                            [routerLink]="['/rms/candidates']"
-                            class="w-full p-button-outlined"
-                        ></button>
-                        <button
-                            pButton
-                            label="Quy trình Tuyển dụng"
-                            icon="pi pi-sitemap"
-                            [routerLink]="['/rms/processes']"
-                            class="w-full p-button-outlined"
-                        ></button>
-                        <button
-                            pButton
-                            label="Quản lý Hunters"
-                            icon="pi pi-user-plus"
-                            [routerLink]="['/rms/hunters']"
-                            class="w-full p-button-outlined"
-                        ></button>
+                        <button pButton label="Danh sách Công việc" icon="pi pi-briefcase" [routerLink]="['/rms/jobs']" class="w-full p-button-outlined"></button>
+                        <button pButton label="Danh sách Ứng viên" icon="pi pi-users" [routerLink]="['/rms/candidates']" class="w-full p-button-outlined"></button>
+                        <button pButton label="Quy trình Tuyển dụng" icon="pi pi-sitemap" [routerLink]="['/rms/processes']" class="w-full p-button-outlined"></button>
+                        <button pButton label="Quản lý Hunters" icon="pi pi-user-plus" [routerLink]="['/rms/hunters']" class="w-full p-button-outlined"></button>
                     </div>
                 </p-card>
             </div>

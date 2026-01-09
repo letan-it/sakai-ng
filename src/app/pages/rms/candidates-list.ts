@@ -226,13 +226,7 @@ export class CandidatesList implements OnInit {
     }
 
     validateForm(): boolean {
-        return (
-            this.candidateForm.full_name &&
-            this.candidateForm.email &&
-            this.candidateForm.phone &&
-            this.candidateForm.location &&
-            this.candidateForm.current_position
-        );
+        return this.candidateForm.full_name && this.candidateForm.email && this.candidateForm.phone && this.candidateForm.location && this.candidateForm.current_position;
     }
 
     confirmDelete(candidate: Candidate): void {

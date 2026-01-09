@@ -21,7 +21,25 @@ import { RMSDataService } from '@/services/rms-data.service';
 
 @Component({
     selector: 'app-process-detail',
-    imports: [CommonModule, RouterModule, FormsModule, CardModule, TagModule, ButtonModule, DividerModule, TimelineModule, StepperModule, DialogModule, InputTextModule, TextareaModule, InputNumberModule, SelectModule, DatePickerModule, ConfirmDialogModule, ToastModule],
+    imports: [
+        CommonModule,
+        RouterModule,
+        FormsModule,
+        CardModule,
+        TagModule,
+        ButtonModule,
+        DividerModule,
+        TimelineModule,
+        StepperModule,
+        DialogModule,
+        InputTextModule,
+        TextareaModule,
+        InputNumberModule,
+        SelectModule,
+        DatePickerModule,
+        ConfirmDialogModule,
+        ToastModule
+    ],
     providers: [ConfirmationService, MessageService],
     template: `
         <div class="grid grid-cols-12 gap-6" *ngIf="process">
@@ -76,24 +94,12 @@ import { RMSDataService } from '@/services/rms-data.service';
 
                     <div class="space-y-3">
                         <h4 class="font-semibold text-surface-700 dark:text-surface-300">Thông tin Ứng viên</h4>
-                        <p-button
-                            label="Xem hồ sơ ứng viên"
-                            icon="pi pi-user"
-                            [outlined]="true"
-                            styleClass="w-full"
-                            [routerLink]="['/rms/candidates', process.candidate?.id]"
-                        />
+                        <p-button label="Xem hồ sơ ứng viên" icon="pi pi-user" [outlined]="true" styleClass="w-full" [routerLink]="['/rms/candidates', process.candidate?.id]" />
                     </div>
 
                     <div class="space-y-3 mt-4">
                         <h4 class="font-semibold text-surface-700 dark:text-surface-300">Thông tin Công việc</h4>
-                        <p-button
-                            label="Xem chi tiết công việc"
-                            icon="pi pi-briefcase"
-                            [outlined]="true"
-                            styleClass="w-full"
-                            [routerLink]="['/rms/jobs', process.job?.id]"
-                        />
+                        <p-button label="Xem chi tiết công việc" icon="pi pi-briefcase" [outlined]="true" styleClass="w-full" [routerLink]="['/rms/jobs', process.job?.id]" />
                     </div>
                 </p-card>
             </div>
@@ -112,9 +118,7 @@ import { RMSDataService } from '@/services/rms-data.service';
                             <div class="mb-4">
                                 <div class="flex justify-between items-start mb-3">
                                     <div>
-                                        <h3 class="text-xl font-bold text-surface-900 dark:text-surface-0">
-                                            Vòng {{ round.round_number }}: {{ round.round_name }}
-                                        </h3>
+                                        <h3 class="text-xl font-bold text-surface-900 dark:text-surface-0">Vòng {{ round.round_number }}: {{ round.round_name }}</h3>
                                         <p class="text-surface-600 dark:text-surface-400 mt-1">
                                             <i class="pi pi-user mr-2"></i>
                                             Người phỏng vấn: {{ round.interviewer_name }}
@@ -138,11 +142,7 @@ import { RMSDataService } from '@/services/rms-data.service';
                                             <div class="grid grid-cols-2 gap-4 mb-3">
                                                 <div>
                                                     <span class="text-sm text-surface-600 dark:text-surface-400">Trạng thái tham dự:</span>
-                                                    <p-tag
-                                                        [value]="round.result.attendance_status"
-                                                        [severity]="getAttendanceSeverity(round.result.attendance_status)"
-                                                        styleClass="ml-2"
-                                                    />
+                                                    <p-tag [value]="round.result.attendance_status" [severity]="getAttendanceSeverity(round.result.attendance_status)" styleClass="ml-2" />
                                                 </div>
                                                 <div>
                                                     <span class="text-sm text-surface-600 dark:text-surface-400">Kết quả:</span>
@@ -174,18 +174,9 @@ import { RMSDataService } from '@/services/rms-data.service';
                                                 <p class="text-surface-600 dark:text-surface-400 mt-1 italic">{{ round.result.feedback }}</p>
                                             </div>
 
-                                            <div *ngIf="round.result.evaluated_at" class="text-xs text-surface-500 dark:text-surface-400 mt-2">
-                                                Đánh giá lúc: {{ formatDateTime(round.result.evaluated_at) }}
-                                            </div>
+                                            <div *ngIf="round.result.evaluated_at" class="text-xs text-surface-500 dark:text-surface-400 mt-2">Đánh giá lúc: {{ formatDateTime(round.result.evaluated_at) }}</div>
                                         </div>
-                                        <p-button
-                                            icon="pi pi-pencil"
-                                            [text]="true"
-                                            size="small"
-                                            severity="warn"
-                                            (onClick)="openUpdateResultDialog(round)"
-                                            pTooltip="Cập nhật kết quả"
-                                        />
+                                        <p-button icon="pi pi-pencil" [text]="true" size="small" severity="warn" (onClick)="openUpdateResultDialog(round)" pTooltip="Cập nhật kết quả" />
                                     </div>
                                 </div>
 

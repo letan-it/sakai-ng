@@ -5,20 +5,13 @@ import { ButtonModule } from 'primeng/button';
 import { ChipModule } from 'primeng/chip';
 import { DividerModule } from 'primeng/divider';
 import { JobWithDetails } from '@/models/rms.models';
+import { getJobShareUrl } from '@/utils/share-url';
 
 @Component({
     selector: 'app-share-job-modal',
     imports: [CommonModule, DialogModule, ButtonModule, ChipModule, DividerModule],
     template: `
-        <p-dialog
-            [(visible)]="visible"
-            (visibleChange)="visibleChange.emit($event)"
-            header="Xem trước nội dung chia sẻ"
-            [modal]="true"
-            [style]="{ width: '600px' }"
-            maskStyleClass="backdrop-blur-sm"
-            styleClass="!border-0"
-        >
+        <p-dialog [(visible)]="visible" (visibleChange)="visibleChange.emit($event)" header="Xem trước nội dung chia sẻ" [modal]="true" [style]="{ width: '600px' }" maskStyleClass="backdrop-blur-sm" styleClass="!border-0">
             <div class="space-y-4" *ngIf="job">
                 <!-- Hình ảnh thumbnail -->
                 <div class="w-full h-48 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
@@ -57,16 +50,8 @@ import { JobWithDetails } from '@/models/rms.models';
                 <div *ngIf="job.skills && job.skills.length > 0">
                     <h4 class="text-sm font-semibold text-surface-700 dark:text-surface-300 mb-2">Kỹ năng yêu cầu</h4>
                     <div class="flex flex-wrap gap-2">
-                        <p-chip
-                            *ngFor="let skill of getTopSkills()"
-                            [label]="skill.name"
-                            styleClass="text-xs"
-                        />
-                        <p-chip
-                            *ngIf="job.skills.length > 5"
-                            [label]="'+' + (job.skills.length - 5) + ' kỹ năng khác'"
-                            styleClass="text-xs bg-surface-200 dark:bg-surface-700"
-                        />
+                        <p-chip *ngFor="let skill of getTopSkills()" [label]="skill.name" styleClass="text-xs" />
+                        <p-chip *ngIf="job.skills.length > 5" [label]="'+' + (job.skills.length - 5) + ' kỹ năng khác'" styleClass="text-xs bg-surface-200 dark:bg-surface-700" />
                     </div>
                 </div>
 
@@ -98,18 +83,8 @@ import { JobWithDetails } from '@/models/rms.models';
 
             <ng-template #footer>
                 <div class="flex justify-end gap-2 mt-4">
-                    <p-button
-                        label="Hủy"
-                        icon="pi pi-times"
-                        [text]="true"
-                        (onClick)="onCancel()"
-                    />
-                    <p-button
-                        label="Chia sẻ lên Facebook"
-                        icon="pi pi-facebook"
-                        (onClick)="onConfirmShare()"
-                        severity="info"
-                    />
+                    <p-button label="Hủy" icon="pi pi-times" [text]="true" (onClick)="onCancel()" />
+                    <p-button label="Chia sẻ lên Facebook" icon="pi pi-facebook" (onClick)="onConfirmShare()" severity="info" />
                 </div>
             </ng-template>
         </p-dialog>
@@ -121,15 +96,16 @@ export class ShareJobModal {
     @Output() visibleChange = new EventEmitter<boolean>();
     @Output() confirmShare = new EventEmitter<void>();
 
+    private readonly MAX_SUMMARY_LENGTH = 200;
+
     getJobSummary(): string {
         if (!this.job) return '';
 
-        const maxLength = 200;
         const description = this.job.description;
 
-        if (description.length <= maxLength) return description;
+        if (description.length <= this.MAX_SUMMARY_LENGTH) return description;
 
-        return description.substring(0, maxLength) + '...';
+        return description.substring(0, this.MAX_SUMMARY_LENGTH) + '...';
     }
 
     formatSalary(amount: number): string {
@@ -147,7 +123,7 @@ export class ShareJobModal {
 
         return this.job.customer.name
             .split(' ')
-            .map(word => word[0])
+            .map((word) => word[0])
             .join('')
             .toUpperCase()
             .substring(0, 2);
@@ -156,9 +132,7 @@ export class ShareJobModal {
     getShareLink(): string {
         if (!this.job) return '';
 
-        const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-
-        return `${baseUrl}/rms/jobs/${this.job.id}`;
+        return getJobShareUrl(this.job.id);
     }
 
     onCancel(): void {

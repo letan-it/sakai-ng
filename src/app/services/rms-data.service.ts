@@ -45,18 +45,22 @@ export class RMSDataService {
                 const customer = data.customers.find((c) => c.id === job.customer_id);
 
                 const jobSkills = data.jobSkills.filter((js) => js.job_id === id);
-                const skills = jobSkills.map((js) => {
-                    const skill = data.skills.find((s) => s.id === js.skill_id);
+                const skills = jobSkills
+                    .map((js) => {
+                        const skill = data.skills.find((s) => s.id === js.skill_id);
 
-                    return skill ? { ...skill, importance_level: js.importance_level } : null;
-                }).filter((s) => s !== null);
+                        return skill ? { ...skill, importance_level: js.importance_level } : null;
+                    })
+                    .filter((s) => s !== null);
 
                 const matchingScores = data.matchingScores.filter((ms) => ms.job_id === id);
-                const candidates = matchingScores.map((ms) => {
-                    const candidate = data.candidates.find((c) => c.id === ms.candidate_id);
+                const candidates = matchingScores
+                    .map((ms) => {
+                        const candidate = data.candidates.find((c) => c.id === ms.candidate_id);
 
-                    return candidate ? { ...candidate, matching_score: ms } : null;
-                }).filter((c) => c !== null);
+                        return candidate ? { ...candidate, matching_score: ms } : null;
+                    })
+                    .filter((c) => c !== null);
 
                 return {
                     ...job,
@@ -82,20 +86,24 @@ export class RMSDataService {
                 if (!candidate) return undefined;
 
                 const candidateSkills = data.candidateSkills.filter((cs) => cs.candidate_id === id);
-                const skills = candidateSkills.map((cs) => {
-                    const skill = data.skills.find((s) => s.id === cs.skill_id);
+                const skills = candidateSkills
+                    .map((cs) => {
+                        const skill = data.skills.find((s) => s.id === cs.skill_id);
 
-                    return skill ? { ...skill, ...cs } : null;
-                }).filter((s) => s !== null);
+                        return skill ? { ...skill, ...cs } : null;
+                    })
+                    .filter((s) => s !== null);
 
                 const experiences = data.candidateExperiences.filter((ce) => ce.candidate_id === id);
 
                 const matchingScores = data.matchingScores.filter((ms) => ms.candidate_id === id);
-                const jobs = matchingScores.map((ms) => {
-                    const job = data.jobs.find((j) => j.id === ms.job_id);
+                const jobs = matchingScores
+                    .map((ms) => {
+                        const job = data.jobs.find((j) => j.id === ms.job_id);
 
-                    return job ? { ...job, matching_score: ms } : null;
-                }).filter((j) => j !== null);
+                        return job ? { ...job, matching_score: ms } : null;
+                    })
+                    .filter((j) => j !== null);
 
                 return {
                     ...candidate,
@@ -116,11 +124,13 @@ export class RMSDataService {
             map((data) => {
                 if (!data) return [];
 
-                const candidatesWithScores = data.matchingScores.map((ms) => {
-                    const candidate = data.candidates.find((c) => c.id === ms.candidate_id);
+                const candidatesWithScores = data.matchingScores
+                    .map((ms) => {
+                        const candidate = data.candidates.find((c) => c.id === ms.candidate_id);
 
-                    return candidate ? { ...candidate, overall_score: ms.overall_score } : null;
-                }).filter((c) => c !== null);
+                        return candidate ? { ...candidate, overall_score: ms.overall_score } : null;
+                    })
+                    .filter((c) => c !== null);
 
                 return candidatesWithScores.sort((a: any, b: any) => b.overall_score - a.overall_score).slice(0, limit) as any;
             })
@@ -182,12 +192,14 @@ export class RMSDataService {
 
                 const candidateJobs = data.candidateJobs.filter((cj) => cj.hunter_id === hunterId);
 
-                const candidates = candidateJobs.map((cj) => {
-                    const candidate = data.candidates.find((c) => c.id === cj.candidate_id);
-                    const job = data.jobs.find((j) => j.id === cj.job_id);
+                const candidates = candidateJobs
+                    .map((cj) => {
+                        const candidate = data.candidates.find((c) => c.id === cj.candidate_id);
+                        const job = data.jobs.find((j) => j.id === cj.job_id);
 
-                    return candidate && job ? { ...candidate, job, status: cj.current_status } : null;
-                }).filter((c) => c !== null);
+                        return candidate && job ? { ...candidate, job, status: cj.current_status } : null;
+                    })
+                    .filter((c) => c !== null);
 
                 return { ...hunter, candidates };
             })

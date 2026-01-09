@@ -85,11 +85,7 @@ import { ShareJobModal } from './components/share-job-modal';
                         <div>
                             <h3 class="font-semibold text-surface-700 dark:text-surface-300 mb-3">Kỹ năng yêu cầu</h3>
                             <div class="flex flex-wrap gap-2">
-                                <p-chip
-                                    *ngFor="let skill of job.skills"
-                                    [label]="skill.name + ' (' + getImportanceText(skill.importance_level) + ')'"
-                                    [styleClass]="getImportanceClass(skill.importance_level)"
-                                />
+                                <p-chip *ngFor="let skill of job.skills" [label]="skill.name + ' (' + getImportanceText(skill.importance_level) + ')'" [styleClass]="getImportanceClass(skill.importance_level)" />
                             </div>
                         </div>
                     </div>
@@ -180,13 +176,13 @@ import { ShareJobModal } from './components/share-job-modal';
             <div class="space-y-4">
                 <div>
                     <label class="block text-sm font-medium mb-2">Chọn Ứng viên <span style="color:red">*</span></label>
-                    <p-select 
-                    appendTo="body"
-                        [(ngModel)]="selectedCandidateId" 
-                        [options]="availableCandidates" 
-                        optionLabel="full_name" 
-                        optionValue="id" 
-                        placeholder="Chọn ứng viên từ danh sách" 
+                    <p-select
+                        appendTo="body"
+                        [(ngModel)]="selectedCandidateId"
+                        [options]="availableCandidates"
+                        optionLabel="full_name"
+                        optionValue="id"
+                        placeholder="Chọn ứng viên từ danh sách"
                         class="w-full"
                         [filter]="true"
                         filterBy="full_name,email,current_position"
@@ -205,15 +201,7 @@ import { ShareJobModal } from './components/share-job-modal';
 
                 <div>
                     <label class="block text-sm font-medium mb-2">Headhunter phụ trách <span style="color:red">*</span></label>
-                    <p-select 
-                    appendTo="body"
-                        [(ngModel)]="selectedHunterId" 
-                        [options]="hunters" 
-                        optionLabel="name" 
-                        optionValue="id" 
-                        placeholder="Chọn headhunter" 
-                        class="w-full"
-                    >
+                    <p-select appendTo="body" [(ngModel)]="selectedHunterId" [options]="hunters" optionLabel="name" optionValue="id" placeholder="Chọn headhunter" class="w-full">
                         <ng-template #item let-hunter>
                             <div>
                                 <div class="font-semibold">{{ hunter.name }}</div>
@@ -225,15 +213,7 @@ import { ShareJobModal } from './components/share-job-modal';
 
                 <div>
                     <label class="block text-sm font-medium mb-2">Trạng thái ban đầu <span style="color:red">*</span></label>
-                    <p-select 
-                    appendTo="body"
-                        [(ngModel)]="selectedStatus" 
-                        [options]="statusOptions" 
-                        optionLabel="label" 
-                        optionValue="value" 
-                        placeholder="Chọn trạng thái" 
-                        class="w-full"
-                    />
+                    <p-select appendTo="body" [(ngModel)]="selectedStatus" [options]="statusOptions" optionLabel="label" optionValue="value" placeholder="Chọn trạng thái" class="w-full" />
                 </div>
             </div>
 
@@ -246,11 +226,7 @@ import { ShareJobModal } from './components/share-job-modal';
         </p-dialog>
 
         <!-- Modal chia sẻ công việc -->
-        <app-share-job-modal
-            [(visible)]="displayShareDialog"
-            [job]="job"
-            (confirmShare)="handleShareConfirm()"
-        />
+        <app-share-job-modal [(visible)]="displayShareDialog" [job]="job" (confirmShare)="handleShareConfirm()" />
     `
 })
 export class JobDetail implements OnInit {
