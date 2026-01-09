@@ -19,6 +19,49 @@ export class AppMenu {
     model: MenuItem[] = [];
 
     ngOnInit() {
+         this.model = [ 
+            {
+                label: 'Home',
+                items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] }]
+            },
+            {
+                label: 'Recruitment Management',
+                icon: 'pi pi-fw pi-sitemap',
+                items: [
+                    {
+                        label: 'Dashboard',
+                        icon: 'pi pi-fw pi-chart-bar',
+                        routerLink: ['/rms']
+                    },
+                    {
+                        label: 'Jobs',
+                        icon: 'pi pi-fw pi-briefcase',
+                        routerLink: ['/rms/jobs']
+                    },
+                    {
+                        label: 'Candidates',
+                        icon: 'pi pi-fw pi-users',
+                        routerLink: ['/rms/candidates']
+                    },
+                    {
+                        label: 'Processes',
+                        icon: 'pi pi-fw pi-list',
+                        routerLink: ['/rms/processes']
+                    },
+                    {
+                        label: 'Hunters',
+                        icon: 'pi pi-fw pi-user-plus',
+                        routerLink: ['/rms/hunters']
+                    },
+                    {
+                        label: 'Recruitment ATS',
+                        icon: 'pi pi-fw pi-users',
+                        routerLink: ['/pages/recruitment']
+                    },
+                ]
+            }
+        ]
+        return
         this.model = [
             {
                 label: 'Home',
@@ -72,7 +115,12 @@ export class AppMenu {
                         label: 'Hunters',
                         icon: 'pi pi-fw pi-user-plus',
                         routerLink: ['/rms/hunters']
-                    }
+                    },
+                    {
+                        label: 'Recruitment ATS',
+                        icon: 'pi pi-fw pi-users',
+                        routerLink: ['/pages/recruitment']
+                    },
                 ]
             },
             {

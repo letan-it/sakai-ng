@@ -19,6 +19,30 @@ Sakai-NG is an Angular 20 application built with:
 
 ## Code Style and Formatting
 
+## Modal / Dialog Conventions (PrimeNG)
+
+- All **Dialogs/Modals** were created using PrimeNG (`p-dialog`, `DialogService`, DynamicDialog)
+  **BẮT BUỘC** The following default style is required:
+
+### Required Styles
+
+- `maskStyleClass="backdrop-blur-sm"`
+- `styleClass="!border-0"`
+
+### Template Example
+
+```html
+<p-dialog
+    [(visible)]="visible"
+    header="Tiêu đề"
+    modal="true"
+    maskStyleClass="backdrop-blur-sm"
+    styleClass="!border-0"
+>
+    <!-- Nội dung modal -->
+</p-dialog>
+
+
 ### TypeScript
 
 - **Indentation**: 4 spaces (no tabs)
