@@ -1,24 +1,20 @@
 import { Component } from '@angular/core';
-import { NotificationsWidget } from './components/notificationswidget';
-import { StatsWidget } from './components/statswidget';
-import { RecentSalesWidget } from './components/recentsaleswidget';
-import { BestSellingWidget } from './components/bestsellingwidget';
-import { RevenueStreamWidget } from './components/revenuestreamwidget';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
+import { SearchWidget } from './components/searchwidget';
+import { WorkStatsWidget } from './components/workstatswidget';
+import { AppIconsWidget } from './components/appiconswidget';
 
 @Component({
     selector: 'app-dashboard',
-    imports: [StatsWidget, RecentSalesWidget, BestSellingWidget, RevenueStreamWidget, NotificationsWidget],
+    imports: [ToastModule, SearchWidget, WorkStatsWidget, AppIconsWidget],
+    providers: [MessageService],
     template: `
-        <div class="grid grid-cols-12 gap-8">
-            <app-stats-widget class="contents" />
-            <div class="col-span-12 xl:col-span-6">
-                <app-recent-sales-widget />
-                <app-best-selling-widget />
-            </div>
-            <div class="col-span-12 xl:col-span-6">
-                <app-revenue-stream-widget />
-                <app-notifications-widget />
-            </div>
+        <p-toast position="bottom-right" />
+        <div class="grid grid-cols-12 gap-6">
+            <app-search-widget class="contents" />
+            <app-work-stats-widget class="contents" />
+            <app-icons-widget class="contents" />
         </div>
     `
 })
