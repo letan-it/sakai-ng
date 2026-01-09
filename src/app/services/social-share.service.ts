@@ -157,12 +157,33 @@ export class SocialShareService {
 
             window.addEventListener('blur', blurHandler);
 
-            // Thử mở URL
-            window.location.href = targetUrl;
+            // Thử mở URL bằng iframe thay vì window.location.href để tránh reload
+            const iframe = document.createElement('iframe');
+
+            iframe.style.display = 'none';
+            iframe.src = targetUrl;
+
+            try {
+                document.body.appendChild(iframe);
+            } catch (e) {
+                this.logWarning('Không thể thêm iframe', e);
+                window.removeEventListener('blur', blurHandler);
+                resolve(false);
+
+                return;
+            }
 
             // Đợi và kiểm tra xem app có mở không
             const checkTimer = setTimeout(() => {
                 window.removeEventListener('blur', blurHandler);
+
+                try {
+                    if (iframe.parentNode) {
+                        document.body.removeChild(iframe);
+                    }
+                } catch (e) {
+                    // Ignore cleanup errors
+                }
 
                 const elapsed = Date.now() - startTime;
 
@@ -180,6 +201,14 @@ export class SocialShareService {
             setTimeout(() => {
                 clearTimeout(checkTimer);
                 window.removeEventListener('blur', blurHandler);
+
+                try {
+                    if (iframe.parentNode) {
+                        document.body.removeChild(iframe);
+                    }
+                } catch (e) {
+                    // Ignore cleanup errors
+                }
             }, timeout + 1000);
         });
     }

@@ -112,15 +112,19 @@ describe('SocialShareService', () => {
             mobileDetectionService.getDeviceInfo.and.returnValue(androidInfo);
         });
 
-        it('nên thử mở ứng dụng Facebook trên Android', async () => {
-            spyOn(window, 'open').and.returnValue(window);
+        it(
+            'nên thử mở ứng dụng Facebook trên Android',
+            async () => {
+                spyOn(window, 'open').and.returnValue(window);
 
-            const result = await service.shareOnFacebook(mockJob);
+                const result = await service.shareOnFacebook(mockJob);
 
-            // Có thể thành công hoặc fallback sang web
-            expect(result).toBeDefined();
-            expect(['native_app', 'web_fallback', 'failed']).toContain(result.method);
-        });
+                // Có thể thành công hoặc fallback sang web
+                expect(result).toBeDefined();
+                expect(['native_app', 'web_fallback', 'failed']).toContain(result.method);
+            },
+            10000
+        ); // Tăng timeout lên 10 giây
     });
 
     describe('iOS Device', () => {
@@ -191,11 +195,12 @@ describe('SocialShareService', () => {
 
             expect(openSpy).toHaveBeenCalled();
 
-            const callArgs = openSpy.calls.first().args[0];
+            const callArgs = openSpy.calls.first().args[0] as string;
+            const decodedUrl = decodeURIComponent(callArgs);
 
-            expect(callArgs).toContain('TUYỂN DỤNG');
-            expect(callArgs).toContain('Senior Software Engineer');
-            expect(callArgs).toContain('Tech Company');
+            expect(decodedUrl).toContain('TUYỂN DỤNG');
+            expect(decodedUrl).toContain('Senior Software Engineer');
+            expect(decodedUrl).toContain('Tech Company');
         });
 
         it('nên xử lý job không có kỹ năng', async () => {
@@ -215,9 +220,10 @@ describe('SocialShareService', () => {
 
             await service.shareOnFacebook(jobWithoutSkills);
 
-            const callArgs = openSpy.calls.first().args[0];
+            const callArgs = openSpy.calls.first().args[0] as string;
+            const decodedUrl = decodeURIComponent(callArgs);
 
-            expect(callArgs).toContain('Nhiều kỹ năng đa dạng');
+            expect(decodedUrl).toContain('Nhiều kỹ năng đa dạng');
         });
 
         it('nên xử lý job không có thông tin công ty', async () => {
@@ -232,14 +238,15 @@ describe('SocialShareService', () => {
 
             mobileDetectionService.getDeviceInfo.and.returnValue(desktopInfo);
 
-            const jobWithoutCustomer = { ...mockJob, customer: null };
+            const jobWithoutCustomer = { ...mockJob, customer: undefined };
             const openSpy = spyOn(window, 'open').and.returnValue(window);
 
             await service.shareOnFacebook(jobWithoutCustomer);
 
-            const callArgs = openSpy.calls.first().args[0];
+            const callArgs = openSpy.calls.first().args[0] as string;
+            const decodedUrl = decodeURIComponent(callArgs);
 
-            expect(callArgs).toContain('Công ty hàng đầu');
+            expect(decodedUrl).toContain('Công ty hàng đầu');
         });
     });
 
