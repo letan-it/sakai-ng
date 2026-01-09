@@ -228,6 +228,14 @@ Tuyển dụng nhân tài - Xây dựng tương lai
         }
     }
 
+    private sanitizeFilename(title: string): string {
+        return title
+            .toLowerCase()
+            .replace(/[^a-z0-9\s-]/g, '')
+            .replace(/\s+/g, '-')
+            .substring(0, 50);
+    }
+
     async generateAndDownloadImage(): Promise<void> {
         if (!this.previewContent?.nativeElement || !this.job) {
             this.messageService.add({
@@ -258,12 +266,7 @@ Tuyển dụng nhân tài - Xây dựng tương lai
 
             // Create download link
             const link = document.createElement('a');
-            // Sanitize filename by removing special characters and limiting length
-            const sanitizedTitle = this.job.title
-                .toLowerCase()
-                .replace(/[^a-z0-9\s-]/g, '')
-                .replace(/\s+/g, '-')
-                .substring(0, 50);
+            const sanitizedTitle = this.sanitizeFilename(this.job.title);
             const fileName = `tuyen-dung-${sanitizedTitle}-${Date.now()}.png`;
 
             link.download = fileName;
