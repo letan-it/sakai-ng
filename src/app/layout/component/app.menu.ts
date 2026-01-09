@@ -25,6 +25,17 @@ export class AppMenu {
                 items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] }]
             },
             {
+                label: 'Learning Management',
+                icon: 'pi pi-fw pi-graduation-cap',
+                items: [
+                    {
+                        label: 'Employee Dashboard',
+                        icon: 'pi pi-fw pi-user',
+                        routerLink: ['/lms']
+                    }
+                ]
+            },
+            {
                 label: 'Recruitment Management',
                 icon: 'pi pi-fw pi-sitemap',
                 items: [
