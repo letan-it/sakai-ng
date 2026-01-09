@@ -19,7 +19,7 @@ export class AppMenu {
     model: MenuItem[] = [];
 
     ngOnInit() {
-         this.model = [ 
+        this.model = [
             {
                 label: 'Home',
                 items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] }]
@@ -57,11 +57,11 @@ export class AppMenu {
                         label: 'Recruitment ATS',
                         icon: 'pi pi-fw pi-users',
                         routerLink: ['/pages/recruitment']
-                    },
+                    }
                 ]
             }
-        ]
-        return
+        ];
+        return;
         this.model = [
             {
                 label: 'Home',
@@ -120,7 +120,7 @@ export class AppMenu {
                         label: 'Recruitment ATS',
                         icon: 'pi pi-fw pi-users',
                         routerLink: ['/pages/recruitment']
-                    },
+                    }
                 ]
             },
             {

@@ -15,11 +15,13 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { combineLatest } from 'rxjs';
 import { RMSDataService } from '@/services/rms-data.service';
+import { SocialShareService } from '@/services/social-share.service';
 import { JobWithDetails, Candidate, Hunter } from '@/models/rms.models';
+import { ShareJobModal } from './components/share-job-modal';
 
 @Component({
     selector: 'app-job-detail',
-    imports: [CommonModule, RouterModule, FormsModule, CardModule, TableModule, TagModule, ChipModule, ProgressBarModule, ButtonModule, DividerModule, DialogModule, SelectModule, ToastModule],
+    imports: [CommonModule, RouterModule, FormsModule, CardModule, TableModule, TagModule, ChipModule, ProgressBarModule, ButtonModule, DividerModule, DialogModule, SelectModule, ToastModule, ShareJobModal],
     providers: [MessageService],
     template: `
         <div class="grid grid-cols-12 gap-6" *ngIf="job">
@@ -34,7 +36,10 @@ import { JobWithDetails, Candidate, Hunter } from '@/models/rms.models';
                             {{ job.customer?.name }} - {{ job.customer?.industry }}
                         </p>
                     </div>
-                    <p-button label="Quay lại" icon="pi pi-arrow-left" [text]="true" [routerLink]="['/rms/jobs']" />
+                    <div class="flex gap-2">
+                        <p-button label="Chia sẻ" icon="pi pi-share-alt" severity="info" (onClick)="openShareDialog()" />
+                        <p-button label="Quay lại" icon="pi pi-arrow-left" [text]="true" [routerLink]="['/rms/jobs']" />
+                    </div>
                 </div>
             </div>
 
@@ -80,11 +85,7 @@ import { JobWithDetails, Candidate, Hunter } from '@/models/rms.models';
                         <div>
                             <h3 class="font-semibold text-surface-700 dark:text-surface-300 mb-3">Kỹ năng yêu cầu</h3>
                             <div class="flex flex-wrap gap-2">
-                                <p-chip
-                                    *ngFor="let skill of job.skills"
-                                    [label]="skill.name + ' (' + getImportanceText(skill.importance_level) + ')'"
-                                    [styleClass]="getImportanceClass(skill.importance_level)"
-                                />
+                                <p-chip *ngFor="let skill of job.skills" [label]="skill.name + ' (' + getImportanceText(skill.importance_level) + ')'" [styleClass]="getImportanceClass(skill.importance_level)" />
                             </div>
                         </div>
                     </div>
@@ -175,13 +176,13 @@ import { JobWithDetails, Candidate, Hunter } from '@/models/rms.models';
             <div class="space-y-4">
                 <div>
                     <label class="block text-sm font-medium mb-2">Chọn Ứng viên <span style="color:red">*</span></label>
-                    <p-select 
-                    appendTo="body"
-                        [(ngModel)]="selectedCandidateId" 
-                        [options]="availableCandidates" 
-                        optionLabel="full_name" 
-                        optionValue="id" 
-                        placeholder="Chọn ứng viên từ danh sách" 
+                    <p-select
+                        appendTo="body"
+                        [(ngModel)]="selectedCandidateId"
+                        [options]="availableCandidates"
+                        optionLabel="full_name"
+                        optionValue="id"
+                        placeholder="Chọn ứng viên từ danh sách"
                         class="w-full"
                         [filter]="true"
                         filterBy="full_name,email,current_position"
@@ -200,15 +201,7 @@ import { JobWithDetails, Candidate, Hunter } from '@/models/rms.models';
 
                 <div>
                     <label class="block text-sm font-medium mb-2">Headhunter phụ trách <span style="color:red">*</span></label>
-                    <p-select 
-                    appendTo="body"
-                        [(ngModel)]="selectedHunterId" 
-                        [options]="hunters" 
-                        optionLabel="name" 
-                        optionValue="id" 
-                        placeholder="Chọn headhunter" 
-                        class="w-full"
-                    >
+                    <p-select appendTo="body" [(ngModel)]="selectedHunterId" [options]="hunters" optionLabel="name" optionValue="id" placeholder="Chọn headhunter" class="w-full">
                         <ng-template #item let-hunter>
                             <div>
                                 <div class="font-semibold">{{ hunter.name }}</div>
@@ -220,15 +213,7 @@ import { JobWithDetails, Candidate, Hunter } from '@/models/rms.models';
 
                 <div>
                     <label class="block text-sm font-medium mb-2">Trạng thái ban đầu <span style="color:red">*</span></label>
-                    <p-select 
-                    appendTo="body"
-                        [(ngModel)]="selectedStatus" 
-                        [options]="statusOptions" 
-                        optionLabel="label" 
-                        optionValue="value" 
-                        placeholder="Chọn trạng thái" 
-                        class="w-full"
-                    />
+                    <p-select appendTo="body" [(ngModel)]="selectedStatus" [options]="statusOptions" optionLabel="label" optionValue="value" placeholder="Chọn trạng thái" class="w-full" />
                 </div>
             </div>
 
@@ -239,11 +224,15 @@ import { JobWithDetails, Candidate, Hunter } from '@/models/rms.models';
                 </div>
             </ng-template>
         </p-dialog>
+
+        <!-- Modal chia sẻ công việc -->
+        <app-share-job-modal [(visible)]="displayShareDialog" [job]="job" (confirmShare)="handleShareConfirm()" />
     `
 })
 export class JobDetail implements OnInit {
     job: JobWithDetails | null = null;
     displayAddCandidateDialog = false;
+    displayShareDialog = false;
     availableCandidates: Candidate[] = [];
     hunters: Hunter[] = [];
     selectedCandidateId: number | null = null;
@@ -262,7 +251,8 @@ export class JobDetail implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private rmsService: RMSDataService,
-        private messageService: MessageService
+        private messageService: MessageService,
+        private socialShareService: SocialShareService
     ) {}
 
     ngOnInit(): void {
@@ -354,5 +344,17 @@ export class JobDetail implements OnInit {
         };
 
         return severityMap[status] || 'secondary';
+    }
+
+    openShareDialog(): void {
+        this.displayShareDialog = true;
+    }
+
+    handleShareConfirm(): void {
+        if (this.job) {
+            this.socialShareService.shareOnFacebook(this.job);
+            this.messageService.add({ severity: 'success', summary: 'Thành công', detail: 'Đang mở cửa sổ chia sẻ Facebook' });
+            this.displayShareDialog = false;
+        }
     }
 }

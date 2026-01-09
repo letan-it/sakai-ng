@@ -24,7 +24,27 @@ import { CandidateWithDetails, CandidateExperience, Skill } from '@/models/rms.m
 
 @Component({
     selector: 'app-candidate-profile',
-    imports: [CommonModule, RouterModule, FormsModule, CardModule, TableModule, TagModule, ChipModule, ProgressBarModule, ButtonModule, DividerModule, TimelineModule, DialogModule, InputTextModule, TextareaModule, InputNumberModule, SelectModule, DatePickerModule, ConfirmDialogModule, ToastModule],
+    imports: [
+        CommonModule,
+        RouterModule,
+        FormsModule,
+        CardModule,
+        TableModule,
+        TagModule,
+        ChipModule,
+        ProgressBarModule,
+        ButtonModule,
+        DividerModule,
+        TimelineModule,
+        DialogModule,
+        InputTextModule,
+        TextareaModule,
+        InputNumberModule,
+        SelectModule,
+        DatePickerModule,
+        ConfirmDialogModule,
+        ToastModule
+    ],
     providers: [ConfirmationService, MessageService],
     template: `
         <div class="grid grid-cols-12 gap-6" *ngIf="candidate">
@@ -154,7 +174,7 @@ import { CandidateWithDetails, CandidateExperience, Skill } from '@/models/rms.m
                             <tr>
                                 <td>
                                     <div class="font-semibold text-primary">{{ job.title }}</div>
-                                    <div class="text-sm text-surface-600 dark:text-surface-400">{{ job.description | slice : 0 : 60 }}...</div>
+                                    <div class="text-sm text-surface-600 dark:text-surface-400">{{ job.description | slice: 0 : 60 }}...</div>
                                 </td>
                                 <td>
                                     <i class="pi pi-map-marker text-surface-400 mr-2"></i>

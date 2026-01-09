@@ -15,11 +15,13 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { RMSDataService } from '@/services/rms-data.service';
-import { Job, Customer } from '@/models/rms.models';
+import { SocialShareService } from '@/services/social-share.service';
+import { Job, Customer, JobWithDetails } from '@/models/rms.models';
+import { ShareJobModal } from './components/share-job-modal';
 
 @Component({
     selector: 'app-jobs-list',
-    imports: [CommonModule, RouterModule, FormsModule, CardModule, TableModule, TagModule, ButtonModule, DialogModule, InputTextModule, TextareaModule, InputNumberModule, SelectModule, ConfirmDialogModule, ToastModule],
+    imports: [CommonModule, RouterModule, FormsModule, CardModule, TableModule, TagModule, ButtonModule, DialogModule, InputTextModule, TextareaModule, InputNumberModule, SelectModule, ConfirmDialogModule, ToastModule, ShareJobModal],
     providers: [ConfirmationService, MessageService],
     template: `
         <div class="card">
@@ -52,16 +54,14 @@ import { Job, Customer } from '@/models/rms.models';
                     <tr>
                         <td>
                             <div class="font-semibold text-primary">{{ job.title }}</div>
-                            <div class="text-sm text-surface-600 dark:text-surface-400">{{ job.description | slice : 0 : 80 }}...</div>
+                            <div class="text-sm text-surface-600 dark:text-surface-400">{{ job.description | slice: 0 : 80 }}...</div>
                         </td>
                         <td>
                             <i class="pi pi-map-marker text-surface-400 mr-2"></i>
                             {{ job.location }}
                         </td>
                         <td>
-                            <div class="text-sm">
-                                {{ formatSalary(job.salary_min) }} - {{ formatSalary(job.salary_max) }}
-                            </div>
+                            <div class="text-sm">{{ formatSalary(job.salary_min) }} - {{ formatSalary(job.salary_max) }}</div>
                         </td>
                         <td>{{ job.experience_min }} - {{ job.experience_max }} năm</td>
                         <td>
@@ -71,6 +71,7 @@ import { Job, Customer } from '@/models/rms.models';
                             <div class="flex gap-1">
                                 <p-button label="Xem" icon="pi pi-eye" [text]="true" size="small" [routerLink]="['/rms/jobs', job.id]" />
                                 <p-button label="Sửa" icon="pi pi-pencil" [text]="true" size="small" severity="warn" (onClick)="openEditDialog(job)" />
+                                <p-button label="Chia sẻ" icon="pi pi-share-alt" [text]="true" size="small" severity="info" (onClick)="openShareDialog(job)" />
                                 <p-button label="Xóa" icon="pi pi-trash" [text]="true" size="small" severity="danger" (onClick)="confirmDelete(job)" />
                             </div>
                         </td>
@@ -95,14 +96,7 @@ import { Job, Customer } from '@/models/rms.models';
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-sm font-medium mb-2">Khách hàng <span style="color:red">*</span></label>
-                        <p-select appendTo="body"
-                            [(ngModel)]="jobForm.customer_id"
-                            [options]="customers"
-                            optionLabel="name"
-                            optionValue="id"
-                            placeholder="Chọn khách hàng"
-                            class="w-full"
-                        />
+                        <p-select appendTo="body" [(ngModel)]="jobForm.customer_id" [options]="customers" optionLabel="name" optionValue="id" placeholder="Chọn khách hàng" class="w-full" />
                     </div>
 
                     <div>
@@ -153,6 +147,9 @@ import { Job, Customer } from '@/models/rms.models';
                 </div>
             </ng-template>
         </p-dialog>
+
+        <!-- Modal chia sẻ công việc -->
+        <app-share-job-modal [(visible)]="displayShareDialog" [job]="selectedJobForShare" (confirmShare)="handleShareConfirm()" />
     `
 })
 export class JobsList implements OnInit {
@@ -161,6 +158,8 @@ export class JobsList implements OnInit {
     displayDialog = false;
     isEditMode = false;
     selectedJob: Job | null = null;
+    displayShareDialog = false;
+    selectedJobForShare: JobWithDetails | null = null;
 
     jobForm: any = {
         title: '',
@@ -183,7 +182,8 @@ export class JobsList implements OnInit {
     constructor(
         private rmsService: RMSDataService,
         private confirmationService: ConfirmationService,
-        private messageService: MessageService
+        private messageService: MessageService,
+        private socialShareService: SocialShareService
     ) {}
 
     ngOnInit(): void {
@@ -257,15 +257,7 @@ export class JobsList implements OnInit {
     }
 
     validateForm(): boolean {
-        return (
-            this.jobForm.title &&
-            this.jobForm.description &&
-            this.jobForm.customer_id &&
-            this.jobForm.location &&
-            this.jobForm.education_level &&
-            this.jobForm.salary_min > 0 &&
-            this.jobForm.salary_max > 0
-        );
+        return this.jobForm.title && this.jobForm.description && this.jobForm.customer_id && this.jobForm.location && this.jobForm.education_level && this.jobForm.salary_min > 0 && this.jobForm.salary_max > 0;
     }
 
     confirmDelete(job: Job): void {
@@ -289,5 +281,25 @@ export class JobsList implements OnInit {
 
     formatSalary(amount: number): string {
         return (amount / 1000000).toFixed(0) + 'M';
+    }
+
+    openShareDialog(job: Job): void {
+        this.rmsService.getJobById(job.id).subscribe({
+            next: (jobDetails) => {
+                this.selectedJobForShare = jobDetails || null;
+                this.displayShareDialog = true;
+            },
+            error: () => {
+                this.messageService.add({ severity: 'error', summary: 'Lỗi', detail: 'Không thể tải thông tin công việc' });
+            }
+        });
+    }
+
+    handleShareConfirm(): void {
+        if (this.selectedJobForShare) {
+            this.socialShareService.shareOnFacebook(this.selectedJobForShare);
+            this.messageService.add({ severity: 'success', summary: 'Thành công', detail: 'Đang mở cửa sổ chia sẻ Facebook' });
+            this.displayShareDialog = false;
+        }
     }
 }
