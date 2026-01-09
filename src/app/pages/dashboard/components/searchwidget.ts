@@ -14,13 +14,7 @@ import { InputTextModule } from 'primeng/inputtext';
             <div class="card">
                 <p-iconfield iconPosition="left" class="w-full">
                     <p-inputicon styleClass="pi pi-search" />
-                    <input 
-                        type="text" 
-                        pInputText 
-                        placeholder="Tìm kiếm chức năng, nhân viên, tài liệu..." 
-                        class="w-full"
-                        [(ngModel)]="searchQuery"
-                    />
+                    <input type="text" pInputText placeholder="Tìm kiếm chức năng, nhân viên, tài liệu..." class="w-full" [(ngModel)]="searchQuery" />
                 </p-iconfield>
             </div>
         </div>

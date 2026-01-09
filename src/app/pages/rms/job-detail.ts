@@ -356,8 +356,7 @@ export class JobDetail implements OnInit {
                 const result = await this.socialShareService.shareOnFacebook(this.job);
 
                 if (result.success) {
-                    const message =
-                        result.method === 'native_app' ? 'Đã mở ứng dụng Facebook để chia sẻ' : 'Đang mở cửa sổ chia sẻ Facebook';
+                    const message = result.method === 'native_app' ? 'Đã mở ứng dụng Facebook để chia sẻ' : 'Đang mở cửa sổ chia sẻ Facebook';
 
                     this.messageService.add({ severity: 'success', summary: 'Thành công', detail: message });
                 } else {
