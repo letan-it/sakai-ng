@@ -15,11 +15,13 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { combineLatest } from 'rxjs';
 import { RMSDataService } from '@/services/rms-data.service';
+import { SocialShareService } from '@/services/social-share.service';
 import { JobWithDetails, Candidate, Hunter } from '@/models/rms.models';
+import { ShareJobModal } from './components/share-job-modal';
 
 @Component({
     selector: 'app-job-detail',
-    imports: [CommonModule, RouterModule, FormsModule, CardModule, TableModule, TagModule, ChipModule, ProgressBarModule, ButtonModule, DividerModule, DialogModule, SelectModule, ToastModule],
+    imports: [CommonModule, RouterModule, FormsModule, CardModule, TableModule, TagModule, ChipModule, ProgressBarModule, ButtonModule, DividerModule, DialogModule, SelectModule, ToastModule, ShareJobModal],
     providers: [MessageService],
     template: `
         <div class="grid grid-cols-12 gap-6" *ngIf="job">
@@ -34,7 +36,10 @@ import { JobWithDetails, Candidate, Hunter } from '@/models/rms.models';
                             {{ job.customer?.name }} - {{ job.customer?.industry }}
                         </p>
                     </div>
-                    <p-button label="Quay lại" icon="pi pi-arrow-left" [text]="true" [routerLink]="['/rms/jobs']" />
+                    <div class="flex gap-2">
+                        <p-button label="Chia sẻ" icon="pi pi-share-alt" severity="info" (onClick)="openShareDialog()" />
+                        <p-button label="Quay lại" icon="pi pi-arrow-left" [text]="true" [routerLink]="['/rms/jobs']" />
+                    </div>
                 </div>
             </div>
 
@@ -239,11 +244,19 @@ import { JobWithDetails, Candidate, Hunter } from '@/models/rms.models';
                 </div>
             </ng-template>
         </p-dialog>
+
+        <!-- Modal chia sẻ công việc -->
+        <app-share-job-modal
+            [(visible)]="displayShareDialog"
+            [job]="job"
+            (confirmShare)="handleShareConfirm()"
+        />
     `
 })
 export class JobDetail implements OnInit {
     job: JobWithDetails | null = null;
     displayAddCandidateDialog = false;
+    displayShareDialog = false;
     availableCandidates: Candidate[] = [];
     hunters: Hunter[] = [];
     selectedCandidateId: number | null = null;
@@ -262,7 +275,8 @@ export class JobDetail implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private rmsService: RMSDataService,
-        private messageService: MessageService
+        private messageService: MessageService,
+        private socialShareService: SocialShareService
     ) {}
 
     ngOnInit(): void {
@@ -354,5 +368,17 @@ export class JobDetail implements OnInit {
         };
 
         return severityMap[status] || 'secondary';
+    }
+
+    openShareDialog(): void {
+        this.displayShareDialog = true;
+    }
+
+    handleShareConfirm(): void {
+        if (this.job) {
+            this.socialShareService.shareOnFacebook(this.job);
+            this.messageService.add({ severity: 'success', summary: 'Thành công', detail: 'Đang mở cửa sổ chia sẻ Facebook' });
+            this.displayShareDialog = false;
+        }
     }
 }

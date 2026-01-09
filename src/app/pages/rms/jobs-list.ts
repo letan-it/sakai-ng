@@ -15,11 +15,13 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { RMSDataService } from '@/services/rms-data.service';
-import { Job, Customer } from '@/models/rms.models';
+import { SocialShareService } from '@/services/social-share.service';
+import { Job, Customer, JobWithDetails } from '@/models/rms.models';
+import { ShareJobModal } from './components/share-job-modal';
 
 @Component({
     selector: 'app-jobs-list',
-    imports: [CommonModule, RouterModule, FormsModule, CardModule, TableModule, TagModule, ButtonModule, DialogModule, InputTextModule, TextareaModule, InputNumberModule, SelectModule, ConfirmDialogModule, ToastModule],
+    imports: [CommonModule, RouterModule, FormsModule, CardModule, TableModule, TagModule, ButtonModule, DialogModule, InputTextModule, TextareaModule, InputNumberModule, SelectModule, ConfirmDialogModule, ToastModule, ShareJobModal],
     providers: [ConfirmationService, MessageService],
     template: `
         <div class="card">
@@ -71,6 +73,7 @@ import { Job, Customer } from '@/models/rms.models';
                             <div class="flex gap-1">
                                 <p-button label="Xem" icon="pi pi-eye" [text]="true" size="small" [routerLink]="['/rms/jobs', job.id]" />
                                 <p-button label="Sửa" icon="pi pi-pencil" [text]="true" size="small" severity="warn" (onClick)="openEditDialog(job)" />
+                                <p-button label="Chia sẻ" icon="pi pi-share-alt" [text]="true" size="small" severity="info" (onClick)="openShareDialog(job)" />
                                 <p-button label="Xóa" icon="pi pi-trash" [text]="true" size="small" severity="danger" (onClick)="confirmDelete(job)" />
                             </div>
                         </td>
@@ -153,6 +156,13 @@ import { Job, Customer } from '@/models/rms.models';
                 </div>
             </ng-template>
         </p-dialog>
+
+        <!-- Modal chia sẻ công việc -->
+        <app-share-job-modal
+            [(visible)]="displayShareDialog"
+            [job]="selectedJobForShare"
+            (confirmShare)="handleShareConfirm()"
+        />
     `
 })
 export class JobsList implements OnInit {
@@ -161,6 +171,8 @@ export class JobsList implements OnInit {
     displayDialog = false;
     isEditMode = false;
     selectedJob: Job | null = null;
+    displayShareDialog = false;
+    selectedJobForShare: JobWithDetails | null = null;
 
     jobForm: any = {
         title: '',
@@ -183,7 +195,8 @@ export class JobsList implements OnInit {
     constructor(
         private rmsService: RMSDataService,
         private confirmationService: ConfirmationService,
-        private messageService: MessageService
+        private messageService: MessageService,
+        private socialShareService: SocialShareService
     ) {}
 
     ngOnInit(): void {
@@ -289,5 +302,20 @@ export class JobsList implements OnInit {
 
     formatSalary(amount: number): string {
         return (amount / 1000000).toFixed(0) + 'M';
+    }
+
+    openShareDialog(job: Job): void {
+        this.rmsService.getJobById(job.id).subscribe((jobDetails) => {
+            this.selectedJobForShare = jobDetails || null;
+            this.displayShareDialog = true;
+        });
+    }
+
+    handleShareConfirm(): void {
+        if (this.selectedJobForShare) {
+            this.socialShareService.shareOnFacebook(this.selectedJobForShare);
+            this.messageService.add({ severity: 'success', summary: 'Thành công', detail: 'Đang mở cửa sổ chia sẻ Facebook' });
+            this.displayShareDialog = false;
+        }
     }
 }
