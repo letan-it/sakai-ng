@@ -13,7 +13,7 @@ import { AppIconsWidget } from './components/appiconswidget';
         <p-toast position="bottom-right" />
         <div class="grid grid-cols-12 gap-6">
             <app-search-widget class="contents" />
-            <app-work-stats-widget class="contents" />
+            
             <app-icons-widget class="contents" />
         </div>
     `
