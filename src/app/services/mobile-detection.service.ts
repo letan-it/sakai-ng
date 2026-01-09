@@ -13,6 +13,7 @@ export interface DeviceInfo {
     providedIn: 'root'
 })
 export class MobileDetectionService {
+    private readonly SCHEME_CHECK_TIMEOUT = 2000;
     private deviceInfo: DeviceInfo;
 
     constructor() {
@@ -77,7 +78,7 @@ export class MobileDetectionService {
 
             const timeout = setTimeout(() => {
                 resolve(false);
-            }, 2000);
+            }, this.SCHEME_CHECK_TIMEOUT);
 
             const iframe = document.createElement('iframe');
 
@@ -88,7 +89,11 @@ export class MobileDetectionService {
 
             setTimeout(() => {
                 clearTimeout(timeout);
-                document.body.removeChild(iframe);
+
+                if (iframe.parentNode) {
+                    document.body.removeChild(iframe);
+                }
+
                 resolve(true);
             }, 1000);
         });

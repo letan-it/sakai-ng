@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { JobWithDetails } from '@/models/rms.models';
 import { getJobShareUrl } from '@/utils/share-url';
-import { MobileDetectionService } from './mobile-detection.service';
+import { MobileDetectionService, DeviceInfo } from './mobile-detection.service';
 
 export interface ShareResult {
     success: boolean;
@@ -52,7 +52,7 @@ export class SocialShareService {
         return this.openWebFallback(url, quote);
     }
 
-    private async tryOpenNativeFacebookApp(url: string, quote: string, deviceInfo: any): Promise<ShareResult> {
+    private async tryOpenNativeFacebookApp(url: string, quote: string, deviceInfo: DeviceInfo): Promise<ShareResult> {
         try {
             if (deviceInfo.isAndroid) {
                 return await this.openAndroidFacebookApp(url, quote);
@@ -75,11 +75,13 @@ export class SocialShareService {
     private async openAndroidFacebookApp(url: string, quote: string): Promise<ShareResult> {
         this.logInfo('Thử mở ứng dụng Facebook trên Android');
 
+        const fbWebUrl = this.buildFacebookShareUrl(url, quote);
+
         // Android Intent URL cho Facebook
-        const intentUrl = `intent://share/#Intent;scheme=https;package=com.facebook.katana;S.browser_fallback_url=${encodeURIComponent(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(quote)}`)};end`;
+        const intentUrl = `intent://share/#Intent;scheme=https;package=com.facebook.katana;S.browser_fallback_url=${encodeURIComponent(fbWebUrl)};end`;
 
         // Deep link cho Facebook app
-        const fbScheme = `fb://facewebmodal/f?href=${encodeURIComponent(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(quote)}`)}`;
+        const fbScheme = `fb://facewebmodal/f?href=${encodeURIComponent(fbWebUrl)}`;
 
         try {
             // Thử deep link trước
@@ -117,9 +119,6 @@ export class SocialShareService {
         // iOS URL scheme cho Facebook
         const fbScheme = `fb://share?link=${encodeURIComponent(url)}&quote=${encodeURIComponent(quote)}`;
 
-        // Fallback URL cho Safari nếu không có app
-        const fallbackUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(quote)}`;
-
         try {
             const opened = await this.tryOpenUrl(fbScheme, this.FACEBOOK_APP_TIMEOUT);
 
@@ -137,6 +136,10 @@ export class SocialShareService {
 
             return { success: false, method: 'failed', message: 'iOS open error' };
         }
+    }
+
+    private buildFacebookShareUrl(url: string, quote: string): string {
+        return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(quote)}`;
     }
 
     private async tryOpenUrl(targetUrl: string, timeout: number): Promise<boolean> {
@@ -173,8 +176,7 @@ export class SocialShareService {
                 return;
             }
 
-            // Đợi và kiểm tra xem app có mở không
-            const checkTimer = setTimeout(() => {
+            const cleanup = () => {
                 window.removeEventListener('blur', blurHandler);
 
                 try {
@@ -184,6 +186,11 @@ export class SocialShareService {
                 } catch (e) {
                     // Ignore cleanup errors
                 }
+            };
+
+            // Đợi và kiểm tra xem app có mở không
+            const checkTimer = setTimeout(() => {
+                cleanup();
 
                 const elapsed = Date.now() - startTime;
 
@@ -197,18 +204,10 @@ export class SocialShareService {
                 }
             }, timeout);
 
-            // Cleanup
+            // Cleanup sau timeout
             setTimeout(() => {
                 clearTimeout(checkTimer);
-                window.removeEventListener('blur', blurHandler);
-
-                try {
-                    if (iframe.parentNode) {
-                        document.body.removeChild(iframe);
-                    }
-                } catch (e) {
-                    // Ignore cleanup errors
-                }
+                cleanup();
             }, timeout + 1000);
         });
     }
@@ -216,7 +215,7 @@ export class SocialShareService {
     private openWebFallback(url: string, quote: string): ShareResult {
         this.logInfo('Sử dụng web fallback để chia sẻ');
 
-        const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(quote)}`;
+        const facebookUrl = this.buildFacebookShareUrl(url, quote);
 
         const popup = window.open(facebookUrl, '_blank', 'width=600,height=400,scrollbars=yes,resizable=yes');
 
