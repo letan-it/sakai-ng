@@ -112,19 +112,15 @@ describe('SocialShareService', () => {
             mobileDetectionService.getDeviceInfo.and.returnValue(androidInfo);
         });
 
-        it(
-            'nên thử mở ứng dụng Facebook trên Android',
-            async () => {
-                spyOn(window, 'open').and.returnValue(window);
+        it('nên thử mở ứng dụng Facebook trên Android', async () => {
+            spyOn(window, 'open').and.returnValue(window);
 
-                const result = await service.shareOnFacebook(mockJob);
+            const result = await service.shareOnFacebook(mockJob);
 
-                // Có thể thành công hoặc fallback sang web
-                expect(result).toBeDefined();
-                expect(['native_app', 'web_fallback', 'failed']).toContain(result.method);
-            },
-            10000
-        ); // Tăng timeout lên 10 giây
+            // Có thể thành công hoặc fallback sang web
+            expect(result).toBeDefined();
+            expect(['native_app', 'web_fallback', 'failed']).toContain(result.method);
+        }, 10000); // Tăng timeout lên 10 giây
     });
 
     describe('iOS Device', () => {

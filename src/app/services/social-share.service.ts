@@ -20,7 +20,6 @@ export class SocialShareService {
 
     async shareOnFacebook(job: JobWithDetails): Promise<ShareResult> {
         const url = getJobShareUrl(job.id);
-        const quote = this.createShareText(job);
 
         this.logInfo('Bắt đầu chia sẻ lên Facebook', { jobId: job.id, url });
 
@@ -32,14 +31,14 @@ export class SocialShareService {
         if (deviceInfo.hasFacebookApp) {
             this.logWarning('Đang chạy trong ứng dụng Facebook - sử dụng web fallback');
 
-            return this.openWebFallback(url, quote);
+            return this.openWebFallback(url);
         }
 
         // Thử mở ứng dụng Facebook native trên mobile
         if (deviceInfo.isMobile) {
             this.logInfo('Thiết bị mobile được phát hiện - thử mở ứng dụng Facebook native');
 
-            const nativeResult = await this.tryOpenNativeFacebookApp(url, quote, deviceInfo);
+            const nativeResult = await this.tryOpenNativeFacebookApp(url, deviceInfo);
 
             if (nativeResult.success) {
                 return nativeResult;
@@ -49,17 +48,17 @@ export class SocialShareService {
         }
 
         // Fallback cho desktop hoặc khi không mở được native app
-        return this.openWebFallback(url, quote);
+        return this.openWebFallback(url);
     }
 
-    private async tryOpenNativeFacebookApp(url: string, quote: string, deviceInfo: DeviceInfo): Promise<ShareResult> {
+    private async tryOpenNativeFacebookApp(url: string, deviceInfo: DeviceInfo): Promise<ShareResult> {
         try {
             if (deviceInfo.isAndroid) {
-                return await this.openAndroidFacebookApp(url, quote);
+                return await this.openAndroidFacebookApp(url);
             }
 
             if (deviceInfo.isIOS) {
-                return await this.openIOSFacebookApp(url, quote);
+                return await this.openIOSFacebookApp(url);
             }
 
             this.logWarning('Hệ điều hành mobile không được hỗ trợ');
@@ -72,10 +71,10 @@ export class SocialShareService {
         }
     }
 
-    private async openAndroidFacebookApp(url: string, quote: string): Promise<ShareResult> {
+    private async openAndroidFacebookApp(url: string): Promise<ShareResult> {
         this.logInfo('Thử mở ứng dụng Facebook trên Android');
 
-        const fbWebUrl = this.buildFacebookShareUrl(url, quote);
+        const fbWebUrl = this.buildFacebookShareUrl(url);
 
         // Android Intent URL cho Facebook
         const intentUrl = `intent://share/#Intent;scheme=https;package=com.facebook.katana;S.browser_fallback_url=${encodeURIComponent(fbWebUrl)};end`;
@@ -113,11 +112,11 @@ export class SocialShareService {
         }
     }
 
-    private async openIOSFacebookApp(url: string, quote: string): Promise<ShareResult> {
+    private async openIOSFacebookApp(url: string): Promise<ShareResult> {
         this.logInfo('Thử mở ứng dụng Facebook trên iOS');
 
         // iOS URL scheme cho Facebook
-        const fbScheme = `fb://share?link=${encodeURIComponent(url)}&quote=${encodeURIComponent(quote)}`;
+        const fbScheme = `fb://share?link=${encodeURIComponent(url)}`;
 
         try {
             const opened = await this.tryOpenUrl(fbScheme, this.FACEBOOK_APP_TIMEOUT);
@@ -138,8 +137,8 @@ export class SocialShareService {
         }
     }
 
-    private buildFacebookShareUrl(url: string, quote: string): string {
-        return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}&quote=${encodeURIComponent(quote)}`;
+    private buildFacebookShareUrl(url: string): string {
+        return `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
     }
 
     private async tryOpenUrl(targetUrl: string, timeout: number): Promise<boolean> {
@@ -212,10 +211,10 @@ export class SocialShareService {
         });
     }
 
-    private openWebFallback(url: string, quote: string): ShareResult {
+    private openWebFallback(url: string): ShareResult {
         this.logInfo('Sử dụng web fallback để chia sẻ');
 
-        const facebookUrl = this.buildFacebookShareUrl(url, quote);
+        const facebookUrl = this.buildFacebookShareUrl(url);
 
         const popup = window.open(facebookUrl, '_blank', 'width=600,height=400,scrollbars=yes,resizable=yes');
 
@@ -228,35 +227,6 @@ export class SocialShareService {
 
             return { success: false, method: 'failed', message: 'Popup blocked' };
         }
-    }
-
-    private createShareText(job: JobWithDetails): string {
-        const salary = `${(job.salary_min / 1000000).toFixed(0)} - ${(job.salary_max / 1000000).toFixed(0)} triệu VND`;
-        const experience = `${job.experience_min} - ${job.experience_max} năm kinh nghiệm`;
-
-        const skillsList =
-            job.skills && job.skills.length > 0
-                ? job.skills
-                      .slice(0, 5)
-                      .map((s) => s.name)
-                      .join(', ')
-                : 'Nhiều kỹ năng đa dạng';
-
-        const companyInfo = job.customer ? `${job.customer.name} - ${job.customer.industry}` : 'Công ty hàng đầu';
-
-        return `🚀 TUYỂN DỤNG: ${job.title}
-
-📍 Địa điểm: ${job.location}
-💰 Mức lương: ${salary}
-💼 Kinh nghiệm: ${experience}
-
-✨ Kỹ năng yêu cầu: ${skillsList}
-
-🏢 ${companyInfo}
-
-Tuyển dụng nhân tài - Xây dựng tương lai
-
-#TuyenDung #JobOpportunity #Career`;
     }
 
     private logInfo(message: string, data?: any): void {

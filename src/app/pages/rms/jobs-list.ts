@@ -295,11 +295,30 @@ export class JobsList implements OnInit {
         });
     }
 
-    handleShareConfirm(): void {
+    async handleShareConfirm(): Promise<void> {
         if (this.selectedJobForShare) {
-            this.socialShareService.shareOnFacebook(this.selectedJobForShare);
-            this.messageService.add({ severity: 'success', summary: 'Thành công', detail: 'Đang mở cửa sổ chia sẻ Facebook' });
-            this.displayShareDialog = false;
+            try {
+                const result = await this.socialShareService.shareOnFacebook(this.selectedJobForShare);
+
+                if (result.success) {
+                    const message = result.method === 'native_app' ? 'Đã mở ứng dụng Facebook. Nội dung đã được copy, bạn có thể paste vào bài viết!' : 'Đang mở cửa sổ chia sẻ Facebook. Nội dung đã được copy, bạn có thể paste vào bài viết!';
+
+                    this.messageService.add({ severity: 'success', summary: 'Thành công', detail: message, life: 5000 });
+                } else {
+                    let errorMessage = 'Không thể mở chia sẻ Facebook';
+
+                    if (result.message === 'Popup blocked') {
+                        errorMessage = 'Vui lòng cho phép popup để chia sẻ lên Facebook';
+                    }
+
+                    this.messageService.add({ severity: 'warn', summary: 'Cảnh báo', detail: errorMessage });
+                }
+
+                this.displayShareDialog = false;
+            } catch (error) {
+                console.error('Lỗi khi chia sẻ lên Facebook:', error);
+                this.messageService.add({ severity: 'error', summary: 'Lỗi', detail: 'Có lỗi xảy ra khi chia sẻ' });
+            }
         }
     }
 }
