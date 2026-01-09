@@ -4,12 +4,14 @@ import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { ChipModule } from 'primeng/chip';
 import { DividerModule } from 'primeng/divider';
+import { MessageService } from 'primeng/api';
 import { JobWithDetails } from '@/models/rms.models';
 import { getJobShareUrl } from '@/utils/share-url';
 
 @Component({
     selector: 'app-share-job-modal',
     imports: [CommonModule, DialogModule, ButtonModule, ChipModule, DividerModule],
+    providers: [MessageService],
     template: `
         <p-dialog [(visible)]="visible" (visibleChange)="visibleChange.emit($event)" header="Xem trước nội dung chia sẻ" [modal]="true" [style]="{ width: '600px' }" maskStyleClass="backdrop-blur-sm" styleClass="!border-0">
             <div class="space-y-4" *ngIf="job">
@@ -74,17 +76,25 @@ import { getJobShareUrl } from '@/utils/share-url';
                     </div>
                 </div>
 
-                <!-- Link chia sẻ -->
-                <div class="bg-blue-50 dark:bg-blue-900 p-3 rounded-lg">
+                <!-- Link chia sẻ và nội dung -->
+                <div class="bg-blue-50 dark:bg-blue-900 p-3 rounded-lg space-y-2">
                     <p class="text-xs text-surface-600 dark:text-surface-400 mb-1">Link chia sẻ:</p>
                     <p class="text-sm font-mono text-primary break-all">{{ getShareLink() }}</p>
+
+                    <p-divider styleClass="my-2" />
+
+                    <p class="text-xs text-surface-600 dark:text-surface-400 mb-1">Nội dung chia sẻ:</p>
+                    <div class="bg-white dark:bg-surface-900 p-3 rounded border border-surface-200 dark:border-surface-700">
+                        <pre class="text-xs whitespace-pre-wrap font-sans text-surface-900 dark:text-surface-0">{{ getShareText() }}</pre>
+                    </div>
+                    <p-button label="Copy nội dung chia sẻ" icon="pi pi-copy" [outlined]="true" size="small" class="w-full mt-2" (onClick)="copyShareText()" />
                 </div>
             </div>
 
             <ng-template #footer>
                 <div class="flex justify-end gap-2 mt-4">
                     <p-button label="Hủy" icon="pi pi-times" [text]="true" (onClick)="onCancel()" />
-                    <p-button label="Chia sẻ lên Facebook" icon="pi pi-facebook" (onClick)="onConfirmShare()" severity="info" />
+                    <p-button label="Copy & Chia sẻ lên Facebook" icon="pi pi-facebook" (onClick)="onConfirmShare()" severity="info" />
                 </div>
             </ng-template>
         </p-dialog>
@@ -97,6 +107,8 @@ export class ShareJobModal {
     @Output() confirmShare = new EventEmitter<void>();
 
     private readonly MAX_SUMMARY_LENGTH = 200;
+
+    constructor(private messageService: MessageService) {}
 
     getJobSummary(): string {
         if (!this.job) return '';
@@ -135,12 +147,93 @@ export class ShareJobModal {
         return getJobShareUrl(this.job.id);
     }
 
+    getShareText(): string {
+        if (!this.job) return '';
+
+        const salary = `${this.formatSalary(this.job.salary_min)} - ${this.formatSalary(this.job.salary_max)} VND`;
+        const experience = `${this.job.experience_min} - ${this.job.experience_max} năm kinh nghiệm`;
+
+        const skillsList =
+            this.job.skills && this.job.skills.length > 0
+                ? this.job.skills
+                      .slice(0, 5)
+                      .map((s) => s.name)
+                      .join(', ')
+                : 'Nhiều kỹ năng đa dạng';
+
+        const moreSkills = this.job.skills && this.job.skills.length > 5 ? ` và ${this.job.skills.length - 5} kỹ năng khác` : '';
+
+        const companyInfo = this.job.customer ? `${this.job.customer.name} - ${this.job.customer.industry}` : 'Công ty hàng đầu';
+
+        return `🚀 TUYỂN DỤNG: ${this.job.title}
+
+📍 Địa điểm: ${this.job.location}
+💰 Mức lương: ${salary}
+💼 Kinh nghiệm: ${experience}
+🎓 Trình độ: ${this.job.education_level}
+
+✨ Kỹ năng yêu cầu: ${skillsList}${moreSkills}
+
+📋 Mô tả công việc:
+${this.job.description}
+
+🏢 ${companyInfo}
+
+Tuyển dụng nhân tài - Xây dựng tương lai
+
+🔗 Chi tiết & Ứng tuyển: ${this.getShareLink()}
+
+#TuyenDung #JobOpportunity #Career #${this.job.location.replace(/\s+/g, '')}`;
+    }
+
+    async copyShareText(): Promise<void> {
+        const shareText = this.getShareText();
+
+        try {
+            await navigator.clipboard.writeText(shareText);
+            this.messageService.add({
+                severity: 'success',
+                summary: 'Thành công',
+                detail: 'Đã copy nội dung chia sẻ vào clipboard'
+            });
+        } catch (err) {
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea');
+
+            textArea.value = shareText;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.select();
+
+            try {
+                document.execCommand('copy');
+                this.messageService.add({
+                    severity: 'success',
+                    summary: 'Thành công',
+                    detail: 'Đã copy nội dung chia sẻ vào clipboard'
+                });
+            } catch (e) {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'Lỗi',
+                    detail: 'Không thể copy nội dung. Vui lòng copy thủ công.'
+                });
+            }
+
+            document.body.removeChild(textArea);
+        }
+    }
+
     onCancel(): void {
         this.visible = false;
         this.visibleChange.emit(false);
     }
 
-    onConfirmShare(): void {
+    async onConfirmShare(): Promise<void> {
+        // Copy the share text first
+        await this.copyShareText();
+        // Then emit the confirm event to open Facebook
         this.confirmShare.emit();
     }
 }
