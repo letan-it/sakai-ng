@@ -261,7 +261,10 @@ Tuyển dụng nhân tài - Xây dựng tương lai
             const dataUrl = await htmlToImage.toPng(element, {
                 quality: 1,
                 pixelRatio: 2, // Higher resolution for better quality
-                backgroundColor: '#ffffff'
+                backgroundColor: '#ffffff',
+                style: {
+                    padding: '20px'
+                }
             });
 
             // Create download link
