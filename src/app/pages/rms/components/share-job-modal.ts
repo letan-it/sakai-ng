@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
@@ -7,6 +7,7 @@ import { DividerModule } from 'primeng/divider';
 import { MessageService } from 'primeng/api';
 import { JobWithDetails } from '@/models/rms.models';
 import { getJobShareUrl } from '@/utils/share-url';
+import * as htmlToImage from 'html-to-image';
 
 @Component({
     selector: 'app-share-job-modal',
@@ -14,7 +15,7 @@ import { getJobShareUrl } from '@/utils/share-url';
     providers: [MessageService],
     template: `
         <p-dialog [(visible)]="visible" (visibleChange)="visibleChange.emit($event)" header="Xem trước nội dung chia sẻ" [modal]="true" [style]="{ width: '600px' }" maskStyleClass="backdrop-blur-sm" styleClass="!border-0">
-            <div class="space-y-4" *ngIf="job">
+            <div #previewContent class="space-y-4" *ngIf="job">
                 <!-- Hình ảnh thumbnail -->
                 <div class="w-full h-48 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
                     <div class="text-center text-white">
@@ -94,6 +95,7 @@ import { getJobShareUrl } from '@/utils/share-url';
             <ng-template #footer>
                 <div class="flex justify-end gap-2 mt-4">
                     <p-button label="Hủy" icon="pi pi-times" [text]="true" (onClick)="onCancel()" />
+                    <p-button label="Tạo ảnh và tải xuống" icon="pi pi-download" [outlined]="true" (onClick)="generateAndDownloadImage()" severity="secondary" />
                     <p-button label="Copy & Chia sẻ lên Facebook" icon="pi pi-facebook" (onClick)="onConfirmShare()" severity="info" />
                 </div>
             </ng-template>
@@ -105,6 +107,7 @@ export class ShareJobModal {
     @Input() job: JobWithDetails | null = null;
     @Output() visibleChange = new EventEmitter<boolean>();
     @Output() confirmShare = new EventEmitter<void>();
+    @ViewChild('previewContent', { read: ElementRef }) previewContent?: ElementRef;
 
     private readonly MAX_SUMMARY_LENGTH = 200;
 
@@ -222,6 +225,66 @@ Tuyển dụng nhân tài - Xây dựng tương lai
             }
 
             document.body.removeChild(textArea);
+        }
+    }
+
+    private sanitizeFilename(title: string): string {
+        return title
+            .toLowerCase()
+            .replace(/[^a-z0-9\s-]/g, '')
+            .replace(/\s+/g, '-')
+            .substring(0, 50);
+    }
+
+    async generateAndDownloadImage(): Promise<void> {
+        if (!this.previewContent?.nativeElement || !this.job) {
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Lỗi',
+                detail: 'Không thể tạo ảnh. Vui lòng thử lại.'
+            });
+
+            return;
+        }
+
+        try {
+            // Show loading message
+            this.messageService.add({
+                severity: 'info',
+                summary: 'Đang xử lý',
+                detail: 'Đang tạo ảnh, vui lòng đợi...'
+            });
+
+            const element = this.previewContent.nativeElement;
+
+            // Generate image using html-to-image
+            const dataUrl = await htmlToImage.toPng(element, {
+                quality: 1,
+                pixelRatio: 2, // Higher resolution for better quality
+                backgroundColor: '#ffffff'
+            });
+
+            // Create download link
+            const link = document.createElement('a');
+            const sanitizedTitle = this.sanitizeFilename(this.job.title);
+            const fileName = `tuyen-dung-${sanitizedTitle}-${Date.now()}.png`;
+
+            link.download = fileName;
+            link.href = dataUrl;
+            link.click();
+
+            this.messageService.add({
+                severity: 'success',
+                summary: 'Thành công',
+                detail: 'Đã tải ảnh xuống thành công'
+            });
+        } catch (error) {
+            console.error('Error generating image:', error);
+            this.messageService.add({
+                severity: 'error',
+                summary: 'Lỗi',
+                detail: 'Không thể tạo ảnh. Vui lòng thử lại.'
+            });
         }
     }
 
