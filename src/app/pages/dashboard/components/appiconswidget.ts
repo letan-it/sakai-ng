@@ -20,8 +20,8 @@ interface AppIcon {
             <div class="card">
                 <h5 class="text-xl font-semibold mb-6">Chức năng & Ứng dụng</h5>
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-                    <div 
-                        *ngFor="let app of applications" 
+                    <div
+                        *ngFor="let app of applications"
                         class="flex flex-col items-center justify-center p-6 rounded-lg cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-105"
                         [ngClass]="app.bgColor"
                         (click)="onAppClick(app.name)"

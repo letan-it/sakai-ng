@@ -230,9 +230,9 @@ Tuyển dụng nhân tài - Xây dựng tương lai
         this.visibleChange.emit(false);
     }
 
-    onConfirmShare(): void {
+    async onConfirmShare(): Promise<void> {
         // Copy the share text first
-        this.copyShareText();
+        await this.copyShareText();
         // Then emit the confirm event to open Facebook
         this.confirmShare.emit();
     }
