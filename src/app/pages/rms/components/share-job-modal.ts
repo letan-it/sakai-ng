@@ -262,8 +262,12 @@ Tuyển dụng nhân tài - Xây dựng tương lai
                 quality: 1,
                 pixelRatio: 2, // Higher resolution for better quality
                 backgroundColor: '#ffffff',
+                width: 680, // Đảm bảo chiều rộng đủ lớn để hiển thị toàn bộ nội dung
                 style: {
-                    padding: '20px'
+                    padding: '40px', // Tăng padding để tránh cắt nội dung ở các rìa
+                    margin: '0',
+                    boxSizing: 'border-box',
+                    maxWidth: 'none' // Loại bỏ giới hạn chiều rộng tối đa
                 }
             });
 
