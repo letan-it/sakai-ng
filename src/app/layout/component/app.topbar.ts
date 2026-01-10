@@ -82,11 +82,20 @@ import { LayoutService } from '../service/layout.service';
     </div>`
 })
 export class AppTopbar {
-    items!: MenuItem[];
+     items!: MenuItem[];
 
     constructor(public layoutService: LayoutService) {}
 
+    ngOnInit() {
+        // Load theme from localStorage when the component initializes
+        const isDarkTheme = localStorage.getItem('isDarkTheme') === 'true';
+        this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: isDarkTheme }));
+    }
+
     toggleDarkMode() {
-        this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: !state.darkTheme }));
+        // Toggle theme and update both layout state and localStorage
+        const updatedTheme = !this.layoutService.isDarkTheme();
+        this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: updatedTheme }));
+        localStorage.setItem('isDarkTheme', updatedTheme.toString());
     }
 }
