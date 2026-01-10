@@ -318,6 +318,7 @@ export class MapDemo implements OnInit, OnDestroy {
             style: this.getMapStyle(),
             center: [106.6297, 15.5],
             zoom: 5,
+            attributionControl: false,
             attributionControl: {
                 compact: true
             }
@@ -334,7 +335,8 @@ export class MapDemo implements OnInit, OnDestroy {
             container: 'markers-map',
             style: this.getMapStyle(),
             center: [106.6297, 15.5],
-            zoom: 5
+            zoom: 5,
+            attributionControl: false
         });
 
         map.addControl(new maplibregl.NavigationControl(), 'top-right');
@@ -383,7 +385,8 @@ export class MapDemo implements OnInit, OnDestroy {
             container: 'standalone-popup-map',
             style: this.getMapStyle(),
             center: [105.8342, 21.0278],
-            zoom: 13
+            zoom: 13,
+            attributionControl: false
         });
 
         map.addControl(new maplibregl.NavigationControl(), 'top-right');
@@ -432,7 +435,8 @@ export class MapDemo implements OnInit, OnDestroy {
             container: 'cluster-map',
             style: this.getMapStyle(),
             center: [106.6297, 15.5],
-            zoom: 5
+            zoom: 5,
+            attributionControl: false
         });
 
         map.addControl(new maplibregl.NavigationControl(), 'top-right');
@@ -574,7 +578,8 @@ export class MapDemo implements OnInit, OnDestroy {
             container: 'rich-popup-map',
             style: this.getMapStyle(),
             center: [106.6297, 15.5],
-            zoom: 5
+            zoom: 5,
+            attributionControl: false
         });
 
         map.addControl(new maplibregl.NavigationControl(), 'top-right');
