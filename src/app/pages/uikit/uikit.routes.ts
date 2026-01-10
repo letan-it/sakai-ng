@@ -15,6 +15,7 @@ import { OverlayDemo } from './overlaydemo';
 import { TreeDemo } from './treedemo';
 import { MenuDemo } from './menudemo';
 import { MapDemo } from './mapdemo';
+import { MapOverpassTurboDemo } from './mapoverpassturbo';
 
 export default [
     { path: 'button', data: { breadcrumb: 'Button' }, component: ButtonDemo },
@@ -33,5 +34,6 @@ export default [
     { path: 'tree', data: { breadcrumb: 'Tree' }, component: TreeDemo },
     { path: 'menu', data: { breadcrumb: 'Menu' }, component: MenuDemo },
     { path: 'map', data: { breadcrumb: 'Map Demo' }, component: MapDemo },
+    { path: 'map-overpass-turbo', data: { breadcrumb: 'Map Overpass Turbo' }, component: MapOverpassTurboDemo },
     { path: '**', redirectTo: '/notfound' }
 ] as Routes;

@@ -27,7 +27,8 @@ export class AppMenu {
             {
                 label: 'UI Components',
                 items: [
-                    { label: 'Map Demo', icon: 'pi pi-fw pi-map', routerLink: ['/uikit/map'] }
+                    { label: 'Map Demo', icon: 'pi pi-fw pi-map', routerLink: ['/uikit/map'] },
+                    { label: 'Map Overpass Turbo', icon: 'pi pi-fw pi-map-marker', routerLink: ['/uikit/map-overpass-turbo'] }
                 ]
             },
             {
