@@ -91,7 +91,7 @@ describe('OverpassService', () => {
             const testQuery = '[out:json]; invalid query;';
 
             service.executeQuery(testQuery).subscribe({
-                next: () => fail('Không nên thành công'),
+                next: () => fail('Test không nên thành công khi API trả về lỗi'),
                 error: (error) => {
                     expect(error).toBeDefined();
                     expect(error.message).toContain('Không thể lấy dữ liệu từ Overpass API');
@@ -112,7 +112,7 @@ describe('OverpassService', () => {
             };
 
             service.executeQuery(testQuery).subscribe({
-                next: () => fail('Không nên thành công với response không hợp lệ'),
+                next: () => fail('Test không nên thành công khi response không hợp lệ (thiếu elements)'),
                 error: (error) => {
                     expect(error).toBeDefined();
                     expect(error.message).toContain('Không thể lấy dữ liệu từ Overpass API');

@@ -72,6 +72,11 @@ export class OverpassService {
      * Thực hiện truy vấn Overpass
      * @param query Chuỗi truy vấn Overpass QL
      * @returns Observable của GeoJSON FeatureCollection
+     * 
+     * Note: Sử dụng GET request với URL-encoded parameters.
+     * URL có giới hạn độ dài (thường ~2048 chars trên browser).
+     * Các query trong app này thường ngắn, nhưng nếu cần query dài hơn
+     * có thể cần fallback về POST method.
      */
     executeQuery(query: string): Observable<GeoJSONFeatureCollection> {
         // Sử dụng URL-encoded query parameters thay vì FormData
@@ -248,7 +253,10 @@ export class OverpassService {
 
         // Kiểm tra version và generator (optional nhưng nên có)
         if (response.version === undefined) {
-            console.warn('Overpass response thiếu trường version');
+            console.warn('Overpass response thiếu trường version', {
+                hasElements: response.elements?.length,
+                hasGenerator: !!response.generator
+            });
         }
 
         return true;
