@@ -9,7 +9,7 @@ export interface GeoJSONFeature {
     type: 'Feature';
     geometry: {
         type: string;
-        coordinates: any[];
+        coordinates: number[][] | number[][][] | number[][][][];
     };
     properties: {
         [key: string]: any;
@@ -205,9 +205,13 @@ export class OverpassService {
      * @returns Observable của GeoJSON FeatureCollection
      */
     getAdministrativeBoundaries(areaName: string, adminLevel: string): Observable<GeoJSONFeatureCollection> {
+        // Sanitize inputs để tránh injection attacks
+        const sanitizedAreaName = this.sanitizeQueryInput(areaName);
+        const sanitizedAdminLevel = this.sanitizeQueryInput(adminLevel);
+
         const query = `
             [out:json][timeout:25];
-            area["name"~"${areaName}"]["admin_level"="${adminLevel}"]->.searchArea;
+            area["name"~"${sanitizedAreaName}"]["admin_level"="${sanitizedAdminLevel}"]->.searchArea;
             (
                 relation(area.searchArea)["boundary"="administrative"];
             );
@@ -217,5 +221,16 @@ export class OverpassService {
         `;
 
         return this.executeQuery(query);
+    }
+
+    /**
+     * Sanitize input để tránh query injection
+     * @param input Chuỗi đầu vào
+     * @returns Chuỗi đã được sanitize
+     */
+    private sanitizeQueryInput(input: string): string {
+        // Loại bỏ các ký tự đặc biệt có thể gây injection
+        // Chỉ cho phép chữ cái, số, khoảng trắng, và dấu gạch ngang
+        return input.replace(/[^\w\s\-ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹ]/g, '');
     }
 }

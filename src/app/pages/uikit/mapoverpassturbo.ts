@@ -389,13 +389,13 @@ out skel qt;`;
                             ${props.population ? `
                                 <div class="info-row">
                                     <span class="info-label">Dân số:</span>
-                                    <span class="info-value">${parseInt(props.population).toLocaleString()}</span>
+                                    <span class="info-value">${Number(props.population).toLocaleString()}</span>
                                 </div>
                             ` : ''}
-                            ${props.wikipedia ? `
+                            ${props.wikipedia && props.wikipedia.includes(':') ? `
                                 <div class="info-row">
                                     <span class="info-label">Wikipedia:</span>
-                                    <span class="info-value"><a href="https://vi.wikipedia.org/wiki/${props.wikipedia.split(':')[1]}" target="_blank">Xem</a></span>
+                                    <span class="info-value"><a href="https://vi.wikipedia.org/wiki/${encodeURIComponent(props.wikipedia.split(':')[1])}" target="_blank" rel="noopener noreferrer">Xem</a></span>
                                 </div>
                             ` : ''}
                         </div>
