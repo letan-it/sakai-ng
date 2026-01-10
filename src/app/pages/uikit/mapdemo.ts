@@ -318,7 +318,6 @@ export class MapDemo implements OnInit, OnDestroy {
             style: this.getMapStyle(),
             center: [106.6297, 15.5],
             zoom: 5,
-            attributionControl: false,
             attributionControl: {
                 compact: true
             }
