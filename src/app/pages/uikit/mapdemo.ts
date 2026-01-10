@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation, inject } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import maplibregl from 'maplibre-gl';
+import { LayoutService } from '@/layout/service/layout.service';
+import { Subscription } from 'rxjs';
 
 // Dữ liệu marker demo cho Việt Nam
 interface LocationMarker {
@@ -262,10 +264,14 @@ const DEMO_LOCATIONS: LocationMarker[] = [
     `
 })
 export class MapDemo implements OnInit, OnDestroy {
+    private static readonly CLUSTER_SOURCE_ID = 'locations';
     private maps: Map<string, maplibregl.Map> = new Map();
     private markers: maplibregl.Marker[] = [];
     showStandalonePopup = false;
     private standalonePopup: maplibregl.Popup | null = null;
+    private layoutService = inject(LayoutService);
+    private themeSubscription: Subscription | null = null;
+    private currentMapStyle: string = '';
 
     ngOnInit(): void {
         this.initBasicMap();
@@ -273,6 +279,11 @@ export class MapDemo implements OnInit, OnDestroy {
         this.initStandalonePopupMap();
         this.initClusterMap();
         this.initRichPopupMap();
+
+        // Subscribe to theme changes
+        this.themeSubscription = this.layoutService.configUpdate$.subscribe(() => {
+            this.updateMapThemes();
+        });
     }
 
     ngOnDestroy(): void {
@@ -280,12 +291,31 @@ export class MapDemo implements OnInit, OnDestroy {
         this.maps.forEach((map) => map.remove());
         this.maps.clear();
         this.markers = [];
+        this.themeSubscription?.unsubscribe();
+    }
+
+    private getMapStyle(): string {
+        const isDark = this.layoutService.isDarkTheme();
+
+        return isDark ? 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json' : 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json';
+    }
+
+    private updateMapThemes(): void {
+        const newStyle = this.getMapStyle();
+
+        // Only update if style has actually changed
+        if (newStyle !== this.currentMapStyle) {
+            this.currentMapStyle = newStyle;
+            this.maps.forEach((map) => {
+                map.setStyle(newStyle);
+            });
+        }
     }
 
     private initBasicMap(): void {
         const map = new maplibregl.Map({
             container: 'basic-map',
-            style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+            style: this.getMapStyle(),
             center: [106.6297, 15.5],
             zoom: 5,
             attributionControl: {
@@ -302,14 +332,14 @@ export class MapDemo implements OnInit, OnDestroy {
     private initMarkersMap(): void {
         const map = new maplibregl.Map({
             container: 'markers-map',
-            style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+            style: this.getMapStyle(),
             center: [106.6297, 15.5],
             zoom: 5
         });
 
         map.addControl(new maplibregl.NavigationControl(), 'top-right');
 
-        map.on('load', () => {
+        const addMarkersToMap = () => {
             DEMO_LOCATIONS.slice(0, 5).forEach((location) => {
                 const el = document.createElement('div');
                 el.className = 'marker';
@@ -334,6 +364,15 @@ export class MapDemo implements OnInit, OnDestroy {
 
                 this.markers.push(marker);
             });
+        };
+
+        map.on('load', addMarkersToMap);
+
+        // Re-add markers when style changes
+        map.on('style.load', () => {
+            if (map.isStyleLoaded()) {
+                addMarkersToMap();
+            }
         });
 
         this.maps.set('markers', map);
@@ -342,7 +381,7 @@ export class MapDemo implements OnInit, OnDestroy {
     private initStandalonePopupMap(): void {
         const map = new maplibregl.Map({
             container: 'standalone-popup-map',
-            style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+            style: this.getMapStyle(),
             center: [105.8342, 21.0278],
             zoom: 13
         });
@@ -391,14 +430,14 @@ export class MapDemo implements OnInit, OnDestroy {
     private initClusterMap(): void {
         const map = new maplibregl.Map({
             container: 'cluster-map',
-            style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+            style: this.getMapStyle(),
             center: [106.6297, 15.5],
             zoom: 5
         });
 
         map.addControl(new maplibregl.NavigationControl(), 'top-right');
 
-        map.on('load', () => {
+        const setupClusterLayers = () => {
             // Tạo GeoJSON từ dữ liệu locations
             const geojson = {
                 type: 'FeatureCollection',
@@ -416,7 +455,7 @@ export class MapDemo implements OnInit, OnDestroy {
                 }))
             };
 
-            map.addSource('locations', {
+            map.addSource(MapDemo.CLUSTER_SOURCE_ID, {
                 type: 'geojson',
                 data: geojson as any,
                 cluster: true,
@@ -428,7 +467,7 @@ export class MapDemo implements OnInit, OnDestroy {
             map.addLayer({
                 id: 'clusters',
                 type: 'circle',
-                source: 'locations',
+                source: MapDemo.CLUSTER_SOURCE_ID,
                 filter: ['has', 'point_count'],
                 paint: {
                     'circle-color': ['step', ['get', 'point_count'], '#22c55e', 5, '#eab308', 10, '#ef4444'],
@@ -440,7 +479,7 @@ export class MapDemo implements OnInit, OnDestroy {
             map.addLayer({
                 id: 'cluster-count',
                 type: 'symbol',
-                source: 'locations',
+                source: MapDemo.CLUSTER_SOURCE_ID,
                 filter: ['has', 'point_count'],
                 layout: {
                     'text-field': '{point_count_abbreviated}',
@@ -456,7 +495,7 @@ export class MapDemo implements OnInit, OnDestroy {
             map.addLayer({
                 id: 'unclustered-point',
                 type: 'circle',
-                source: 'locations',
+                source: MapDemo.CLUSTER_SOURCE_ID,
                 filter: ['!', ['has', 'point_count']],
                 paint: {
                     'circle-color': '#3b82f6',
@@ -473,7 +512,7 @@ export class MapDemo implements OnInit, OnDestroy {
                 });
 
                 const clusterId = features[0].properties['cluster_id'];
-                const source: any = map.getSource('locations');
+                const source: any = map.getSource(MapDemo.CLUSTER_SOURCE_ID);
 
                 source.getClusterExpansionZoom(clusterId, (err: any, zoom: number) => {
                     if (err) {
@@ -516,6 +555,15 @@ export class MapDemo implements OnInit, OnDestroy {
             map.on('mouseleave', 'unclustered-point', () => {
                 map.getCanvas().style.cursor = '';
             });
+        };
+
+        map.on('load', setupClusterLayers);
+
+        // Re-add layers when style changes
+        map.on('style.load', () => {
+            if (map.isStyleLoaded() && !map.getSource(MapDemo.CLUSTER_SOURCE_ID)) {
+                setupClusterLayers();
+            }
         });
 
         this.maps.set('cluster', map);
@@ -524,7 +572,7 @@ export class MapDemo implements OnInit, OnDestroy {
     private initRichPopupMap(): void {
         const map = new maplibregl.Map({
             container: 'rich-popup-map',
-            style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+            style: this.getMapStyle(),
             center: [106.6297, 15.5],
             zoom: 5
         });
@@ -545,7 +593,7 @@ export class MapDemo implements OnInit, OnDestroy {
             'Sa Pa': 'https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=300&h=150&fit=crop'
         };
 
-        map.on('load', () => {
+        const addRichMarkersToMap = () => {
             DEMO_LOCATIONS.forEach((location) => {
                 const el = document.createElement('div');
                 el.className = 'marker';
@@ -584,6 +632,15 @@ export class MapDemo implements OnInit, OnDestroy {
 
                 this.markers.push(marker);
             });
+        };
+
+        map.on('load', addRichMarkersToMap);
+
+        // Re-add markers when style changes
+        map.on('style.load', () => {
+            if (map.isStyleLoaded()) {
+                addRichMarkersToMap();
+            }
         });
 
         this.maps.set('rich', map);
