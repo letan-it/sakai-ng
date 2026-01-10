@@ -264,12 +264,14 @@ const DEMO_LOCATIONS: LocationMarker[] = [
     `
 })
 export class MapDemo implements OnInit, OnDestroy {
+    private static readonly CLUSTER_SOURCE_ID = 'locations';
     private maps: Map<string, maplibregl.Map> = new Map();
     private markers: maplibregl.Marker[] = [];
     showStandalonePopup = false;
     private standalonePopup: maplibregl.Popup | null = null;
     private layoutService = inject(LayoutService);
     private themeSubscription: Subscription | null = null;
+    private currentMapStyle: string = '';
 
     ngOnInit(): void {
         this.initBasicMap();
@@ -289,10 +291,7 @@ export class MapDemo implements OnInit, OnDestroy {
         this.maps.forEach((map) => map.remove());
         this.maps.clear();
         this.markers = [];
-
-        if (this.themeSubscription) {
-            this.themeSubscription.unsubscribe();
-        }
+        this.themeSubscription?.unsubscribe();
     }
 
     private getMapStyle(): string {
@@ -303,9 +302,14 @@ export class MapDemo implements OnInit, OnDestroy {
 
     private updateMapThemes(): void {
         const newStyle = this.getMapStyle();
-        this.maps.forEach((map) => {
-            map.setStyle(newStyle);
-        });
+
+        // Only update if style has actually changed
+        if (newStyle !== this.currentMapStyle) {
+            this.currentMapStyle = newStyle;
+            this.maps.forEach((map) => {
+                map.setStyle(newStyle);
+            });
+        }
     }
 
     private initBasicMap(): void {
@@ -451,7 +455,7 @@ export class MapDemo implements OnInit, OnDestroy {
                 }))
             };
 
-            map.addSource('locations', {
+            map.addSource(MapDemo.CLUSTER_SOURCE_ID, {
                 type: 'geojson',
                 data: geojson as any,
                 cluster: true,
@@ -463,7 +467,7 @@ export class MapDemo implements OnInit, OnDestroy {
             map.addLayer({
                 id: 'clusters',
                 type: 'circle',
-                source: 'locations',
+                source: MapDemo.CLUSTER_SOURCE_ID,
                 filter: ['has', 'point_count'],
                 paint: {
                     'circle-color': ['step', ['get', 'point_count'], '#22c55e', 5, '#eab308', 10, '#ef4444'],
@@ -475,7 +479,7 @@ export class MapDemo implements OnInit, OnDestroy {
             map.addLayer({
                 id: 'cluster-count',
                 type: 'symbol',
-                source: 'locations',
+                source: MapDemo.CLUSTER_SOURCE_ID,
                 filter: ['has', 'point_count'],
                 layout: {
                     'text-field': '{point_count_abbreviated}',
@@ -491,7 +495,7 @@ export class MapDemo implements OnInit, OnDestroy {
             map.addLayer({
                 id: 'unclustered-point',
                 type: 'circle',
-                source: 'locations',
+                source: MapDemo.CLUSTER_SOURCE_ID,
                 filter: ['!', ['has', 'point_count']],
                 paint: {
                     'circle-color': '#3b82f6',
@@ -508,7 +512,7 @@ export class MapDemo implements OnInit, OnDestroy {
                 });
 
                 const clusterId = features[0].properties['cluster_id'];
-                const source: any = map.getSource('locations');
+                const source: any = map.getSource(MapDemo.CLUSTER_SOURCE_ID);
 
                 source.getClusterExpansionZoom(clusterId, (err: any, zoom: number) => {
                     if (err) {
@@ -557,7 +561,7 @@ export class MapDemo implements OnInit, OnDestroy {
 
         // Re-add layers when style changes
         map.on('style.load', () => {
-            if (map.isStyleLoaded() && !map.getSource('locations')) {
+            if (map.isStyleLoaded() && !map.getSource(MapDemo.CLUSTER_SOURCE_ID)) {
                 setupClusterLayers();
             }
         });
