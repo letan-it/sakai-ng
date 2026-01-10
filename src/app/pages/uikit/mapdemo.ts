@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation, inject } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import maplibregl from 'maplibre-gl';
+import { LayoutService } from '@/layout/service/layout.service';
+import { Subscription } from 'rxjs';
 
 // Dữ liệu marker demo cho Việt Nam
 interface LocationMarker {
@@ -266,6 +268,8 @@ export class MapDemo implements OnInit, OnDestroy {
     private markers: maplibregl.Marker[] = [];
     showStandalonePopup = false;
     private standalonePopup: maplibregl.Popup | null = null;
+    private layoutService = inject(LayoutService);
+    private themeSubscription: Subscription | null = null;
 
     ngOnInit(): void {
         this.initBasicMap();
@@ -273,6 +277,11 @@ export class MapDemo implements OnInit, OnDestroy {
         this.initStandalonePopupMap();
         this.initClusterMap();
         this.initRichPopupMap();
+
+        // Subscribe to theme changes
+        this.themeSubscription = this.layoutService.configUpdate$.subscribe(() => {
+            this.updateMapThemes();
+        });
     }
 
     ngOnDestroy(): void {
@@ -280,12 +289,29 @@ export class MapDemo implements OnInit, OnDestroy {
         this.maps.forEach((map) => map.remove());
         this.maps.clear();
         this.markers = [];
+
+        if (this.themeSubscription) {
+            this.themeSubscription.unsubscribe();
+        }
+    }
+
+    private getMapStyle(): string {
+        const isDark = this.layoutService.isDarkTheme();
+
+        return isDark ? 'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json' : 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json';
+    }
+
+    private updateMapThemes(): void {
+        const newStyle = this.getMapStyle();
+        this.maps.forEach((map) => {
+            map.setStyle(newStyle);
+        });
     }
 
     private initBasicMap(): void {
         const map = new maplibregl.Map({
             container: 'basic-map',
-            style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+            style: this.getMapStyle(),
             center: [106.6297, 15.5],
             zoom: 5,
             attributionControl: {
@@ -302,14 +328,14 @@ export class MapDemo implements OnInit, OnDestroy {
     private initMarkersMap(): void {
         const map = new maplibregl.Map({
             container: 'markers-map',
-            style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+            style: this.getMapStyle(),
             center: [106.6297, 15.5],
             zoom: 5
         });
 
         map.addControl(new maplibregl.NavigationControl(), 'top-right');
 
-        map.on('load', () => {
+        const addMarkersToMap = () => {
             DEMO_LOCATIONS.slice(0, 5).forEach((location) => {
                 const el = document.createElement('div');
                 el.className = 'marker';
@@ -334,6 +360,15 @@ export class MapDemo implements OnInit, OnDestroy {
 
                 this.markers.push(marker);
             });
+        };
+
+        map.on('load', addMarkersToMap);
+
+        // Re-add markers when style changes
+        map.on('style.load', () => {
+            if (map.isStyleLoaded()) {
+                addMarkersToMap();
+            }
         });
 
         this.maps.set('markers', map);
@@ -342,7 +377,7 @@ export class MapDemo implements OnInit, OnDestroy {
     private initStandalonePopupMap(): void {
         const map = new maplibregl.Map({
             container: 'standalone-popup-map',
-            style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+            style: this.getMapStyle(),
             center: [105.8342, 21.0278],
             zoom: 13
         });
@@ -391,14 +426,14 @@ export class MapDemo implements OnInit, OnDestroy {
     private initClusterMap(): void {
         const map = new maplibregl.Map({
             container: 'cluster-map',
-            style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+            style: this.getMapStyle(),
             center: [106.6297, 15.5],
             zoom: 5
         });
 
         map.addControl(new maplibregl.NavigationControl(), 'top-right');
 
-        map.on('load', () => {
+        const setupClusterLayers = () => {
             // Tạo GeoJSON từ dữ liệu locations
             const geojson = {
                 type: 'FeatureCollection',
@@ -516,6 +551,15 @@ export class MapDemo implements OnInit, OnDestroy {
             map.on('mouseleave', 'unclustered-point', () => {
                 map.getCanvas().style.cursor = '';
             });
+        };
+
+        map.on('load', setupClusterLayers);
+
+        // Re-add layers when style changes
+        map.on('style.load', () => {
+            if (map.isStyleLoaded() && !map.getSource('locations')) {
+                setupClusterLayers();
+            }
         });
 
         this.maps.set('cluster', map);
@@ -524,7 +568,7 @@ export class MapDemo implements OnInit, OnDestroy {
     private initRichPopupMap(): void {
         const map = new maplibregl.Map({
             container: 'rich-popup-map',
-            style: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+            style: this.getMapStyle(),
             center: [106.6297, 15.5],
             zoom: 5
         });
@@ -545,7 +589,7 @@ export class MapDemo implements OnInit, OnDestroy {
             'Sa Pa': 'https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=300&h=150&fit=crop'
         };
 
-        map.on('load', () => {
+        const addRichMarkersToMap = () => {
             DEMO_LOCATIONS.forEach((location) => {
                 const el = document.createElement('div');
                 el.className = 'marker';
@@ -584,6 +628,15 @@ export class MapDemo implements OnInit, OnDestroy {
 
                 this.markers.push(marker);
             });
+        };
+
+        map.on('load', addRichMarkersToMap);
+
+        // Re-add markers when style changes
+        map.on('style.load', () => {
+            if (map.isStyleLoaded()) {
+                addRichMarkersToMap();
+            }
         });
 
         this.maps.set('rich', map);
