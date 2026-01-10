@@ -72,13 +72,26 @@ export class OverpassService {
      * Thực hiện truy vấn Overpass
      * @param query Chuỗi truy vấn Overpass QL
      * @returns Observable của GeoJSON FeatureCollection
+     * 
+     * Note: Sử dụng GET request với URL-encoded parameters.
+     * URL có giới hạn độ dài (thường ~2048 chars trên browser).
+     * Các query trong app này thường ngắn, nhưng nếu cần query dài hơn
+     * có thể cần fallback về POST method.
      */
     executeQuery(query: string): Observable<GeoJSONFeatureCollection> {
-        const formData = new FormData();
-        formData.append('data', query);
+        // Sử dụng URL-encoded query parameters thay vì FormData
+        const encodedQuery = encodeURIComponent(query);
+        const url = `${this.OVERPASS_API_URL}?data=${encodedQuery}`;
 
-        return this.http.post<OverpassResponse>(this.OVERPASS_API_URL, formData).pipe(
-            map((response) => this.convertToGeoJSON(response)),
+        return this.http.get<OverpassResponse>(url).pipe(
+            map((response) => {
+                // Validate API response
+                if (!this.isValidOverpassResponse(response)) {
+                    throw new Error('Phản hồi từ Overpass API không hợp lệ');
+                }
+
+                return this.convertToGeoJSON(response);
+            }),
             catchError((error) => {
                 console.error('Lỗi khi gọi Overpass API:', error);
 
@@ -221,6 +234,32 @@ export class OverpassService {
         `;
 
         return this.executeQuery(query);
+    }
+
+    /**
+     * Kiểm tra tính hợp lệ của Overpass API response
+     * @param response Phản hồi từ Overpass API
+     * @returns true nếu response hợp lệ, false nếu không
+     */
+    private isValidOverpassResponse(response: any): response is OverpassResponse {
+        if (!response || typeof response !== 'object') {
+            return false;
+        }
+
+        // Kiểm tra các trường bắt buộc
+        if (!response.elements || !Array.isArray(response.elements)) {
+            return false;
+        }
+
+        // Kiểm tra version và generator (optional nhưng nên có)
+        if (response.version === undefined) {
+            console.warn('Overpass response thiếu trường version', {
+                hasElements: response.elements?.length,
+                hasGenerator: !!response.generator
+            });
+        }
+
+        return true;
     }
 
     /**
