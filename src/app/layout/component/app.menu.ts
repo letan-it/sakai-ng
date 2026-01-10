@@ -25,6 +25,12 @@ export class AppMenu {
                 items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', routerLink: ['/'] }]
             },
             {
+                label: 'UI Components',
+                items: [
+                    { label: 'Map Demo', icon: 'pi pi-fw pi-map', routerLink: ['/uikit/map'] }
+                ]
+            },
+            {
                 label: 'Learning Management',
                 icon: 'pi pi-fw pi-graduation-cap',
                 items: [
