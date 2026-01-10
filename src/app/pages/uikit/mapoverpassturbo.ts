@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 
@@ -48,15 +48,7 @@ import { CardModule } from 'primeng/card';
         </div>
     `
 })
-export class MapOverpassTurboDemo implements OnInit, OnDestroy {
-    ngOnInit() {
-        // Initialization logic if needed
-    }
-
-    ngOnDestroy() {
-        // Cleanup logic if needed
-    }
-
+export class MapOverpassTurboDemo {
     openInNewTab() {
         window.open('https://demo-recruitment.vercel.app/uikit/map-overpass-turbo', '_blank');
     }
