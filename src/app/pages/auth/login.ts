@@ -1,18 +1,34 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, PLATFORM_ID, inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 import { AppFloatingConfigurator } from '../../layout/component/app.floatingconfigurator';
+
+// Định nghĩa interface cho Google Identity Services
+declare const google: any;
+
+interface GoogleUserProfile {
+    id: string;
+    name: string;
+    email: string;
+    imageUrl: string;
+    token: string;
+}
 
 @Component({
     selector: 'app-login',
     standalone: true,
-    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, AppFloatingConfigurator],
+    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, ToastModule, AppFloatingConfigurator],
+    providers: [MessageService],
     template: `
+        <p-toast />
         <app-floating-configurator />
         <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-screen overflow-hidden">
             <div class="flex flex-col items-center justify-center">
@@ -55,6 +71,35 @@ import { AppFloatingConfigurator } from '../../layout/component/app.floatingconf
                                 <span class="font-medium no-underline ml-2 text-right cursor-pointer text-primary">Forgot password?</span>
                             </div>
                             <p-button label="Sign In" styleClass="w-full" routerLink="/"></p-button>
+
+                            <div class="flex items-center my-6">
+                                <div class="flex-1 border-t border-surface-200 dark:border-surface-700"></div>
+                                <span class="px-4 text-muted-color font-medium">OR</span>
+                                <div class="flex-1 border-t border-surface-200 dark:border-surface-700"></div>
+                            </div>
+
+                            <button
+                                type="button"
+                                (click)="handleGoogleSignIn()"
+                                class="w-full flex items-center justify-center gap-3 px-6 py-3 border border-surface-200 dark:border-surface-700 rounded-lg hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors"
+                            >
+                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M17.64 9.20454C17.64 8.56636 17.5827 7.95272 17.4764 7.36363H9V10.845H13.8436C13.635 11.97 13.0009 12.9231 12.0477 13.5613V15.8195H14.9564C16.6582 14.2527 17.64 11.9454 17.64 9.20454Z" fill="#4285F4" />
+                                    <path
+                                        d="M9 18C11.43 18 13.4673 17.1941 14.9564 15.8195L12.0477 13.5613C11.2418 14.1013 10.2109 14.4204 9 14.4204C6.65591 14.4204 4.67182 12.8372 3.96409 10.71H0.957275V13.0418C2.43818 15.9831 5.48182 18 9 18Z"
+                                        fill="#34A853"
+                                    />
+                                    <path
+                                        d="M3.96409 10.71C3.78409 10.17 3.68182 9.59318 3.68182 9C3.68182 8.40682 3.78409 7.83 3.96409 7.29V4.95818H0.957275C0.347727 6.17318 0 7.54773 0 9C0 10.4523 0.347727 11.8268 0.957275 13.0418L3.96409 10.71Z"
+                                        fill="#FBBC05"
+                                    />
+                                    <path
+                                        d="M9 3.57955C10.3214 3.57955 11.5077 4.03364 12.4405 4.92545L15.0218 2.34409C13.4632 0.891818 11.4259 0 9 0C5.48182 0 2.43818 2.01682 0.957275 4.95818L3.96409 7.29C4.67182 5.16273 6.65591 3.57955 9 3.57955Z"
+                                        fill="#EA4335"
+                                    />
+                                </svg>
+                                <span class="text-surface-900 dark:text-surface-0 font-medium">Login with Google</span>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -62,10 +107,152 @@ import { AppFloatingConfigurator } from '../../layout/component/app.floatingconf
         </div>
     `
 })
-export class Login {
+export class Login implements OnInit {
     email: string = '';
 
     password: string = '';
 
     checked: boolean = false;
+
+    private router = inject(Router);
+
+    private platformId = inject(PLATFORM_ID);
+
+    private messageService = inject(MessageService);
+
+    // TODO: Di chuyển client_id vào environment config để dễ quản lý cho các môi trường khác nhau
+    private readonly GOOGLE_CLIENT_ID = '478210539-cfbfeaorngqplsad1agd078rs5e8nudr.apps.googleusercontent.com';
+
+    private readonly MAX_INIT_RETRIES = 10;
+
+    private initRetryCount = 0;
+
+    ngOnInit() {
+        // Chỉ khởi tạo Google Sign-In khi chạy trong browser
+        if (isPlatformBrowser(this.platformId)) {
+            this.initGoogleSignIn();
+        }
+    }
+
+    /**
+     * Khởi tạo Google OAuth client
+     */
+    initGoogleSignIn() {
+        if (typeof google !== 'undefined' && google.accounts) {
+            google.accounts.id.initialize({
+                client_id: this.GOOGLE_CLIENT_ID,
+                callback: this.handleGoogleCallback.bind(this),
+                auto_select: false,
+                cancel_on_tap_outside: true
+            });
+            this.initRetryCount = 0;
+        } else if (this.initRetryCount < this.MAX_INIT_RETRIES) {
+            // Nếu script chưa load, thử lại sau 500ms (tối đa 10 lần)
+            this.initRetryCount++;
+            setTimeout(() => this.initGoogleSignIn(), 500);
+        } else {
+            // Đã thử quá số lần cho phép
+            console.error('Không thể load Google Identity Services sau', this.MAX_INIT_RETRIES, 'lần thử');
+        }
+    }
+
+    /**
+     * Xử lý khi user click "Login with Google"
+     */
+    handleGoogleSignIn() {
+        if (typeof google !== 'undefined' && google.accounts) {
+            google.accounts.id.prompt();
+        }
+    }
+
+    /**
+     * Xử lý response từ Google sau khi đăng nhập thành công
+     */
+    handleGoogleCallback(response: any) {
+        try {
+            if (response.credential) {
+                // Decode JWT token để lấy thông tin user
+                const payload = this.parseJwt(response.credential);
+
+                const userProfile: GoogleUserProfile = {
+                    id: payload.sub,
+                    name: payload.name,
+                    email: payload.email,
+                    imageUrl: payload.picture,
+                    token: response.credential
+                };
+
+                // Lưu profile vào localStorage
+                this.saveUserProfile(userProfile);
+
+                // Điều hướng về trang chính
+                this.router.navigate(['/']);
+            }
+        } catch (error) {
+            this.handleError(error);
+        }
+    }
+
+    /**
+     * Parse JWT token để lấy payload
+     */
+    private parseJwt(token: string): any {
+        try {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(
+                atob(base64)
+                    .split('')
+                    .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+                    .join('')
+            );
+
+            return JSON.parse(jsonPayload);
+        } catch (error) {
+            throw new Error('Invalid token');
+        }
+    }
+
+    /**
+     * Lưu user profile vào localStorage
+     * NOTE: Trong production nên cân nhắc:
+     * - Sử dụng sessionStorage thay vì localStorage để tăng bảo mật
+     * - Hoặc lưu token vào httpOnly cookie thông qua backend
+     * - Mã hóa dữ liệu nhạy cảm trước khi lưu
+     */
+    private saveUserProfile(profile: GoogleUserProfile) {
+        try {
+            localStorage.setItem('googleUserProfile', JSON.stringify(profile));
+            localStorage.setItem('isAuthenticated', 'true');
+            localStorage.setItem('authMethod', 'google');
+        } catch (error) {
+            console.error('Lỗi khi lưu profile vào localStorage:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * Xử lý các lỗi
+     */
+    private handleError(error: any) {
+        console.error('Lỗi đăng nhập Google:', error);
+
+        let errorMessage = 'Đã xảy ra lỗi khi đăng nhập với Google';
+
+        if (error.message === 'Invalid token') {
+            errorMessage = 'Token không hợp lệ. Vui lòng thử lại.';
+        } else if (error.type === 'popup_closed') {
+            errorMessage = 'Cửa sổ đăng nhập đã bị đóng. Vui lòng thử lại.';
+        } else if (error.type === 'access_denied') {
+            errorMessage = 'Bạn đã từ chối cấp quyền. Vui lòng thử lại và cho phép truy cập.';
+        }
+
+        // Hiển thị thông báo lỗi cho user bằng Toast
+        this.messageService.add({
+            severity: 'error',
+            summary: 'Lỗi đăng nhập',
+            detail: errorMessage,
+            life: 5000
+        });
+    }
 }
