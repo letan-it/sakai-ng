@@ -231,47 +231,59 @@ export class Login implements OnInit {
      * Xử lý khi user click "Login with Google"
      */
     handleGoogleSignIn() {
-        if (typeof google !== 'undefined' && google.accounts && this.isGoogleApiLoaded) {
-            try {
-                this.isGoogleButtonLoading = true;
-                google.accounts.id.prompt((notification: any) => {
-                    this.isGoogleButtonLoading = false;
-                    
-                    if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-                        console.warn('Google prompt không hiển thị hoặc bị bỏ qua:', notification.getNotDisplayedReason(), notification.getSkippedReason());
-                    }
-                });
-            } catch (error) {
-                this.isGoogleButtonLoading = false;
-                console.error('Lỗi khi hiển thị Google Sign-In prompt:', error);
-                this.showErrorMessage('Không thể mở cửa sổ đăng nhập Google. Vui lòng thử lại.');
-            }
+        if (this.isGoogleApiLoaded && typeof google !== 'undefined' && google.accounts) {
+            this.showGooglePrompt();
         } else if (!this.isGoogleApiLoaded && this.initRetryCount < this.MAX_INIT_RETRIES) {
-            // Google API chưa sẵn sàng, thông báo cho user và thử init lại
-            console.warn('Google API chưa sẵn sàng, đang thử khởi tạo lại...');
-            this.isGoogleButtonLoading = true;
-            this.showInfoMessage('Đang kết nối với Google, vui lòng đợi...');
-            
-            // Reset retry count và init lại
-            const currentRetryCount = this.initRetryCount;
-            this.initRetryCount = 0;
-            this.initGoogleSignIn();
-            
-            // Thử lại sau 1.5 giây, nhưng chỉ nếu vẫn chưa quá số lần thử
-            setTimeout(() => {
-                if (this.isGoogleApiLoaded) {
-                    this.isGoogleButtonLoading = false;
-                    // Không gọi lại handleGoogleSignIn tự động để tránh vòng lặp
-                    this.showInfoMessage('Google đã sẵn sàng. Vui lòng nhấn nút đăng nhập lại.');
-                } else {
-                    this.isGoogleButtonLoading = false;
-                    // Khôi phục retry count
-                    this.initRetryCount = currentRetryCount + 1;
-                }
-            }, 1500);
+            this.retryGoogleInit();
         } else {
             this.showErrorMessage('Dịch vụ Google Sign-In không khả dụng. Vui lòng thử lại sau hoặc kiểm tra kết nối internet.');
         }
+    }
+
+    /**
+     * Hiển thị Google Sign-In prompt
+     */
+    private showGooglePrompt() {
+        try {
+            this.isGoogleButtonLoading = true;
+            google.accounts.id.prompt((notification: any) => {
+                this.isGoogleButtonLoading = false;
+                
+                if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+                    console.warn('Google prompt không hiển thị hoặc bị bỏ qua:', notification.getNotDisplayedReason(), notification.getSkippedReason());
+                }
+            });
+        } catch (error) {
+            this.isGoogleButtonLoading = false;
+            console.error('Lỗi khi hiển thị Google Sign-In prompt:', error);
+            this.showErrorMessage('Không thể mở cửa sổ đăng nhập Google. Vui lòng thử lại.');
+        }
+    }
+
+    /**
+     * Retry khởi tạo Google API khi user click button nhưng API chưa sẵn sàng
+     */
+    private retryGoogleInit() {
+        console.warn('Google API chưa sẵn sàng, đang thử khởi tạo lại...');
+        this.isGoogleButtonLoading = true;
+        this.showInfoMessage('Đang kết nối với Google, vui lòng đợi...');
+        
+        // Lưu retry count hiện tại trước khi reset
+        const currentRetryCount = this.initRetryCount;
+        this.initRetryCount = 0;
+        this.initGoogleSignIn();
+        
+        // Thử lại sau 1.5 giây, nhưng chỉ thông báo cho user
+        setTimeout(() => {
+            this.isGoogleButtonLoading = false;
+            
+            if (this.isGoogleApiLoaded) {
+                this.showInfoMessage('Google đã sẵn sàng. Vui lòng nhấn nút đăng nhập lại.');
+            } else {
+                // Khôi phục và tăng retry count
+                this.initRetryCount = currentRetryCount + 1;
+            }
+        }, 1500);
     }
 
     /**
@@ -351,10 +363,18 @@ export class Login implements OnInit {
 
     /**
      * Lưu user profile vào localStorage
-     * NOTE: Trong production nên cân nhắc:
-     * - Sử dụng sessionStorage thay vì localStorage để tăng bảo mật
-     * - Hoặc lưu token vào httpOnly cookie thông qua backend
-     * - Mã hóa dữ liệu nhạy cảm trước khi lưu
+     * 
+     * ⚠️ LƯU Ý BẢO MẬT:
+     * - localStorage có thể bị truy cập bởi JavaScript => dễ bị XSS attacks
+     * - Token nên được lưu trong httpOnly cookies qua backend
+     * - Hoặc sử dụng sessionStorage thay vì localStorage để tăng bảo mật
+     * - Trong production app thực tế, nên:
+     *   1. Gửi token đến backend
+     *   2. Backend verify token với Google
+     *   3. Backend tạo session và set httpOnly cookie
+     *   4. Chỉ lưu user info (không có token) trong localStorage
+     * 
+     * Implementation hiện tại chỉ phù hợp cho demo/development purposes.
      */
     private saveUserProfile(profile: GoogleUserProfile) {
         try {
