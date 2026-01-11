@@ -6,7 +6,14 @@
         <base href="/" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <!-- 
-            Content Security Policy để cho phép Google OAuth hoạt động
+            Content Security Policy để bảo mật ứng dụng
+            
+            Connect-src domains:
+            - accounts.google.com, www.googleapis.com: Google OAuth
+            - basemaps.cartocdn.com: Map tiles và styles (MapLibre GL)
+            - overpass-api.de: Dữ liệu ranh giới hành chính từ OpenStreetMap
+            - *.tile.openstreetmap.org: OSM tiles (dự phòng)
+            
             LƯU Ý: CSP này có 'unsafe-inline' và 'unsafe-eval' cho Angular development
             Trong production, nên:
             1. Sử dụng nonces cho inline scripts
