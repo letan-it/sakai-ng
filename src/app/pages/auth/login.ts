@@ -246,24 +246,31 @@ export class Login implements OnInit {
                 console.error('Lỗi khi hiển thị Google Sign-In prompt:', error);
                 this.showErrorMessage('Không thể mở cửa sổ đăng nhập Google. Vui lòng thử lại.');
             }
-        } else if (!this.isGoogleApiLoaded) {
+        } else if (!this.isGoogleApiLoaded && this.initRetryCount < this.MAX_INIT_RETRIES) {
             // Google API chưa sẵn sàng, thông báo cho user và thử init lại
             console.warn('Google API chưa sẵn sàng, đang thử khởi tạo lại...');
             this.isGoogleButtonLoading = true;
             this.showInfoMessage('Đang kết nối với Google, vui lòng đợi...');
+            
+            // Reset retry count và init lại
+            const currentRetryCount = this.initRetryCount;
             this.initRetryCount = 0;
             this.initGoogleSignIn();
             
-            // Thử lại sau 1 giây
+            // Thử lại sau 1.5 giây, nhưng chỉ nếu vẫn chưa quá số lần thử
             setTimeout(() => {
                 if (this.isGoogleApiLoaded) {
-                    this.handleGoogleSignIn();
+                    this.isGoogleButtonLoading = false;
+                    // Không gọi lại handleGoogleSignIn tự động để tránh vòng lặp
+                    this.showInfoMessage('Google đã sẵn sàng. Vui lòng nhấn nút đăng nhập lại.');
                 } else {
                     this.isGoogleButtonLoading = false;
+                    // Khôi phục retry count
+                    this.initRetryCount = currentRetryCount + 1;
                 }
-            }, 1000);
+            }, 1500);
         } else {
-            this.showErrorMessage('Dịch vụ Google Sign-In chưa sẵn sàng. Vui lòng thử lại sau.');
+            this.showErrorMessage('Dịch vụ Google Sign-In không khả dụng. Vui lòng thử lại sau hoặc kiểm tra kết nối internet.');
         }
     }
 

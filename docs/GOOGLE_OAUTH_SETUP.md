@@ -9,6 +9,32 @@
 - Tài khoản Google Cloud Platform (GCP)
 - Quyền truy cập để tạo và quản lý OAuth 2.0 Client IDs
 
+## ⚠️ LƯU Ý BẢO MẬT QUAN TRỌNG
+
+### Google Client ID
+
+1. **Sử dụng Client ID riêng cho mỗi môi trường**:
+   - Development: Client ID riêng cho localhost
+   - Staging: Client ID riêng cho staging environment
+   - Production: Client ID riêng cho production domain
+
+2. **KHÔNG commit Client ID vào public repository**:
+   - Nếu repository là public, sử dụng GitHub Secrets hoặc environment variables
+   - Thêm `environment*.ts` vào `.gitignore` nếu chứa sensitive data
+   - Với repository private, vẫn nên sử dụng environment variables cho flexibility
+
+3. **Rotate Client IDs định kỳ**:
+   - Tạo Client ID mới mỗi 6-12 tháng
+   - Update ứng dụng trước khi disable Client ID cũ
+
+### Content Security Policy
+
+CSP hiện tại cho phép `'unsafe-inline'` và `'unsafe-eval'` để Angular có thể hoạt động. Trong production:
+
+1. **Cân nhắc sử dụng nonces** cho inline scripts thay vì `'unsafe-inline'`
+2. **Tránh `'unsafe-eval'`** nếu có thể - chỉ cần cho development builds
+3. **Giới hạn domains** trong CSP chỉ còn những gì thực sự cần thiết
+
 ## Các bước cấu hình
 
 ### 1. Tạo Google Cloud Project
