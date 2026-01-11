@@ -11,17 +11,10 @@ import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 import { AppFloatingConfigurator } from '../../layout/component/app.floatingconfigurator';
+import { GoogleUserProfile } from '../../models/google-user-profile.model';
 
 // Định nghĩa interface cho Google Identity Services
 declare const google: any;
-
-interface GoogleUserProfile {
-    id: string;
-    name: string;
-    email: string;
-    imageUrl: string;
-    token: string;
-}
 
 @Component({
     selector: 'app-login',

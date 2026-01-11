@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -7,14 +7,7 @@ import { PopoverModule } from 'primeng/popover';
 import { ButtonModule } from 'primeng/button';
 import { AppConfigurator } from './app.configurator';
 import { LayoutService } from '../service/layout.service';
-
-interface GoogleUserProfile {
-    id: string;
-    name: string;
-    email: string;
-    imageUrl: string;
-    token: string;
-}
+import { GoogleUserProfile } from '../../models/google-user-profile.model';
 
 @Component({
     selector: 'app-topbar',
@@ -133,7 +126,7 @@ interface GoogleUserProfile {
         </div>
     </div>`
 })
-export class AppTopbar {
+export class AppTopbar implements OnInit {
      items!: MenuItem[];
 
     userProfile: GoogleUserProfile | null = null;

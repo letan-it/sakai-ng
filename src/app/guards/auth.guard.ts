@@ -49,6 +49,8 @@ export const authGuard: CanActivateFn = (route, state) => {
 
 /**
  * Helper function để xóa authentication data
+ * TODO: Trong tương lai nên tạo shared authentication service
+ * để tránh code duplication với handleLogout() trong app.topbar.ts
  */
 function clearAuthentication() {
     localStorage.removeItem('googleUserProfile');
