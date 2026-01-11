@@ -29,7 +29,7 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = PDF_WORKER_SRC;
         <p-toast />
 
         <!-- Dialog giới thiệu -->
-        <p-dialog header="Thông báo" [(visible)]="displayIntroDialog" [modal]="true" [style]="{ width: '450px' }" [closable]="true">
+        <p-dialog header="Thông báo" [(visible)]="displayIntroDialog" [modal]="true" [style]="{ width: '450px' }" [closable]="true" maskStyleClass="backdrop-blur-sm" styleClass="!border-0">
             <div class="flex flex-col gap-4">
                 <p class="text-lg leading-relaxed">Sản phẩm do <strong class="text-primary">AI Agents của LQT</strong> tạo ra, sản phẩm này chỉ dùng để <strong>demo giao diện chức năng</strong>.</p>
             </div>
