@@ -174,6 +174,8 @@ export class Login implements OnInit {
 
     private readonly MAX_INIT_RETRIES = 10;
 
+    private readonly MODAL_CLOSE_DELAY = 100; // Delay trước khi navigate (ms)
+
     private initRetryCount = 0;
 
     ngOnInit() {
@@ -261,7 +263,7 @@ export class Login implements OnInit {
             } else {
                 this.router.navigate(['/']);
             }
-        }, 100);
+        }, this.MODAL_CLOSE_DELAY);
     }
 
     /**
