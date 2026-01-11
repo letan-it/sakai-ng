@@ -8,6 +8,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
 import { ToastModule } from 'primeng/toast';
+import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 import { AppFloatingConfigurator } from '../../layout/component/app.floatingconfigurator';
 
@@ -25,7 +26,7 @@ interface GoogleUserProfile {
 @Component({
     selector: 'app-login',
     standalone: true,
-    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, ToastModule, AppFloatingConfigurator],
+    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, ToastModule, DialogModule, AppFloatingConfigurator],
     providers: [MessageService],
     template: `
         <p-toast />
@@ -105,6 +106,64 @@ interface GoogleUserProfile {
                 </div>
             </div>
         </div>
+        
+        <!-- Welcome Modal -->
+        <p-dialog 
+            [(visible)]="showWelcomeModal" 
+            [modal]="true" 
+            [closable]="false"
+            [draggable]="false"
+            maskStyleClass="backdrop-blur-sm"
+            styleClass="!border-0"
+        >
+            <ng-template pTemplate="header">
+                <div class="flex items-center gap-3">
+                    <i class="pi pi-sparkles text-primary text-2xl"></i>
+                    <span class="text-2xl font-bold">Chào mừng {{ welcomeUserName }}!</span>
+                </div>
+            </ng-template>
+            
+            <div class="flex flex-col items-center gap-6 py-4">
+                @if (welcomeUserAvatar) {
+                    <img 
+                        [src]="welcomeUserAvatar" 
+                        alt="Avatar" 
+                        class="w-24 h-24 rounded-full border-4 border-primary shadow-xl animate-scalein"
+                    />
+                }
+                
+                <div class="text-center max-w-md">
+                    <p class="text-lg text-surface-700 dark:text-surface-300 mb-4">
+                        Chào mừng bạn đến với hệ thống!
+                    </p>
+                    
+                    <div class="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-primary p-4 rounded-lg mb-4">
+                        <p class="text-surface-800 dark:text-surface-200 mb-2">
+                            Đây là sản phẩm được phát triển bởi <strong>AI Agent - LQT</strong>
+                        </p>
+                        <p class="text-sm text-muted-color italic">
+                            (AI-powered Application Development Agent)
+                        </p>
+                    </div>
+                    
+                    <p class="text-lg text-surface-700 dark:text-surface-300 flex items-center justify-center gap-2">
+                        Chúc bạn có trải nghiệm tuyệt vời! <span class="text-2xl">🚀</span>
+                    </p>
+                </div>
+            </div>
+            
+            <ng-template pTemplate="footer">
+                <p-button 
+                    label="Bắt đầu" 
+                    icon="pi pi-arrow-right" 
+                    iconPos="right"
+                    severity="primary"
+                    size="large"
+                    (onClick)="closeWelcomeModal()"
+                    [fluid]="true"
+                />
+            </ng-template>
+        </p-dialog>
     `
 })
 export class Login implements OnInit {
@@ -113,6 +172,12 @@ export class Login implements OnInit {
     password: string = '';
 
     checked: boolean = false;
+
+    showWelcomeModal: boolean = false;
+
+    welcomeUserName: string = '';
+
+    welcomeUserAvatar: string = '';
 
     private router = inject(Router);
 
@@ -185,11 +250,30 @@ export class Login implements OnInit {
                 // Lưu profile vào localStorage
                 this.saveUserProfile(userProfile);
 
-                // Điều hướng về trang chính
-                this.router.navigate(['/']);
+                // Hiển thị welcome modal trước khi navigate
+                this.welcomeUserName = userProfile.name;
+                this.welcomeUserAvatar = userProfile.imageUrl;
+                this.showWelcomeModal = true;
             }
         } catch (error) {
             this.handleError(error);
+        }
+    }
+
+    /**
+     * Đóng welcome modal và chuyển đến trang chính
+     */
+    closeWelcomeModal() {
+        this.showWelcomeModal = false;
+
+        // Kiểm tra xem có URL được lưu để redirect không
+        const redirectUrl = localStorage.getItem('redirectUrl');
+
+        if (redirectUrl) {
+            localStorage.removeItem('redirectUrl');
+            this.router.navigateByUrl(redirectUrl);
+        } else {
+            this.router.navigate(['/']);
         }
     }
 

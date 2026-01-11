@@ -1,15 +1,25 @@
 import { Component } from '@angular/core';
 import { MenuItem } from 'primeng/api';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { StyleClassModule } from 'primeng/styleclass';
+import { PopoverModule } from 'primeng/popover';
+import { ButtonModule } from 'primeng/button';
 import { AppConfigurator } from './app.configurator';
 import { LayoutService } from '../service/layout.service';
+
+interface GoogleUserProfile {
+    id: string;
+    name: string;
+    email: string;
+    imageUrl: string;
+    token: string;
+}
 
 @Component({
     selector: 'app-topbar',
     standalone: true,
-    imports: [RouterModule, CommonModule, StyleClassModule, AppConfigurator],
+    imports: [RouterModule, CommonModule, StyleClassModule, PopoverModule, ButtonModule, AppConfigurator],
     template: ` <div class="layout-topbar">
         <div class="layout-topbar-logo-container">
             <button class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
@@ -72,24 +82,106 @@ import { LayoutService } from '../service/layout.service';
                         <i class="pi pi-inbox"></i>
                         <span>Messages</span>
                     </button>
-                    <button type="button" class="layout-topbar-action">
-                        <i class="pi pi-user"></i>
+                    <button type="button" class="layout-topbar-action" (click)="profilePopover.toggle($event)">
+                        @if (userProfile && userProfile.imageUrl) {
+                            <img [src]="userProfile.imageUrl" alt="Avatar" class="w-8 h-8 rounded-full border-2 border-primary shadow-md" />
+                        } @else {
+                            <i class="pi pi-user"></i>
+                        }
                         <span>Profile</span>
                     </button>
                 </div>
             </div>
+            
+            <!-- Profile Popover -->
+            <p-popover #profilePopover maskStyleClass="backdrop-blur-sm" styleClass="!border-0">
+                @if (userProfile) {
+                    <div class="flex flex-col gap-4 p-4 min-w-80">
+                        <!-- Avatar và thông tin cơ bản -->
+                        <div class="flex flex-col items-center gap-3 pb-4 border-b border-surface-200 dark:border-surface-700">
+                            <img [src]="userProfile.imageUrl" alt="Avatar" class="w-20 h-20 rounded-full border-4 border-primary shadow-lg" />
+                            <div class="text-center">
+                                <h3 class="text-xl font-semibold text-surface-900 dark:text-surface-0 mb-1">{{ userProfile.name }}</h3>
+                                <p class="text-muted-color text-sm">{{ userProfile.email }}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Chi tiết thông tin -->
+                        <div class="flex flex-col gap-3">
+                            <div class="flex items-start gap-2">
+                                <i class="pi pi-id-card text-primary mt-1"></i>
+                                <div>
+                                    <p class="text-xs text-muted-color font-medium mb-1">User ID</p>
+                                    <p class="text-sm text-surface-900 dark:text-surface-0 font-mono">{{ userProfile.id }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Nút đăng xuất -->
+                        <div class="pt-3 border-t border-surface-200 dark:border-surface-700">
+                            <p-button 
+                                label="Đăng xuất" 
+                                icon="pi pi-sign-out" 
+                                severity="danger" 
+                                (onClick)="handleLogout()"
+                                [fluid]="true"
+                            />
+                        </div>
+                    </div>
+                }
+            </p-popover>
         </div>
     </div>`
 })
 export class AppTopbar {
      items!: MenuItem[];
 
-    constructor(public layoutService: LayoutService) {}
+    userProfile: GoogleUserProfile | null = null;
+
+    constructor(
+        public layoutService: LayoutService,
+        private router: Router
+    ) {}
 
     ngOnInit() {
         // Load theme from localStorage when the component initializes
         const isDarkTheme = localStorage.getItem('isDarkTheme') === 'true';
         this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: isDarkTheme }));
+
+        // Load user profile from localStorage
+        this.loadUserProfile();
+    }
+
+    /**
+     * Load user profile từ localStorage
+     */
+    loadUserProfile() {
+        try {
+            const profileStr = localStorage.getItem('googleUserProfile');
+            
+            if (profileStr) {
+                this.userProfile = JSON.parse(profileStr);
+            }
+        } catch (error) {
+            console.error('Lỗi khi load user profile:', error);
+            this.userProfile = null;
+        }
+    }
+
+    /**
+     * Xử lý đăng xuất
+     */
+    handleLogout() {
+        // Xóa tất cả thông tin authentication khỏi localStorage
+        localStorage.removeItem('googleUserProfile');
+        localStorage.removeItem('isAuthenticated');
+        localStorage.removeItem('authMethod');
+
+        // Reset user profile
+        this.userProfile = null;
+
+        // Chuyển hướng về trang login
+        this.router.navigate(['/auth/login']);
     }
 
     toggleDarkMode() {
