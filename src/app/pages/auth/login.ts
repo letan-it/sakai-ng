@@ -12,6 +12,7 @@ import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 import { AppFloatingConfigurator } from '../../layout/component/app.floatingconfigurator';
 import { GoogleUserProfile } from '../../models/google-user-profile.model';
+import { environment } from '../../../environments/environment';
 
 // Định nghĩa interface cho Google Identity Services
 declare const google: any;
@@ -169,14 +170,15 @@ export class Login implements OnInit {
 
     private messageService = inject(MessageService);
 
-    // TODO: Di chuyển client_id vào environment config để dễ quản lý cho các môi trường khác nhau
-    private readonly GOOGLE_CLIENT_ID = '478210539-cfbfeaorngqplsad1agd078rs5e8nudr.apps.googleusercontent.com';
+    private readonly GOOGLE_CLIENT_ID = environment.googleClientId;
 
     private readonly MAX_INIT_RETRIES = 10;
 
     private readonly MODAL_CLOSE_DELAY = 100; // Delay trước khi navigate (ms)
 
     private initRetryCount = 0;
+
+    private isGoogleApiLoaded = false;
 
     ngOnInit() {
         // Chỉ khởi tạo Google Sign-In khi chạy trong browser
@@ -190,20 +192,30 @@ export class Login implements OnInit {
      */
     initGoogleSignIn() {
         if (typeof google !== 'undefined' && google.accounts) {
-            google.accounts.id.initialize({
-                client_id: this.GOOGLE_CLIENT_ID,
-                callback: this.handleGoogleCallback.bind(this),
-                auto_select: false,
-                cancel_on_tap_outside: true
-            });
-            this.initRetryCount = 0;
+            try {
+                google.accounts.id.initialize({
+                    client_id: this.GOOGLE_CLIENT_ID,
+                    callback: this.handleGoogleCallback.bind(this),
+                    auto_select: false,
+                    cancel_on_tap_outside: true
+                });
+                this.isGoogleApiLoaded = true;
+                this.initRetryCount = 0;
+                console.log('Google Identity Services đã được khởi tạo thành công');
+            } catch (error) {
+                console.error('Lỗi khi khởi tạo Google Identity Services:', error);
+                this.showErrorMessage('Không thể khởi tạo Google Sign-In. Vui lòng thử lại sau.');
+            }
         } else if (this.initRetryCount < this.MAX_INIT_RETRIES) {
             // Nếu script chưa load, thử lại sau 500ms (tối đa 10 lần)
             this.initRetryCount++;
+            console.log(`Đang chờ Google Identity Services load... (lần thử ${this.initRetryCount}/${this.MAX_INIT_RETRIES})`);
             setTimeout(() => this.initGoogleSignIn(), 500);
         } else {
             // Đã thử quá số lần cho phép
-            console.error('Không thể load Google Identity Services sau', this.MAX_INIT_RETRIES, 'lần thử');
+            const errorMsg = `Không thể load Google Identity Services sau ${this.MAX_INIT_RETRIES} lần thử`;
+            console.error(errorMsg);
+            this.showErrorMessage('Không thể kết nối với Google. Vui lòng kiểm tra kết nối internet và thử lại.');
         }
     }
 
@@ -211,8 +223,28 @@ export class Login implements OnInit {
      * Xử lý khi user click "Login with Google"
      */
     handleGoogleSignIn() {
-        if (typeof google !== 'undefined' && google.accounts) {
-            google.accounts.id.prompt();
+        if (typeof google !== 'undefined' && google.accounts && this.isGoogleApiLoaded) {
+            try {
+                google.accounts.id.prompt();
+            } catch (error) {
+                console.error('Lỗi khi hiển thị Google Sign-In prompt:', error);
+                this.showErrorMessage('Không thể mở cửa sổ đăng nhập Google. Vui lòng thử lại.');
+            }
+        } else if (!this.isGoogleApiLoaded) {
+            // Google API chưa sẵn sàng, thông báo cho user và thử init lại
+            console.warn('Google API chưa sẵn sàng, đang thử khởi tạo lại...');
+            this.showInfoMessage('Đang kết nối với Google, vui lòng đợi...');
+            this.initRetryCount = 0;
+            this.initGoogleSignIn();
+            
+            // Thử lại sau 1 giây
+            setTimeout(() => {
+                if (this.isGoogleApiLoaded) {
+                    this.handleGoogleSignIn();
+                }
+            }, 1000);
+        } else {
+            this.showErrorMessage('Dịch vụ Google Sign-In chưa sẵn sàng. Vui lòng thử lại sau.');
         }
     }
 
@@ -240,8 +272,13 @@ export class Login implements OnInit {
                 this.welcomeUserName = userProfile.name;
                 this.welcomeUserAvatar = userProfile.imageUrl;
                 this.showWelcomeModal = true;
+
+                console.log('Đăng nhập Google thành công:', userProfile.email);
+            } else {
+                throw new Error('Không nhận được credential từ Google');
             }
         } catch (error) {
+            console.error('Lỗi trong quá trình xử lý Google callback:', error);
             this.handleError(error);
         }
     }
@@ -320,12 +357,30 @@ export class Login implements OnInit {
             errorMessage = 'Bạn đã từ chối cấp quyền. Vui lòng thử lại và cho phép truy cập.';
         }
 
-        // Hiển thị thông báo lỗi cho user bằng Toast
+        this.showErrorMessage(errorMessage);
+    }
+
+    /**
+     * Hiển thị thông báo lỗi cho user
+     */
+    private showErrorMessage(message: string) {
         this.messageService.add({
             severity: 'error',
             summary: 'Lỗi đăng nhập',
-            detail: errorMessage,
+            detail: message,
             life: 5000
+        });
+    }
+
+    /**
+     * Hiển thị thông báo thông tin cho user
+     */
+    private showInfoMessage(message: string) {
+        this.messageService.add({
+            severity: 'info',
+            summary: 'Thông tin',
+            detail: message,
+            life: 3000
         });
     }
 }
