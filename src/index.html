@@ -5,7 +5,24 @@
         <title>AI Agents - Lê Tấn</title>
         <base href="/" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- 
+            Content Security Policy để cho phép Google OAuth hoạt động
+            LƯU Ý: CSP này có 'unsafe-inline' và 'unsafe-eval' cho Angular development
+            Trong production, nên:
+            1. Sử dụng nonces cho inline scripts
+            2. Loại bỏ 'unsafe-eval' nếu có thể
+            3. Giới hạn script-src chỉ còn những domains cần thiết
+        -->
+        <meta http-equiv="Content-Security-Policy" 
+              content="default-src 'self'; 
+                       script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://apis.google.com; 
+                       style-src 'self' 'unsafe-inline' https://fonts.cdnfonts.com; 
+                       font-src 'self' https://fonts.cdnfonts.com; 
+                       img-src 'self' data: https: blob:; 
+                       connect-src 'self' https://accounts.google.com https://www.googleapis.com; 
+                       frame-src https://accounts.google.com;" />
         <link rel="preconnect" href="https://primefaces.org" />
+        <link rel="preconnect" href="https://accounts.google.com" />
         <link rel="icon" type="image/x-icon" href="https://primefaces.org/cdn/primeng/images/favicon.png" />
         <link href="https://fonts.cdnfonts.com/css/lato" rel="stylesheet" />
         <script src="https://accounts.google.com/gsi/client" async defer></script>
