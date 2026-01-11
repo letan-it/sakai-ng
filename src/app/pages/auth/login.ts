@@ -112,7 +112,7 @@ declare const google: any;
             <ng-template pTemplate="header">
                 <div class="flex items-center gap-3">
                     <i class="pi pi-sparkles text-primary text-2xl"></i>
-                    <span class="text-2xl font-bold">Chào mừng {{ welcomeUserName }}!</span>
+                    <span class="text-2xl font-bold">Chào mừng {{ welcomeUserName }} đến với Website Demo</span>
                 </div>
             </ng-template>
             
@@ -127,20 +127,11 @@ declare const google: any;
                 
                 <div class="text-center max-w-md">
                     <p class="text-lg text-surface-700 dark:text-surface-300 mb-4">
-                        Chào mừng bạn đến với hệ thống!
+                        Đây là giao diện demo do Agent AI LQT tạo ra.
                     </p>
                     
-                    <div class="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-primary p-4 rounded-lg mb-4">
-                        <p class="text-surface-800 dark:text-surface-200 mb-2">
-                            Đây là sản phẩm được phát triển bởi <strong>AI Agent - LQT</strong>
-                        </p>
-                        <p class="text-sm text-muted-color italic">
-                            (AI-powered Application Development Agent)
-                        </p>
-                    </div>
-                    
-                    <p class="text-lg text-surface-700 dark:text-surface-300 flex items-center justify-center gap-2">
-                        Chúc bạn có trải nghiệm tuyệt vời! <span class="text-2xl">🚀</span>
+                    <p class="text-lg text-surface-700 dark:text-surface-300">
+                        Sản phẩm do AI Agents của LQT tạo ra, chỉ dùng để demo giao diện chức năng
                     </p>
                 </div>
             </div>
@@ -259,15 +250,18 @@ export class Login implements OnInit {
     closeWelcomeModal() {
         this.showWelcomeModal = false;
 
-        // Kiểm tra xem có URL được lưu để redirect không
-        const redirectUrl = localStorage.getItem('redirectUrl');
+        // Sử dụng setTimeout để đảm bảo modal đã đóng hoàn toàn trước khi navigate
+        setTimeout(() => {
+            // Kiểm tra xem có URL được lưu để redirect không
+            const redirectUrl = localStorage.getItem('redirectUrl');
 
-        if (redirectUrl) {
-            localStorage.removeItem('redirectUrl');
-            this.router.navigateByUrl(redirectUrl);
-        } else {
-            this.router.navigate(['/']);
-        }
+            if (redirectUrl) {
+                localStorage.removeItem('redirectUrl');
+                this.router.navigateByUrl(redirectUrl);
+            } else {
+                this.router.navigate(['/']);
+            }
+        }, 100);
     }
 
     /**
