@@ -11,11 +11,17 @@ import { ToastModule } from 'primeng/toast';
 import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 import { AppFloatingConfigurator } from '../../layout/component/app.floatingconfigurator';
-import { GoogleUserProfile } from '../../models/google-user-profile.model';
-import { environment } from '../../../environments/environment';
 
 // Định nghĩa interface cho Google Identity Services
 declare const google: any;
+
+interface GoogleUserProfile {
+    id: string;
+    name: string;
+    email: string;
+    imageUrl: string;
+    token: string;
+}
 
 @Component({
     selector: 'app-login',
@@ -76,30 +82,24 @@ declare const google: any;
                             <button
                                 type="button"
                                 (click)="handleGoogleSignIn()"
-                                [disabled]="isGoogleButtonLoading"
-                                class="w-full flex items-center justify-center gap-3 px-6 py-3 border border-surface-200 dark:border-surface-700 rounded-lg hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                class="w-full flex items-center justify-center gap-3 px-6 py-3 border border-surface-200 dark:border-surface-700 rounded-lg hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors"
                             >
-                                @if (isGoogleButtonLoading) {
-                                    <i class="pi pi-spin pi-spinner"></i>
-                                    <span class="text-surface-900 dark:text-surface-0 font-medium">Đang kết nối...</span>
-                                } @else {
-                                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M17.64 9.20454C17.64 8.56636 17.5827 7.95272 17.4764 7.36363H9V10.845H13.8436C13.635 11.97 13.0009 12.9231 12.0477 13.5613V15.8195H14.9564C16.6582 14.2527 17.64 11.9454 17.64 9.20454Z" fill="#4285F4" />
-                                        <path
-                                            d="M9 18C11.43 18 13.4673 17.1941 14.9564 15.8195L12.0477 13.5613C11.2418 14.1013 10.2109 14.4204 9 14.4204C6.65591 14.4204 4.67182 12.8372 3.96409 10.71H0.957275V13.0418C2.43818 15.9831 5.48182 18 9 18Z"
-                                            fill="#34A853"
-                                        />
-                                        <path
-                                            d="M3.96409 10.71C3.78409 10.17 3.68182 9.59318 3.68182 9C3.68182 8.40682 3.78409 7.83 3.96409 7.29V4.95818H0.957275C0.347727 6.17318 0 7.54773 0 9C0 10.4523 0.347727 11.8268 0.957275 13.0418L3.96409 10.71Z"
-                                            fill="#FBBC05"
-                                        />
-                                        <path
-                                            d="M9 3.57955C10.3214 3.57955 11.5077 4.03364 12.4405 4.92545L15.0218 2.34409C13.4632 0.891818 11.4259 0 9 0C5.48182 0 2.43818 2.01682 0.957275 4.95818L3.96409 7.29C4.67182 5.16273 6.65591 3.57955 9 3.57955Z"
-                                            fill="#EA4335"
-                                        />
-                                    </svg>
-                                    <span class="text-surface-900 dark:text-surface-0 font-medium">Login with Google</span>
-                                }
+                                <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M17.64 9.20454C17.64 8.56636 17.5827 7.95272 17.4764 7.36363H9V10.845H13.8436C13.635 11.97 13.0009 12.9231 12.0477 13.5613V15.8195H14.9564C16.6582 14.2527 17.64 11.9454 17.64 9.20454Z" fill="#4285F4" />
+                                    <path
+                                        d="M9 18C11.43 18 13.4673 17.1941 14.9564 15.8195L12.0477 13.5613C11.2418 14.1013 10.2109 14.4204 9 14.4204C6.65591 14.4204 4.67182 12.8372 3.96409 10.71H0.957275V13.0418C2.43818 15.9831 5.48182 18 9 18Z"
+                                        fill="#34A853"
+                                    />
+                                    <path
+                                        d="M3.96409 10.71C3.78409 10.17 3.68182 9.59318 3.68182 9C3.68182 8.40682 3.78409 7.83 3.96409 7.29V4.95818H0.957275C0.347727 6.17318 0 7.54773 0 9C0 10.4523 0.347727 11.8268 0.957275 13.0418L3.96409 10.71Z"
+                                        fill="#FBBC05"
+                                    />
+                                    <path
+                                        d="M9 3.57955C10.3214 3.57955 11.5077 4.03364 12.4405 4.92545L15.0218 2.34409C13.4632 0.891818 11.4259 0 9 0C5.48182 0 2.43818 2.01682 0.957275 4.95818L3.96409 7.29C4.67182 5.16273 6.65591 3.57955 9 3.57955Z"
+                                        fill="#EA4335"
+                                    />
+                                </svg>
+                                <span class="text-surface-900 dark:text-surface-0 font-medium">Login with Google</span>
                             </button>
                         </div>
                     </div>
@@ -119,7 +119,7 @@ declare const google: any;
             <ng-template pTemplate="header">
                 <div class="flex items-center gap-3">
                     <i class="pi pi-sparkles text-primary text-2xl"></i>
-                    <span class="text-2xl font-bold">Chào mừng {{ welcomeUserName }} đến với Website Demo</span>
+                    <span class="text-2xl font-bold">Chào mừng {{ welcomeUserName }}!</span>
                 </div>
             </ng-template>
             
@@ -134,11 +134,20 @@ declare const google: any;
                 
                 <div class="text-center max-w-md">
                     <p class="text-lg text-surface-700 dark:text-surface-300 mb-4">
-                        Đây là giao diện demo do Agent AI LQT tạo ra.
+                        Chào mừng bạn đến với hệ thống!
                     </p>
                     
-                    <p class="text-lg text-surface-700 dark:text-surface-300">
-                        Sản phẩm do AI Agents của LQT tạo ra, chỉ dùng để demo giao diện chức năng
+                    <div class="bg-blue-50 dark:bg-blue-900/20 border-l-4 border-primary p-4 rounded-lg mb-4">
+                        <p class="text-surface-800 dark:text-surface-200 mb-2">
+                            Đây là sản phẩm được phát triển bởi <strong>AI Agent - LQT</strong>
+                        </p>
+                        <p class="text-sm text-muted-color italic">
+                            (AI-powered Application Development Agent)
+                        </p>
+                    </div>
+                    
+                    <p class="text-lg text-surface-700 dark:text-surface-300 flex items-center justify-center gap-2">
+                        Chúc bạn có trải nghiệm tuyệt vời! <span class="text-2xl">🚀</span>
                     </p>
                 </div>
             </div>
@@ -176,17 +185,12 @@ export class Login implements OnInit {
 
     private messageService = inject(MessageService);
 
-    private readonly GOOGLE_CLIENT_ID = environment.googleClientId;
+    // TODO: Di chuyển client_id vào environment config để dễ quản lý cho các môi trường khác nhau
+    private readonly GOOGLE_CLIENT_ID = '478210539-cfbfeaorngqplsad1agd078rs5e8nudr.apps.googleusercontent.com';
 
     private readonly MAX_INIT_RETRIES = 10;
 
-    private readonly MODAL_CLOSE_DELAY = 100; // Delay trước khi navigate (ms)
-
     private initRetryCount = 0;
-
-    private isGoogleApiLoaded = false;
-
-    isGoogleButtonLoading = false;
 
     ngOnInit() {
         // Chỉ khởi tạo Google Sign-In khi chạy trong browser
@@ -200,30 +204,20 @@ export class Login implements OnInit {
      */
     initGoogleSignIn() {
         if (typeof google !== 'undefined' && google.accounts) {
-            try {
-                google.accounts.id.initialize({
-                    client_id: this.GOOGLE_CLIENT_ID,
-                    callback: this.handleGoogleCallback.bind(this),
-                    auto_select: false,
-                    cancel_on_tap_outside: true
-                });
-                this.isGoogleApiLoaded = true;
-                this.initRetryCount = 0;
-                console.log('Google Identity Services đã được khởi tạo thành công');
-            } catch (error) {
-                console.error('Lỗi khi khởi tạo Google Identity Services:', error);
-                this.showErrorMessage('Không thể khởi tạo Google Sign-In. Vui lòng thử lại sau.');
-            }
+            google.accounts.id.initialize({
+                client_id: this.GOOGLE_CLIENT_ID,
+                callback: this.handleGoogleCallback.bind(this),
+                auto_select: false,
+                cancel_on_tap_outside: true
+            });
+            this.initRetryCount = 0;
         } else if (this.initRetryCount < this.MAX_INIT_RETRIES) {
             // Nếu script chưa load, thử lại sau 500ms (tối đa 10 lần)
             this.initRetryCount++;
-            console.log(`Đang chờ Google Identity Services load... (lần thử ${this.initRetryCount}/${this.MAX_INIT_RETRIES})`);
             setTimeout(() => this.initGoogleSignIn(), 500);
         } else {
             // Đã thử quá số lần cho phép
-            const errorMsg = `Không thể load Google Identity Services sau ${this.MAX_INIT_RETRIES} lần thử`;
-            console.error(errorMsg);
-            this.showErrorMessage('Không thể kết nối với Google. Vui lòng kiểm tra kết nối internet và thử lại.');
+            console.error('Không thể load Google Identity Services sau', this.MAX_INIT_RETRIES, 'lần thử');
         }
     }
 
@@ -231,59 +225,9 @@ export class Login implements OnInit {
      * Xử lý khi user click "Login with Google"
      */
     handleGoogleSignIn() {
-        if (this.isGoogleApiLoaded && typeof google !== 'undefined' && google.accounts) {
-            this.showGooglePrompt();
-        } else if (!this.isGoogleApiLoaded && this.initRetryCount < this.MAX_INIT_RETRIES) {
-            this.retryGoogleInit();
-        } else {
-            this.showErrorMessage('Dịch vụ Google Sign-In không khả dụng. Vui lòng thử lại sau hoặc kiểm tra kết nối internet.');
+        if (typeof google !== 'undefined' && google.accounts) {
+            google.accounts.id.prompt();
         }
-    }
-
-    /**
-     * Hiển thị Google Sign-In prompt
-     */
-    private showGooglePrompt() {
-        try {
-            this.isGoogleButtonLoading = true;
-            google.accounts.id.prompt((notification: any) => {
-                this.isGoogleButtonLoading = false;
-                
-                if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-                    console.warn('Google prompt không hiển thị hoặc bị bỏ qua:', notification.getNotDisplayedReason(), notification.getSkippedReason());
-                }
-            });
-        } catch (error) {
-            this.isGoogleButtonLoading = false;
-            console.error('Lỗi khi hiển thị Google Sign-In prompt:', error);
-            this.showErrorMessage('Không thể mở cửa sổ đăng nhập Google. Vui lòng thử lại.');
-        }
-    }
-
-    /**
-     * Retry khởi tạo Google API khi user click button nhưng API chưa sẵn sàng
-     */
-    private retryGoogleInit() {
-        console.warn('Google API chưa sẵn sàng, đang thử khởi tạo lại...');
-        this.isGoogleButtonLoading = true;
-        this.showInfoMessage('Đang kết nối với Google, vui lòng đợi...');
-        
-        // Lưu retry count hiện tại trước khi reset
-        const currentRetryCount = this.initRetryCount;
-        this.initRetryCount = 0;
-        this.initGoogleSignIn();
-        
-        // Thử lại sau 1.5 giây, nhưng chỉ thông báo cho user
-        setTimeout(() => {
-            this.isGoogleButtonLoading = false;
-            
-            if (this.isGoogleApiLoaded) {
-                this.showInfoMessage('Google đã sẵn sàng. Vui lòng nhấn nút đăng nhập lại.');
-            } else {
-                // Khôi phục và tăng retry count
-                this.initRetryCount = currentRetryCount + 1;
-            }
-        }, 1500);
     }
 
     /**
@@ -310,13 +254,8 @@ export class Login implements OnInit {
                 this.welcomeUserName = userProfile.name;
                 this.welcomeUserAvatar = userProfile.imageUrl;
                 this.showWelcomeModal = true;
-
-                console.log('Đăng nhập Google thành công:', userProfile.email);
-            } else {
-                throw new Error('Không nhận được credential từ Google');
             }
         } catch (error) {
-            console.error('Lỗi trong quá trình xử lý Google callback:', error);
             this.handleError(error);
         }
     }
@@ -327,18 +266,15 @@ export class Login implements OnInit {
     closeWelcomeModal() {
         this.showWelcomeModal = false;
 
-        // Sử dụng setTimeout để đảm bảo modal đã đóng hoàn toàn trước khi navigate
-        setTimeout(() => {
-            // Kiểm tra xem có URL được lưu để redirect không
-            const redirectUrl = localStorage.getItem('redirectUrl');
+        // Kiểm tra xem có URL được lưu để redirect không
+        const redirectUrl = localStorage.getItem('redirectUrl');
 
-            if (redirectUrl) {
-                localStorage.removeItem('redirectUrl');
-                this.router.navigateByUrl(redirectUrl);
-            } else {
-                this.router.navigate(['/']);
-            }
-        }, this.MODAL_CLOSE_DELAY);
+        if (redirectUrl) {
+            localStorage.removeItem('redirectUrl');
+            this.router.navigateByUrl(redirectUrl);
+        } else {
+            this.router.navigate(['/']);
+        }
     }
 
     /**
@@ -363,18 +299,10 @@ export class Login implements OnInit {
 
     /**
      * Lưu user profile vào localStorage
-     * 
-     * ⚠️ LƯU Ý BẢO MẬT:
-     * - localStorage có thể bị truy cập bởi JavaScript => dễ bị XSS attacks
-     * - Token nên được lưu trong httpOnly cookies qua backend
-     * - Hoặc sử dụng sessionStorage thay vì localStorage để tăng bảo mật
-     * - Trong production app thực tế, nên:
-     *   1. Gửi token đến backend
-     *   2. Backend verify token với Google
-     *   3. Backend tạo session và set httpOnly cookie
-     *   4. Chỉ lưu user info (không có token) trong localStorage
-     * 
-     * Implementation hiện tại chỉ phù hợp cho demo/development purposes.
+     * NOTE: Trong production nên cân nhắc:
+     * - Sử dụng sessionStorage thay vì localStorage để tăng bảo mật
+     * - Hoặc lưu token vào httpOnly cookie thông qua backend
+     * - Mã hóa dữ liệu nhạy cảm trước khi lưu
      */
     private saveUserProfile(profile: GoogleUserProfile) {
         try {
@@ -403,30 +331,12 @@ export class Login implements OnInit {
             errorMessage = 'Bạn đã từ chối cấp quyền. Vui lòng thử lại và cho phép truy cập.';
         }
 
-        this.showErrorMessage(errorMessage);
-    }
-
-    /**
-     * Hiển thị thông báo lỗi cho user
-     */
-    private showErrorMessage(message: string) {
+        // Hiển thị thông báo lỗi cho user bằng Toast
         this.messageService.add({
             severity: 'error',
             summary: 'Lỗi đăng nhập',
-            detail: message,
+            detail: errorMessage,
             life: 5000
-        });
-    }
-
-    /**
-     * Hiển thị thông báo thông tin cho user
-     */
-    private showInfoMessage(message: string) {
-        this.messageService.add({
-            severity: 'info',
-            summary: 'Thông tin',
-            detail: message,
-            life: 3000
         });
     }
 }
