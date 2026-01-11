@@ -1,4 +1,4 @@
-import { Component, OnInit, PLATFORM_ID, inject } from '@angular/core';
+import { Component, OnInit, AfterViewInit, PLATFORM_ID, inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -74,10 +74,15 @@ interface GoogleUserProfile {
                                 <div class="flex-1 border-t border-surface-200 dark:border-surface-700"></div>
                             </div>
 
+                            <!-- Container cho Google Sign-In Button chính thức -->
+                            <div id="googleSignInDiv" class="w-full flex justify-center mb-4"></div>
+
+                            <!-- Fallback custom button -->
                             <button
                                 type="button"
                                 (click)="handleGoogleSignIn()"
                                 class="w-full flex items-center justify-center gap-3 px-6 py-3 border border-surface-200 dark:border-surface-700 rounded-lg hover:bg-surface-50 dark:hover:bg-surface-800 transition-colors"
+                                [class.hidden]="googleButtonRendered"
                             >
                                 <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M17.64 9.20454C17.64 8.56636 17.5827 7.95272 17.4764 7.36363H9V10.845H13.8436C13.635 11.97 13.0009 12.9231 12.0477 13.5613V15.8195H14.9564C16.6582 14.2527 17.64 11.9454 17.64 9.20454Z" fill="#4285F4" />
@@ -103,12 +108,14 @@ interface GoogleUserProfile {
         </div>
     `
 })
-export class Login implements OnInit {
+export class Login implements OnInit, AfterViewInit {
     email: string = '';
 
     password: string = '';
 
     checked: boolean = false;
+
+    googleButtonRendered: boolean = false;
 
     private router = inject(Router);
 
@@ -116,36 +123,194 @@ export class Login implements OnInit {
 
     private readonly GOOGLE_CLIENT_ID = '478210539-cfbfeaorngqplsad1agd078rs5e8nudr.apps.googleusercontent.com';
 
+    private initAttempts = 0;
+
+    private readonly MAX_INIT_ATTEMPTS = 10;
+
     ngOnInit() {
         // Chỉ khởi tạo Google Sign-In khi chạy trong browser
         if (isPlatformBrowser(this.platformId)) {
-            this.initGoogleSignIn();
+            console.log('[Google SSO] Bắt đầu khởi tạo Google Sign-In...');
+            this.loadGoogleScript();
         }
+    }
+
+    ngAfterViewInit() {
+        // Đảm bảo DOM đã sẵn sàng trước khi render button
+        if (isPlatformBrowser(this.platformId)) {
+            console.log('[Google SSO] AfterViewInit - DOM đã sẵn sàng');
+            setTimeout(() => {
+                this.initGoogleSignIn();
+            }, 100);
+        }
+    }
+
+    /**
+     * Kiểm tra và load Google Identity Services script
+     */
+    private loadGoogleScript(): Promise<void> {
+        return new Promise((resolve, reject) => {
+            console.log('[Google SSO] Kiểm tra Google Identity Services script...');
+
+            // Kiểm tra xem script đã được load chưa
+            if (typeof google !== 'undefined' && google.accounts) {
+                console.log('[Google SSO] Script đã được load sẵn');
+                resolve();
+
+                return;
+            }
+
+            // Tìm script tag hiện có
+            const existingScript = document.querySelector('script[src*="accounts.google.com/gsi/client"]');
+
+            if (existingScript) {
+                console.log('[Google SSO] Script tag đã tồn tại, chờ load...');
+                // Script đã tồn tại, chờ nó load
+                existingScript.addEventListener('load', () => {
+                    console.log('[Google SSO] Script đã load thành công');
+                    resolve();
+                });
+                existingScript.addEventListener('error', (error) => {
+                    console.error('[Google SSO] Lỗi khi load script:', error);
+                    reject(error);
+                });
+            } else {
+                console.warn('[Google SSO] Script tag không tồn tại trong HTML, tạo mới...');
+                // Tạo script tag mới nếu chưa có
+                const script = document.createElement('script');
+
+                script.src = 'https://accounts.google.com/gsi/client';
+                script.async = true;
+                script.defer = true;
+                script.onload = () => {
+                    console.log('[Google SSO] Script mới đã load thành công');
+                    resolve();
+                };
+                script.onerror = (error) => {
+                    console.error('[Google SSO] Lỗi khi load script mới:', error);
+                    reject(error);
+                };
+                document.head.appendChild(script);
+            }
+
+            // Timeout sau 10 giây
+            setTimeout(() => {
+                if (typeof google === 'undefined' || !google.accounts) {
+                    console.error('[Google SSO] Timeout: Script không load sau 10 giây');
+                    reject(new Error('Google script load timeout'));
+                }
+            }, 10000);
+        });
     }
 
     /**
      * Khởi tạo Google OAuth client
      */
-    initGoogleSignIn() {
+    private initGoogleSignIn() {
+        this.initAttempts++;
+        console.log(`[Google SSO] Lần thử khởi tạo #${this.initAttempts}`);
+
         if (typeof google !== 'undefined' && google.accounts) {
-            google.accounts.id.initialize({
-                client_id: this.GOOGLE_CLIENT_ID,
-                callback: this.handleGoogleCallback.bind(this),
-                auto_select: false,
-                cancel_on_tap_outside: true
-            });
+            try {
+                console.log('[Google SSO] Đang khởi tạo Google Identity Services...');
+                google.accounts.id.initialize({
+                    client_id: this.GOOGLE_CLIENT_ID,
+                    callback: this.handleGoogleCallback.bind(this),
+                    auto_select: false,
+                    cancel_on_tap_outside: true,
+                    ux_mode: 'popup' // Sử dụng popup mode thay vì redirect
+                });
+                console.log('[Google SSO] Khởi tạo thành công, đang render button...');
+                this.renderGoogleButton();
+            } catch (error) {
+                console.error('[Google SSO] Lỗi khi khởi tạo:', error);
+                this.handleError(error);
+            }
         } else {
-            // Nếu script chưa load, thử lại sau 500ms
-            setTimeout(() => this.initGoogleSignIn(), 500);
+            // Nếu script chưa load, thử lại
+            if (this.initAttempts < this.MAX_INIT_ATTEMPTS) {
+                console.log('[Google SSO] Script chưa sẵn sàng, thử lại sau 500ms...');
+                setTimeout(() => this.initGoogleSignIn(), 500);
+            } else {
+                console.error('[Google SSO] Đã vượt quá số lần thử tối đa');
+                alert('Không thể tải Google Sign-In. Vui lòng tải lại trang.');
+            }
         }
     }
 
     /**
-     * Xử lý khi user click "Login with Google"
+     * Render Google Sign-In button chính thức
+     */
+    private renderGoogleButton() {
+        const buttonDiv = document.getElementById('googleSignInDiv');
+
+        if (!buttonDiv) {
+            console.error('[Google SSO] Không tìm thấy container #googleSignInDiv');
+
+            return;
+        }
+
+        if (typeof google === 'undefined' || !google.accounts) {
+            console.error('[Google SSO] Google accounts object không tồn tại');
+
+            return;
+        }
+
+        try {
+            console.log('[Google SSO] Đang render button chính thức của Google...');
+            google.accounts.id.renderButton(buttonDiv, {
+                theme: 'outline',
+                size: 'large',
+                width: buttonDiv.offsetWidth || 400,
+                text: 'signin_with',
+                shape: 'rectangular',
+                logo_alignment: 'left'
+            });
+            this.googleButtonRendered = true;
+            console.log('[Google SSO] Button đã được render thành công');
+        } catch (error) {
+            console.error('[Google SSO] Lỗi khi render button:', error);
+            console.log('[Google SSO] Sẽ sử dụng custom button làm fallback');
+            this.googleButtonRendered = false;
+        }
+    }
+
+    /**
+     * Xử lý khi user click custom button "Login with Google"
      */
     handleGoogleSignIn() {
+        console.log('[Google SSO] User click vào custom Google button');
+
         if (typeof google !== 'undefined' && google.accounts) {
-            google.accounts.id.prompt();
+            try {
+                console.log('[Google SSO] Đang hiển thị Google One Tap...');
+                // Sử dụng prompt với callback để xử lý các trường hợp không hiển thị
+                google.accounts.id.prompt((notification: any) => {
+                    if (notification.isNotDisplayed()) {
+                        console.warn('[Google SSO] One Tap không được hiển thị:', notification.getNotDisplayedReason());
+                        console.log('[Google SSO] Lý do:', notification.getNotDisplayedReason());
+
+                        // Thử render button nếu chưa có
+                        if (!this.googleButtonRendered) {
+                            console.log('[Google SSO] Thử render button chính thức...');
+                            this.renderGoogleButton();
+                        }
+
+                        // Hiển thị thông báo cho user
+                        alert('Popup Google Sign-In có thể bị chặn bởi browser. Vui lòng:\n1. Cho phép popup từ trang này\n2. Hoặc sử dụng button Google chính thức ở trên\n3. Hoặc thử lại');
+                    } else if (notification.isSkippedMoment()) {
+                        console.log('[Google SSO] User đã skip One Tap moment');
+                    } else {
+                        console.log('[Google SSO] One Tap hiển thị thành công');
+                    }
+                });
+            } catch (error) {
+                console.error('[Google SSO] Lỗi khi gọi prompt():', error);
+                this.handleError(error);
+            }
+        } else {
+            console.error('[Google SSO] Google Identity Services chưa được load');
+            alert('Google Sign-In chưa sẵn sàng. Vui lòng tải lại trang hoặc thử lại sau.');
         }
     }
 
