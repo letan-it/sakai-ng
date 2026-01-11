@@ -7,6 +7,8 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 import { AppFloatingConfigurator } from '../../layout/component/app.floatingconfigurator';
 
 // Định nghĩa interface cho Google Identity Services
@@ -23,8 +25,10 @@ interface GoogleUserProfile {
 @Component({
     selector: 'app-login',
     standalone: true,
-    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, AppFloatingConfigurator],
+    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, ToastModule, AppFloatingConfigurator],
+    providers: [MessageService],
     template: `
+        <p-toast />
         <app-floating-configurator />
         <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-screen overflow-hidden">
             <div class="flex flex-col items-center justify-center">
@@ -114,7 +118,14 @@ export class Login implements OnInit {
 
     private platformId = inject(PLATFORM_ID);
 
+    private messageService = inject(MessageService);
+
+    // TODO: Di chuyển client_id vào environment config để dễ quản lý cho các môi trường khác nhau
     private readonly GOOGLE_CLIENT_ID = '478210539-cfbfeaorngqplsad1agd078rs5e8nudr.apps.googleusercontent.com';
+
+    private readonly MAX_INIT_RETRIES = 10;
+
+    private initRetryCount = 0;
 
     ngOnInit() {
         // Chỉ khởi tạo Google Sign-In khi chạy trong browser
@@ -134,9 +145,14 @@ export class Login implements OnInit {
                 auto_select: false,
                 cancel_on_tap_outside: true
             });
-        } else {
-            // Nếu script chưa load, thử lại sau 500ms
+            this.initRetryCount = 0;
+        } else if (this.initRetryCount < this.MAX_INIT_RETRIES) {
+            // Nếu script chưa load, thử lại sau 500ms (tối đa 10 lần)
+            this.initRetryCount++;
             setTimeout(() => this.initGoogleSignIn(), 500);
+        } else {
+            // Đã thử quá số lần cho phép
+            console.error('Không thể load Google Identity Services sau', this.MAX_INIT_RETRIES, 'lần thử');
         }
     }
 
@@ -199,6 +215,10 @@ export class Login implements OnInit {
 
     /**
      * Lưu user profile vào localStorage
+     * NOTE: Trong production nên cân nhắc:
+     * - Sử dụng sessionStorage thay vì localStorage để tăng bảo mật
+     * - Hoặc lưu token vào httpOnly cookie thông qua backend
+     * - Mã hóa dữ liệu nhạy cảm trước khi lưu
      */
     private saveUserProfile(profile: GoogleUserProfile) {
         try {
@@ -227,7 +247,12 @@ export class Login implements OnInit {
             errorMessage = 'Bạn đã từ chối cấp quyền. Vui lòng thử lại và cho phép truy cập.';
         }
 
-        // Hiển thị thông báo lỗi cho user
-        alert(errorMessage);
+        // Hiển thị thông báo lỗi cho user bằng Toast
+        this.messageService.add({
+            severity: 'error',
+            summary: 'Lỗi đăng nhập',
+            detail: errorMessage,
+            life: 5000
+        });
     }
 }
