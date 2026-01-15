@@ -68,7 +68,9 @@ export class KanbanService {
                                 columnId: '',
                                 assignee: 'Nguyễn Văn A',
                                 createdAt: new Date(),
-                                order: 0
+                                order: 0,
+                                tags: ['urgent', 'design', 'frontend'],
+                                mentions: ['user1', 'designer']
                             },
                             {
                                 id: this.generateId(),
@@ -77,7 +79,9 @@ export class KanbanService {
                                 priority: 'medium',
                                 columnId: '',
                                 createdAt: new Date(),
-                                order: 1
+                                order: 1,
+                                tags: ['research', 'ux'],
+                                mentions: ['user2']
                             }
                         ]
                     },
@@ -95,7 +99,9 @@ export class KanbanService {
                                 columnId: '',
                                 assignee: 'Trần Thị B',
                                 createdAt: new Date(),
-                                order: 0
+                                order: 0,
+                                tags: ['backend', 'api', 'urgent'],
+                                mentions: ['developer1', 'teamlead']
                             }
                         ]
                     },
@@ -112,7 +118,9 @@ export class KanbanService {
                                 priority: 'medium',
                                 columnId: '',
                                 createdAt: new Date(),
-                                order: 0
+                                order: 0,
+                                tags: ['review', 'security'],
+                                mentions: ['reviewer1']
                             }
                         ]
                     },
@@ -129,7 +137,9 @@ export class KanbanService {
                                 priority: 'high',
                                 columnId: '',
                                 createdAt: new Date(),
-                                order: 0
+                                order: 0,
+                                tags: ['setup', 'devops'],
+                                mentions: []
                             }
                         ]
                     }
@@ -230,7 +240,9 @@ export class KanbanService {
             assignee: input.assignee,
             dueDate: input.dueDate,
             createdAt: new Date(),
-            order: 0
+            order: 0,
+            tags: input.tags,
+            mentions: input.mentions
         };
 
         this.boards.update((boards) =>
@@ -318,30 +330,39 @@ export class KanbanService {
                         return board;
                     }
 
-                    // Create updated task with explicit typing
-                    const taskToMove: Task = foundTask;
                     const sourceColumnId: string = sourceColId;
-                    const updatedTask: Task = {
-                        ...taskToMove,
-                        columnId: targetColumnId,
-                        order: newOrder
-                    };
+                    const isSameColumn = sourceColumnId === targetColumnId;
 
                     return {
                         ...board,
                         columns: board.columns.map((column) => {
-                            if (column.id === sourceColumnId) {
-                                // Remove from source column
+                            if (column.id === sourceColumnId && column.id === targetColumnId) {
+                                // Reorder within same column
+                                const tasksCopy = [...column.tasks];
+                                const oldIndex = tasksCopy.findIndex((t) => t.id === taskId);
+                                const [movedTask] = tasksCopy.splice(oldIndex, 1);
+                                tasksCopy.splice(newOrder, 0, movedTask);
+
                                 return {
                                     ...column,
-                                    tasks: column.tasks.filter((t) => t.id !== taskId)
+                                    tasks: tasksCopy.map((t, idx) => ({ ...t, order: idx }))
+                                };
+                            } else if (column.id === sourceColumnId) {
+                                // Remove from source column (different column move)
+                                return {
+                                    ...column,
+                                    tasks: column.tasks.filter((t) => t.id !== taskId).map((t, idx) => ({ ...t, order: idx }))
                                 };
                             } else if (column.id === targetColumnId) {
-                                // Add to target column
+                                // Add to target column (different column move)
+                                const updatedTask: Task = {
+                                    ...foundTask,
+                                    columnId: targetColumnId,
+                                    order: newOrder
+                                };
                                 const newTasks = [...column.tasks];
                                 newTasks.splice(newOrder, 0, updatedTask);
 
-                                // Reorder tasks
                                 return {
                                     ...column,
                                     tasks: newTasks.map((t, idx) => ({ ...t, order: idx }))
