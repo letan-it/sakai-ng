@@ -24,10 +24,14 @@ Sakai-NG is an Angular 20 application built with:
 - All **Dialogs/Modals** were created using PrimeNG (`p-dialog`, `DialogService`, DynamicDialog)
   **BẮT BUỘC** The following default style is required:
 
+
+  
+
 ### Required Styles
 
 - `maskStyleClass="backdrop-blur-sm"`
 - `styleClass="!border-0"`
+- `appendTo="body"`
 
 ### Template Example
 
