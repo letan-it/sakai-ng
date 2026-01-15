@@ -61,6 +61,7 @@ import { Task } from '@/models/kanban.models';
                         Độ ưu tiên <span class="text-red-500">*</span>
                     </label>
                     <p-select
+                     appendTo="body"
                         [(ngModel)]="editedTask.priority"
                         [options]="priorityOptions"
                         optionLabel="label"
@@ -83,7 +84,7 @@ import { Task } from '@/models/kanban.models';
                     <label for="editTaskDueDate" class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">
                         Hạn chót
                     </label>
-                    <p-datepicker [(ngModel)]="editedTask.dueDate" [showIcon]="true" placeholder="Chọn ngày" dateFormat="dd/mm/yy" class="w-full" />
+                    <p-datepicker  appendTo="body" [(ngModel)]="editedTask.dueDate" [showIcon]="true" placeholder="Chọn ngày" dateFormat="dd/mm/yy" class="w-full" />
                 </div>
 
                 <!-- Tags -->
