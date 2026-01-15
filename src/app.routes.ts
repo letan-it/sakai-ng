@@ -6,6 +6,7 @@ import { Landing } from './app/pages/landing/landing';
 import { Notfound } from './app/pages/notfound/notfound';
 import { LMS } from './app/pages/lms/lms';
 import { ToiBiNgu } from './app/pages/toibingu/toibingu';
+import { Kanban } from './app/pages/kanban/kanban';
 import { authGuard } from './app/guards/auth.guard';
 
 export const appRoutes: Routes = [
@@ -19,7 +20,8 @@ export const appRoutes: Routes = [
             { path: 'documentation', component: Documentation },
             { path: 'pages', loadChildren: () => import('./app/pages/pages.routes') },
             { path: 'rms', loadChildren: () => import('./app/pages/rms/rms.routes') },
-            { path: 'lms', component: LMS }
+            { path: 'lms', component: LMS },
+            { path: 'kanban', component: Kanban }
         ]
     },
     { path: 'landing', component: Landing },
