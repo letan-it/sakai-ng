@@ -20,7 +20,7 @@ import { Task } from '@/models/kanban.models';
             header="Chỉnh sửa Task"
             [modal]="true"
             [style]="{ width: '600px' }"
-            maskStyleClass="backdrop-blur-sm"
+          
             styleClass="!border-0"
         >
             <div class="space-y-4">
