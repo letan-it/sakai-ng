@@ -32,7 +32,11 @@ import { ConfirmDialogComponent } from './confirm-dialog';
 
             <!-- Task Description -->
             <div *ngIf="task.description" class="mb-3 text-sm text-surface-600 dark:text-surface-300 line-clamp-2" [innerHTML]="sanitizeHtml(task.description)"></div>
-
+             <p-editor *ngIf="task.description" [(ngModel)]="task.description" [style]="{ height: '320px' }" class="mb-3 text-sm text-surface-600 dark:text-surface-300 line-clamp-2">
+                <ng-template #header>
+                    
+                </ng-template>
+            </p-editor>
             <!-- Tags -->
             <div *ngIf="task.tags && task.tags.length > 0" class="mb-2 flex flex-wrap gap-1">
                 <p-chip *ngFor="let tag of task.tags" [label]="'#' + tag" styleClass="text-xs" />
