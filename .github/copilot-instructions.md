@@ -37,6 +37,7 @@ Sakai-NG is an Angular 20 application built with:
 
 ```html
 <p-dialog
+    appendTo="body"
     [(visible)]="visible"
     header="Tiêu đề"
     modal="true"
