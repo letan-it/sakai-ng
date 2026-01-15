@@ -10,11 +10,11 @@ import { DialogModule } from 'primeng/dialog';
 import { ChipModule } from 'primeng/chip';
 import { EditTaskDialogComponent } from './edit-task-dialog';
 import { ConfirmDialogComponent } from './confirm-dialog';
-import { EditorModule } from 'primeng/editor';
+
 
 @Component({
     selector: 'app-kanban-task-card',
-    imports: [CommonModule, CardModule, TagModule, ButtonModule, DialogModule, ChipModule, EditTaskDialogComponent, ConfirmDialogComponent,EditorModule],
+    imports: [CommonModule, CardModule, TagModule, ButtonModule, DialogModule, ChipModule, EditTaskDialogComponent, ConfirmDialogComponent],
     template: `
         <div class="task-card cursor-move rounded-lg bg-white dark:bg-surface-700 p-4 shadow-md hover:shadow-lg transition-shadow mt-4" (click)="viewTaskDetails()">
             <!-- Priority Badge -->
@@ -33,11 +33,7 @@ import { EditorModule } from 'primeng/editor';
 
             <!-- Task Description -->
             <div *ngIf="task.description" class="mb-3 text-sm text-surface-600 dark:text-surface-300 line-clamp-2" [innerHTML]="sanitizeHtml(task.description)"></div>
-             <p-editor *ngIf="task.description" [(ngModel)]="task.description" [style]="{ height: '320px' }" class="mb-3 text-sm text-surface-600 dark:text-surface-300 line-clamp-2">
-                <ng-template #header>
-                    
-                </ng-template>
-            </p-editor>
+           
             <!-- Tags -->
             <div *ngIf="task.tags && task.tags.length > 0" class="mb-2 flex flex-wrap gap-1">
                 <p-chip *ngFor="let tag of task.tags" [label]="'#' + tag" styleClass="text-xs" />
