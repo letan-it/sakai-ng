@@ -8,6 +8,8 @@ export interface Task {
     dueDate?: Date;
     createdAt: Date;
     order: number;
+    tags?: string[];
+    mentions?: string[];
 }
 
 export interface Column {
@@ -40,4 +42,6 @@ export interface CreateTaskInput {
     columnId: string;
     assignee?: string;
     dueDate?: Date;
+    tags?: string[];
+    mentions?: string[];
 }

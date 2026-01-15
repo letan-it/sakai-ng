@@ -7,30 +7,30 @@ import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
 import { MenuItem } from 'primeng/api';
 import { KanbanService } from '@/services/kanban.service';
+import { RenameColumnDialogComponent } from './rename-column-dialog';
+import { ConfirmDialogComponent } from './confirm-dialog';
 
 @Component({
     selector: 'app-kanban-column',
-    imports: [CommonModule, DragDropModule, KanbanTaskCardComponent, ButtonModule, MenuModule],
+    imports: [CommonModule, DragDropModule, KanbanTaskCardComponent, ButtonModule, MenuModule, RenameColumnDialogComponent, ConfirmDialogComponent],
     template: `
-        <div class="kanban-column min-w-[320px]">
-            <!-- Column Header -->
-            <div class="mb-4 flex items-center justify-between">
+        <div class="kanban-column min-w-[320px] flex flex-col" style="height: 70vh;">
+            <!-- Column Header - Fixed -->
+            <div class="mb-4 flex items-center justify-between flex-shrink-0">
                 <div class="flex items-center gap-2">
                     <span class="h-4 w-4 rounded-full" [style.background-color]="columnColor"></span>
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-surface-500 dark:text-surface-400">
-                        {{ column.name }} ({{ column.tasks.length }})
-                    </h3>
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-surface-500 dark:text-surface-400">{{ column.name }} ({{ column.tasks.length }})</h3>
                 </div>
                 <p-button icon="pi pi-ellipsis-v" [text]="true" severity="secondary" size="small" (onClick)="menu.toggle($event)" />
                 <p-menu #menu [model]="menuItems" [popup]="true" />
             </div>
 
-            <!-- Tasks List -->
+            <!-- Tasks List - Scrollable -->
             <div
                 cdkDropList
                 [cdkDropListData]="column.tasks"
                 (cdkDropListDropped)="onDrop($event)"
-                class="min-h-[500px] space-y-4 rounded-lg p-2"
+                class="flex-1 space-y-4 overflow-y-auto rounded-lg p-2"
                 [class.bg-surface-50]="column.tasks.length === 0"
                 [class.dark:bg-surface-800]="column.tasks.length === 0"
                 [class.border-2]="column.tasks.length === 0"
@@ -46,6 +46,12 @@ import { KanbanService } from '@/services/kanban.service';
                 </div>
             </div>
         </div>
+
+        <!-- Rename Column Dialog -->
+        <app-rename-column-dialog [(visible)]="renameDialogVisible" [currentName]="column.name" (columnRenamed)="onColumnRenamed($event)" />
+
+        <!-- Delete Confirmation Dialog -->
+        <app-confirm-dialog [(visible)]="deleteDialogVisible" header="Xác nhận xóa cột" [message]="deleteConfirmMessage" confirmLabel="Xóa" severity="danger" (confirmed)="onDeleteConfirmed()" />
     `,
     styles: [
         `
@@ -74,6 +80,8 @@ export class KanbanColumnComponent implements OnInit {
     @Output() taskMoved = new EventEmitter<{ drop: CdkDragDrop<Task[]>; columnId: string }>();
 
     menuItems: MenuItem[] = [];
+    renameDialogVisible = false;
+    deleteDialogVisible = false;
 
     private colors = ['#635FC7', '#49C4E5', '#67E2AE', '#8471F2', '#FF6B9D'];
 
@@ -98,20 +106,29 @@ export class KanbanColumnComponent implements OnInit {
         return this.colors[this.colorIndex % this.colors.length];
     }
 
+    get deleteConfirmMessage(): string {
+        return `Bạn có chắc muốn xóa cột "${this.column.name}"? Tất cả tasks trong cột sẽ bị xóa.`;
+    }
+
     onDrop(event: CdkDragDrop<Task[]>): void {
         this.taskMoved.emit({ drop: event, columnId: this.column.id });
     }
 
     renameColumn(): void {
-        const newName = prompt('Nhập tên mới cho cột:', this.column.name);
-        if (newName && newName.trim()) {
-            this.kanbanService.updateColumn(this.column.id, newName.trim());
-        }
+        this.renameDialogVisible = true;
+    }
+
+    onColumnRenamed(newName: string): void {
+        this.kanbanService.updateColumn(this.column.id, newName);
+        this.renameDialogVisible = false;
     }
 
     deleteColumn(): void {
-        if (confirm(`Bạn có chắc muốn xóa cột "${this.column.name}"? Tất cả tasks trong cột sẽ bị xóa.`)) {
-            this.kanbanService.deleteColumn(this.column.id);
-        }
+        this.deleteDialogVisible = true;
+    }
+
+    onDeleteConfirmed(): void {
+        this.kanbanService.deleteColumn(this.column.id);
+        this.deleteDialogVisible = false;
     }
 }

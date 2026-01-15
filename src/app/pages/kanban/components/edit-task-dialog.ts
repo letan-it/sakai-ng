@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
@@ -8,16 +8,16 @@ import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
 import { DatePickerModule } from 'primeng/datepicker';
 import { KanbanService } from '@/services/kanban.service';
-import { Column, CreateTaskInput, Task } from '@/models/kanban.models';
+import { Task } from '@/models/kanban.models';
 
 @Component({
-    selector: 'app-create-task-dialog',
+    selector: 'app-edit-task-dialog',
     imports: [CommonModule, FormsModule, DialogModule, InputTextModule, TextareaModule, ButtonModule, SelectModule, DatePickerModule],
     template: `
         <p-dialog
             [(visible)]="visible"
             (visibleChange)="visibleChange.emit($event)"
-            header="Tạo Task Mới"
+            header="Chỉnh sửa Task"
             [modal]="true"
             [style]="{ width: '600px' }"
             maskStyleClass="backdrop-blur-sm"
@@ -26,59 +26,42 @@ import { Column, CreateTaskInput, Task } from '@/models/kanban.models';
             <div class="space-y-4">
                 <!-- Task Title -->
                 <div>
-                    <label for="taskTitle" class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">
+                    <label for="editTaskTitle" class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">
                         Tiêu đề <span class="text-red-500">*</span>
                     </label>
                     <input
                         pInputText
-                        id="taskTitle"
-                        [(ngModel)]="taskData.title"
+                        id="editTaskTitle"
+                        [(ngModel)]="editedTask.title"
                         placeholder="Ví dụ: Thiết kế giao diện trang chủ"
                         class="w-full"
-                        [class.ng-invalid]="submitted && !taskData.title"
+                        [class.ng-invalid]="submitted && !editedTask.title"
                     />
-                    <small *ngIf="submitted && !taskData.title" class="text-red-500">Tiêu đề là bắt buộc</small>
+                    <small *ngIf="submitted && !editedTask.title" class="text-red-500">Tiêu đề là bắt buộc</small>
                 </div>
 
                 <!-- Description -->
                 <div>
-                    <label for="taskDescription" class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">
+                    <label for="editTaskDescription" class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">
                         Mô tả
                     </label>
                     <textarea
                         pTextarea
-                        id="taskDescription"
-                        [(ngModel)]="taskData.description"
+                        id="editTaskDescription"
+                        [(ngModel)]="editedTask.description"
                         placeholder="Mô tả chi tiết về task..."
                         rows="4"
                         class="w-full"
                     ></textarea>
                 </div>
 
-                <!-- Column Selection -->
-                <div>
-                    <label for="taskColumn" class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">
-                        Cột <span class="text-red-500">*</span>
-                    </label>
-                    <p-select
-                        [(ngModel)]="taskData.columnId"
-                        [options]="columns"
-                        optionLabel="name"
-                        optionValue="id"
-                        placeholder="Chọn cột"
-                        class="w-full"
-                        [class.ng-invalid]="submitted && !taskData.columnId"
-                    />
-                    <small *ngIf="submitted && !taskData.columnId" class="text-red-500">Vui lòng chọn cột</small>
-                </div>
-
                 <!-- Priority -->
                 <div>
-                    <label for="taskPriority" class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">
+                    <label for="editTaskPriority" class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">
                         Độ ưu tiên <span class="text-red-500">*</span>
                     </label>
                     <p-select
-                        [(ngModel)]="taskData.priority"
+                        [(ngModel)]="editedTask.priority"
                         [options]="priorityOptions"
                         optionLabel="label"
                         optionValue="value"
@@ -89,28 +72,28 @@ import { Column, CreateTaskInput, Task } from '@/models/kanban.models';
 
                 <!-- Assignee -->
                 <div>
-                    <label for="taskAssignee" class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">
+                    <label for="editTaskAssignee" class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">
                         Người thực hiện
                     </label>
-                    <input pInputText id="taskAssignee" [(ngModel)]="taskData.assignee" placeholder="Tên người thực hiện" class="w-full" />
+                    <input pInputText id="editTaskAssignee" [(ngModel)]="editedTask.assignee" placeholder="Tên người thực hiện" class="w-full" />
                 </div>
 
                 <!-- Due Date -->
                 <div>
-                    <label for="taskDueDate" class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">
+                    <label for="editTaskDueDate" class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">
                         Hạn chót
                     </label>
-                    <p-datepicker [(ngModel)]="taskData.dueDate" [showIcon]="true" placeholder="Chọn ngày" dateFormat="dd/mm/yy" class="w-full" />
+                    <p-datepicker [(ngModel)]="editedTask.dueDate" [showIcon]="true" placeholder="Chọn ngày" dateFormat="dd/mm/yy" class="w-full" />
                 </div>
 
                 <!-- Tags -->
                 <div>
-                    <label for="taskTags" class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">
+                    <label for="editTaskTags" class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">
                         Hashtags
                     </label>
                     <input
                         pInputText
-                        id="taskTags"
+                        id="editTaskTags"
                         [(ngModel)]="tagsInput"
                         placeholder="Nhập tags (phân cách bằng dấu phẩy, ví dụ: #urgent, #backend, #api)"
                         class="w-full"
@@ -120,12 +103,12 @@ import { Column, CreateTaskInput, Task } from '@/models/kanban.models';
 
                 <!-- Mentions -->
                 <div>
-                    <label for="taskMentions" class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">
+                    <label for="editTaskMentions" class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">
                         Tag người theo dõi
                     </label>
                     <input
                         pInputText
-                        id="taskMentions"
+                        id="editTaskMentions"
                         [(ngModel)]="mentionsInput"
                         placeholder="Tag người theo dõi (phân cách bằng dấu phẩy, ví dụ: @user1, @user2)"
                         class="w-full"
@@ -137,29 +120,19 @@ import { Column, CreateTaskInput, Task } from '@/models/kanban.models';
             <ng-template #footer>
                 <div class="flex justify-end gap-2">
                     <p-button label="Hủy" severity="secondary" (onClick)="cancel()" />
-                    <p-button label="Tạo Task" (onClick)="createTask()" />
+                    <p-button label="Cập nhật" (onClick)="updateTask()" />
                 </div>
             </ng-template>
         </p-dialog>
     `
 })
-export class CreateTaskDialogComponent {
+export class EditTaskDialogComponent implements OnChanges {
     @Input() visible = false;
-    @Input() columns: Column[] = [];
+    @Input() task: Task | null = null;
     @Output() visibleChange = new EventEmitter<boolean>();
-    @Output() taskCreated = new EventEmitter<Task>();
+    @Output() taskUpdated = new EventEmitter<void>();
 
-    taskData: CreateTaskInput = {
-        title: '',
-        description: '',
-        priority: 'medium',
-        columnId: '',
-        assignee: '',
-        dueDate: undefined,
-        tags: [],
-        mentions: []
-    };
-
+    editedTask: Partial<Task> = {};
     tagsInput = '';
     mentionsInput = '';
     submitted = false;
@@ -172,41 +145,52 @@ export class CreateTaskDialogComponent {
 
     constructor(private kanbanService: KanbanService) {}
 
-    createTask(): void {
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['task'] && this.task) {
+            this.editedTask = {
+                title: this.task.title,
+                description: this.task.description,
+                priority: this.task.priority,
+                assignee: this.task.assignee,
+                dueDate: this.task.dueDate
+            };
+            this.tagsInput = this.task.tags?.join(', ') || '';
+            this.mentionsInput = this.task.mentions?.join(', ') || '';
+        }
+    }
+
+    updateTask(): void {
         this.submitted = true;
 
-        if (!this.taskData.title || !this.taskData.title.trim() || !this.taskData.columnId) {
+        if (!this.editedTask.title || !this.editedTask.title.trim()) {
+            return;
+        }
+
+        if (!this.task) {
             return;
         }
 
         // Parse tags and mentions
-        this.taskData.tags = this.parseInputToArray(this.tagsInput, '#');
-        this.taskData.mentions = this.parseInputToArray(this.mentionsInput, '@');
+        const tags = this.parseInputToArray(this.tagsInput, '#');
+        const mentions = this.parseInputToArray(this.mentionsInput, '@');
 
-        const newTask = this.kanbanService.createTask(this.taskData);
-        this.taskCreated.emit(newTask);
-        this.resetForm();
+        this.kanbanService.updateTask(this.task.id, {
+            ...this.editedTask,
+            tags,
+            mentions
+        });
+
+        this.taskUpdated.emit();
+        this.close();
     }
 
     cancel(): void {
-        this.visible = false;
-        this.visibleChange.emit(false);
-        this.resetForm();
+        this.close();
     }
 
-    resetForm(): void {
-        this.taskData = {
-            title: '',
-            description: '',
-            priority: 'medium',
-            columnId: this.columns.length > 0 ? this.columns[0].id : '',
-            assignee: '',
-            dueDate: undefined,
-            tags: [],
-            mentions: []
-        };
-        this.tagsInput = '';
-        this.mentionsInput = '';
+    close(): void {
+        this.visible = false;
+        this.visibleChange.emit(false);
         this.submitted = false;
     }
 

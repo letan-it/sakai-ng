@@ -27,54 +27,24 @@ interface RenderStyle {
     template: `
         <div class="card">
             <div class="font-semibold text-2xl mb-4">Bản Đồ Overpass Turbo - Ranh Giới Hành Chính</div>
-            <p class="text-muted-color mb-4 line-height-3">
-                Demo tích hợp Overpass Turbo API để truy vấn và hiển thị ranh giới hành chính của tỉnh Lâm Đồng từ OpenStreetMap.
-            </p>
+            <p class="text-muted-color mb-4 line-height-3">Demo tích hợp Overpass Turbo API để truy vấn và hiển thị ranh giới hành chính của tỉnh Lâm Đồng từ OpenStreetMap.</p>
 
             <!-- Controls -->
             <div class="grid grid-cols-12 gap-4 mb-4">
                 <div class="col-span-12 md:col-span-6 lg:col-span-3">
                     <label class="block text-sm font-medium mb-2">Tỉnh/Thành phố</label>
-                    <input 
-                        type="text" 
-                        pInputText 
-                        [(ngModel)]="areaName" 
-                        placeholder="VD: Lâm Đồng"
-                        class="w-full"
-                    />
+                    <input type="text" pInputText [(ngModel)]="areaName" placeholder="VD: Lâm Đồng" class="w-full" />
                 </div>
                 <div class="col-span-12 md:col-span-6 lg:col-span-3">
                     <label class="block text-sm font-medium mb-2">Cấp hành chính</label>
-                    <p-select 
-                        [(ngModel)]="adminLevel" 
-                        [options]="adminLevelOptions"
-                        optionLabel="label"
-                        optionValue="value"
-                        placeholder="Chọn cấp"
-                        class="w-full"
-                    />
+                    <p-select [(ngModel)]="adminLevel" [options]="adminLevelOptions" optionLabel="label" optionValue="value" placeholder="Chọn cấp" class="w-full" />
                 </div>
                 <div class="col-span-12 md:col-span-6 lg:col-span-3">
                     <label class="block text-sm font-medium mb-2">Style hiển thị</label>
-                    <p-select 
-                        [(ngModel)]="selectedStyle" 
-                        [options]="styleOptions"
-                        optionLabel="label"
-                        optionValue="value"
-                        (onChange)="applyStyle()"
-                        placeholder="Chọn style"
-                        class="w-full"
-                    />
+                    <p-select [(ngModel)]="selectedStyle" [options]="styleOptions" optionLabel="label" optionValue="value" (onChange)="applyStyle()" placeholder="Chọn style" class="w-full" />
                 </div>
                 <div class="col-span-12 md:col-span-6 lg:col-span-3 flex items-end">
-                    <p-button 
-                        label="Tải dữ liệu" 
-                        icon="pi pi-refresh" 
-                        (onClick)="loadData()"
-                        [loading]="loading"
-                        [disabled]="loading || !areaName"
-                        class="w-full"
-                    />
+                    <p-button label="Tải dữ liệu" icon="pi pi-refresh" (onClick)="loadData()" [loading]="loading" [disabled]="loading || !areaName" class="w-full" />
                 </div>
             </div>
 
@@ -88,11 +58,7 @@ interface RenderStyle {
                 <div id="overpass-map" class="w-full h-full"></div>
                 @if (loading) {
                     <div class="absolute inset-0 bg-surface-0/80 dark:bg-surface-900/80 flex justify-center items-center z-10">
-                        <p-progressSpinner 
-                            styleClass="w-16 h-16" 
-                            strokeWidth="4"
-                            animationDuration="1s"
-                        />
+                        <p-progressSpinner styleClass="w-16 h-16" strokeWidth="4" animationDuration="1s" />
                     </div>
                 }
             </div>
@@ -102,13 +68,8 @@ interface RenderStyle {
                 <div class="col-span-12 md:col-span-6">
                     <div class="card bg-primary-50 dark:bg-primary-950/30">
                         <h3 class="text-lg font-semibold mb-2">Thông tin Overpass Turbo API</h3>
-                        <p class="text-muted-color mb-2 text-sm">
-                            Overpass API là một dịch vụ web-based để truy vấn dữ liệu từ OpenStreetMap.
-                        </p>
-                        <p class="text-muted-color text-sm">
-                            API này cho phép thực hiện các truy vấn phức tạp để lấy dữ liệu địa lý như ranh giới hành chính, 
-                            đường phố, các địa điểm quan trọng và nhiều thông tin khác.
-                        </p>
+                        <p class="text-muted-color mb-2 text-sm">Overpass API là một dịch vụ web-based để truy vấn dữ liệu từ OpenStreetMap.</p>
+                        <p class="text-muted-color text-sm">API này cho phép thực hiện các truy vấn phức tạp để lấy dữ liệu địa lý như ranh giới hành chính, đường phố, các địa điểm quan trọng và nhiều thông tin khác.</p>
                     </div>
                 </div>
                 <div class="col-span-12 md:col-span-6">
@@ -386,25 +347,30 @@ out skel qt;`;
                                 <span class="info-label">Cấp hành chính:</span>
                                 <span class="info-value">${props.admin_level || 'N/A'}</span>
                             </div>
-                            ${props.population ? `
+                            ${
+                                props.population
+                                    ? `
                                 <div class="info-row">
                                     <span class="info-label">Dân số:</span>
                                     <span class="info-value">${Number(props.population).toLocaleString()}</span>
                                 </div>
-                            ` : ''}
-                            ${props.wikipedia && props.wikipedia.includes(':') ? `
+                            `
+                                    : ''
+                            }
+                            ${
+                                props.wikipedia && props.wikipedia.includes(':')
+                                    ? `
                                 <div class="info-row">
                                     <span class="info-label">Wikipedia:</span>
                                     <span class="info-value"><a href="https://vi.wikipedia.org/wiki/${encodeURIComponent(props.wikipedia.split(':')[1])}" target="_blank" rel="noopener noreferrer">Xem</a></span>
                                 </div>
-                            ` : ''}
+                            `
+                                    : ''
+                            }
                         </div>
                     `;
 
-                    new maplibregl.Popup()
-                        .setLngLat(e.lngLat)
-                        .setHTML(popupContent)
-                        .addTo(map);
+                    new maplibregl.Popup().setLngLat(e.lngLat).setHTML(popupContent).addTo(map);
                 }
             });
 

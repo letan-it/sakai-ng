@@ -12,45 +12,19 @@ import { Board, CreateBoardInput } from '@/models/kanban.models';
     selector: 'app-create-board-dialog',
     imports: [CommonModule, FormsModule, DialogModule, InputTextModule, TextareaModule, ButtonModule],
     template: `
-        <p-dialog
-            [(visible)]="visible"
-            (visibleChange)="visibleChange.emit($event)"
-            header="Tạo Board Mới"
-            [modal]="true"
-            [style]="{ width: '500px' }"
-            maskStyleClass="backdrop-blur-sm"
-            styleClass="!border-0"
-        >
+        <p-dialog [(visible)]="visible" (visibleChange)="visibleChange.emit($event)" header="Tạo Board Mới" [modal]="true" [style]="{ width: '500px' }" maskStyleClass="backdrop-blur-sm" styleClass="!border-0">
             <div class="space-y-4">
                 <!-- Board Name -->
                 <div>
-                    <label for="boardName" class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">
-                        Tên Board <span class="text-red-500">*</span>
-                    </label>
-                    <input
-                        pInputText
-                        id="boardName"
-                        [(ngModel)]="boardData.name"
-                        placeholder="Ví dụ: Dự án Website Mới"
-                        class="w-full"
-                        [class.ng-invalid]="submitted && !boardData.name"
-                    />
+                    <label for="boardName" class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200"> Tên Board <span class="text-red-500">*</span> </label>
+                    <input pInputText id="boardName" [(ngModel)]="boardData.name" placeholder="Ví dụ: Dự án Website Mới" class="w-full" [class.ng-invalid]="submitted && !boardData.name" />
                     <small *ngIf="submitted && !boardData.name" class="text-red-500">Tên board là bắt buộc</small>
                 </div>
 
                 <!-- Description -->
                 <div>
-                    <label for="boardDescription" class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">
-                        Mô tả
-                    </label>
-                    <textarea
-                        pTextarea
-                        id="boardDescription"
-                        [(ngModel)]="boardData.description"
-                        placeholder="Mô tả về board này..."
-                        rows="3"
-                        class="w-full"
-                    ></textarea>
+                    <label for="boardDescription" class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200"> Mô tả </label>
+                    <textarea pTextarea id="boardDescription" [(ngModel)]="boardData.description" placeholder="Mô tả về board này..." rows="3" class="w-full"></textarea>
                 </div>
 
                 <!-- Color Picker -->

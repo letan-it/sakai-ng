@@ -45,7 +45,7 @@ const DEMO_LOCATIONS: LocationMarker[] = [
     {
         id: 4,
         name: 'Hội An',
-        lng: 108.3380,
+        lng: 108.338,
         lat: 15.8801,
         description: 'Phố cổ Hội An - Di sản văn hóa thế giới với kiến trúc độc đáo.',
         category: 'Di sản'
@@ -77,7 +77,7 @@ const DEMO_LOCATIONS: LocationMarker[] = [
     {
         id: 8,
         name: 'Phú Quốc',
-        lng: 103.9860,
+        lng: 103.986,
         lat: 10.2269,
         description: 'Đảo ngọc Phú Quốc với bãi biển hoang sơ và hệ sinh thái phong phú.',
         category: 'Du lịch'
@@ -107,9 +107,7 @@ const DEMO_LOCATIONS: LocationMarker[] = [
     template: `
         <div class="card">
             <div class="font-semibold text-2xl mb-4">Bản Đồ Demo</div>
-            <p class="text-muted-color mb-4 line-height-3">
-                Trang demo tích hợp thư viện bản đồ với các tính năng: hiển thị marker, popup, cluster và controls.
-            </p>
+            <p class="text-muted-color mb-4 line-height-3">Trang demo tích hợp thư viện bản đồ với các tính năng: hiển thị marker, popup, cluster và controls.</p>
 
             <div class="grid grid-cols-12 gap-6">
                 <!-- Bản đồ cơ bản -->
@@ -133,12 +131,7 @@ const DEMO_LOCATIONS: LocationMarker[] = [
                     <div class="card">
                         <h3 class="font-semibold text-xl mb-3">Standalone Popup</h3>
                         <div class="mb-3">
-                            <p-button
-                                [label]="showStandalonePopup ? 'Ẩn Popup' : 'Hiển Thị Popup'"
-                                [severity]="showStandalonePopup ? 'secondary' : 'primary'"
-                                (onClick)="toggleStandalonePopup()"
-                                size="small"
-                            />
+                            <p-button [label]="showStandalonePopup ? 'Ẩn Popup' : 'Hiển Thị Popup'" [severity]="showStandalonePopup ? 'secondary' : 'primary'" (onClick)="toggleStandalonePopup()" size="small" />
                         </div>
                         <div id="standalone-popup-map" class="w-full h-[400px] rounded-border"></div>
                     </div>
@@ -148,9 +141,7 @@ const DEMO_LOCATIONS: LocationMarker[] = [
                 <div class="col-span-12 lg:col-span-6">
                     <div class="card">
                         <h3 class="font-semibold text-xl mb-3">Cluster Demo</h3>
-                        <p class="text-sm text-muted-color mb-3">
-                            Các marker được nhóm lại khi zoom out, click vào cluster để zoom in.
-                        </p>
+                        <p class="text-sm text-muted-color mb-3">Các marker được nhóm lại khi zoom out, click vào cluster để zoom in.</p>
                         <div id="cluster-map" class="w-full h-[400px] rounded-border"></div>
                     </div>
                 </div>
@@ -159,9 +150,7 @@ const DEMO_LOCATIONS: LocationMarker[] = [
                 <div class="col-span-12">
                     <div class="card">
                         <h3 class="font-semibold text-xl mb-3">Rich Popups với Nội Dung Chi Tiết</h3>
-                        <p class="text-sm text-muted-color mb-3">
-                            Click vào các marker để xem popup với hình ảnh và thông tin chi tiết.
-                        </p>
+                        <p class="text-sm text-muted-color mb-3">Click vào các marker để xem popup với hình ảnh và thông tin chi tiết.</p>
                         <div id="rich-popup-map" class="w-full h-[500px] rounded-border"></div>
                     </div>
                 </div>
@@ -356,10 +345,7 @@ export class MapDemo implements OnInit, OnDestroy {
                     </div>
                 `);
 
-                const marker = new maplibregl.Marker(el)
-                    .setLngLat([location.lng, location.lat])
-                    .setPopup(popup)
-                    .addTo(map);
+                const marker = new maplibregl.Marker(el).setLngLat([location.lng, location.lat]).setPopup(popup).addTo(map);
 
                 this.markers.push(marker);
             });
@@ -406,7 +392,8 @@ export class MapDemo implements OnInit, OnDestroy {
                 closeButton: true
             })
                 .setLngLat([105.8342, 21.0278])
-                .setHTML(`
+                .setHTML(
+                    `
                     <div class="popup-content">
                         <h4>Hà Nội - Thủ Đô</h4>
                         <p>Thành phố ngàn năm văn hiến với nhiều di tích lịch sử.</p>
@@ -414,7 +401,8 @@ export class MapDemo implements OnInit, OnDestroy {
                             <strong>Dân số:</strong> ~8.5 triệu người
                         </p>
                     </div>
-                `)
+                `
+                )
                 .addTo(map);
 
             this.standalonePopup.on('close', () => {
@@ -532,12 +520,17 @@ export class MapDemo implements OnInit, OnDestroy {
                 const coordinates = (e.features[0].geometry as any).coordinates.slice();
                 const { name, description } = e.features[0].properties;
 
-                new maplibregl.Popup().setLngLat(coordinates).setHTML(`
+                new maplibregl.Popup()
+                    .setLngLat(coordinates)
+                    .setHTML(
+                        `
                     <div class="popup-content">
                         <h4>${name}</h4>
                         <p>${description}</p>
                     </div>
-                `).addTo(map);
+                `
+                    )
+                    .addTo(map);
             });
 
             // Thay đổi con trỏ khi hover
@@ -587,7 +580,7 @@ export class MapDemo implements OnInit, OnDestroy {
             'Thành phố Hồ Chí Minh': 'https://images.unsplash.com/photo-1583417319070-4a69db38a482?w=300&h=150&fit=crop',
             'Đà Nẵng': 'https://images.unsplash.com/photo-1559592413-7cec4d0cae2b?w=300&h=150&fit=crop',
             'Hội An': 'https://images.unsplash.com/photo-1557750255-c76072a7aad1?w=300&h=150&fit=crop',
-            'Huế': 'https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?w=300&h=150&fit=crop',
+            Huế: 'https://images.unsplash.com/photo-1588668214407-6ea9a6d8c272?w=300&h=150&fit=crop',
             'Hạ Long': 'https://images.unsplash.com/photo-1528127269322-539801943592?w=300&h=150&fit=crop',
             'Nha Trang': 'https://images.unsplash.com/photo-1572967771481-0c4e4e6e0fce?w=300&h=150&fit=crop',
             'Phú Quốc': 'https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=300&h=150&fit=crop',
@@ -627,10 +620,7 @@ export class MapDemo implements OnInit, OnDestroy {
                     </div>
                 `);
 
-                const marker = new maplibregl.Marker(el)
-                    .setLngLat([location.lng, location.lat])
-                    .setPopup(popup)
-                    .addTo(map);
+                const marker = new maplibregl.Marker(el).setLngLat([location.lng, location.lat]).setPopup(popup).addTo(map);
 
                 this.markers.push(marker);
             });

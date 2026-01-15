@@ -1,6 +1,6 @@
 /**
  * Cấu hình môi trường production
- * 
+ *
  * LƯU Ý BẢO MẬT:
  * - Sử dụng Google Client ID KHÁC với development environment
  * - Cân nhắc sử dụng environment variables thay vì hardcode

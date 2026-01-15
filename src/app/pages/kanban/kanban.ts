@@ -19,24 +19,11 @@ import { SelectModule } from 'primeng/select';
             <div class="mb-6 flex items-center justify-between">
                 <div class="flex items-center gap-4">
                     <h1 class="text-3xl font-bold text-surface-900 dark:text-surface-0">Quản lý Kanban</h1>
-                    <p-select
-                        *ngIf="boards.length > 0"
-                        [options]="boards"
-                        [(ngModel)]="selectedBoard"
-                        (onChange)="onBoardChange($event)"
-                        optionLabel="name"
-                        placeholder="Chọn board"
-                        styleClass="w-64"
-                    />
+                    <p-select *ngIf="boards.length > 0" [options]="boards" [(ngModel)]="selectedBoard" (onChange)="onBoardChange($event)" optionLabel="name" placeholder="Chọn board" styleClass="w-64" />
                 </div>
                 <div class="flex gap-3">
                     <p-button label="Board mới" icon="pi pi-plus" severity="secondary" (onClick)="showCreateBoardDialog()" />
-                    <p-button
-                        *ngIf="currentBoard"
-                        label="Task mới"
-                        icon="pi pi-plus"
-                        (onClick)="showCreateTaskDialog()"
-                    />
+                    <p-button *ngIf="currentBoard" label="Task mới" icon="pi pi-plus" (onClick)="showCreateTaskDialog()" />
                 </div>
             </div>
 
@@ -57,12 +44,7 @@ import { SelectModule } from 'primeng/select';
             <app-create-board-dialog [(visible)]="createBoardDialogVisible" (boardCreated)="onBoardCreated($event)" />
 
             <!-- Create Task Dialog -->
-            <app-create-task-dialog
-                *ngIf="currentBoard"
-                [(visible)]="createTaskDialogVisible"
-                [columns]="currentBoard.columns"
-                (taskCreated)="onTaskCreated()"
-            />
+            <app-create-task-dialog *ngIf="currentBoard" [(visible)]="createTaskDialogVisible" [columns]="currentBoard.columns" (taskCreated)="onTaskCreated()" />
         </div>
     `
 })
