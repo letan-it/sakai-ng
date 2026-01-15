@@ -10,10 +10,11 @@ import { DialogModule } from 'primeng/dialog';
 import { ChipModule } from 'primeng/chip';
 import { EditTaskDialogComponent } from './edit-task-dialog';
 import { ConfirmDialogComponent } from './confirm-dialog';
+import { EditorModule } from 'primeng/editor';
 
 @Component({
     selector: 'app-kanban-task-card',
-    imports: [CommonModule, CardModule, TagModule, ButtonModule, DialogModule, ChipModule, EditTaskDialogComponent, ConfirmDialogComponent],
+    imports: [CommonModule, CardModule, TagModule, ButtonModule, DialogModule, ChipModule, EditTaskDialogComponent, ConfirmDialogComponent,EditorModule],
     template: `
         <div class="task-card cursor-move rounded-lg bg-white dark:bg-surface-700 p-4 shadow-md hover:shadow-lg transition-shadow mt-4" (click)="viewTaskDetails()">
             <!-- Priority Badge -->
