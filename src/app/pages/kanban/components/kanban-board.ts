@@ -10,8 +10,8 @@ import { ButtonModule } from 'primeng/button';
     selector: 'app-kanban-board',
     imports: [CommonModule, DragDropModule, KanbanColumnComponent, ButtonModule],
     template: `
-        <div class="kanban-board overflow-x-auto">
-            <div class="flex gap-6 pb-4" cdkDropListGroup>
+        <div class="kanban-board overflow-x-auto" >
+            <div class="flex gap-6 pb-4" style="height: 70vh;" cdkDropListGroup>
                 <app-kanban-column
                     *ngFor="let column of board.columns; let i = index"
                     [column]="column"
