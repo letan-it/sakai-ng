@@ -45,36 +45,16 @@ import { Task } from '@/models/kanban.models';
                     <label for="editTaskDescription" class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">
                         Mô tả
                     </label>
-                    <p-editor [(ngModel)]="editedTask.description" [style]="{ height: '200px' }" placeholder="Mô tả chi tiết về task...">
+                    <p-editor [(ngModel)]="editedTask.description" [style]="{ height: '320px' }" placeholder="Mô tả chi tiết về task...">
                         <ng-template #header>
                             <span class="ql-formats">
-                                <select class="ql-size">
-                                    <option value="small">Nhỏ</option>
-                                    <option selected>Bình thường</option>
-                                    <option value="large">Lớn</option>
-                                    <option value="huge">Rất lớn</option>
-                                </select>
-                                <select class="ql-font">
-                                    <option selected>Sans Serif</option>
-                                    <option value="serif">Serif</option>
-                                    <option value="monospace">Monospace</option>
-                                </select>
-                            </span>
-                            <span class="ql-formats">
-                                <button class="ql-bold" aria-label="Bold"></button>
-                                <button class="ql-italic" aria-label="Italic"></button>
-                                <button class="ql-underline" aria-label="Underline"></button>
-                            </span>
-                            <span class="ql-formats">
-                                <select class="ql-color"></select>
-                                <select class="ql-background"></select>
-                            </span>
-                            <span class="ql-formats">
-                                <button class="ql-list" value="ordered" aria-label="Ordered List"></button>
-                                <button class="ql-list" value="bullet" aria-label="Bullet List"></button>
+                                <button type="button" class="ql-bold" aria-label="Bold"></button>
+                                <button type="button" class="ql-italic" aria-label="Italic"></button>
+                                <button type="button" class="ql-underline" aria-label="Underline"></button>
                             </span>
                         </ng-template>
                     </p-editor>
+                                       
                 </div>
 
                 <!-- Priority -->
