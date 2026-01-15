@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { Column, Task } from '@/models/kanban.models';
@@ -68,7 +68,7 @@ import { KanbanService } from '@/services/kanban.service';
         `
     ]
 })
-export class KanbanColumnComponent {
+export class KanbanColumnComponent implements OnInit {
     @Input() column!: Column;
     @Input() colorIndex: number = 0;
     @Output() taskMoved = new EventEmitter<{ drop: CdkDragDrop<Task[]>; columnId: string }>();

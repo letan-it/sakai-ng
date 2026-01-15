@@ -88,7 +88,7 @@ export class Kanban implements OnInit {
         }
     }
 
-    onBoardChange(event: any): void {
+    onBoardChange(event: { value: Board }): void {
         if (event.value) {
             this.kanbanService.selectBoard(event.value.id);
             this.selectedBoard = event.value;
