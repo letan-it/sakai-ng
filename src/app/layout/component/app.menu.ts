@@ -32,6 +32,17 @@ export class AppMenu {
                 ]
             },
             {
+                label: 'Project Management',
+                icon: 'pi pi-fw pi-th-large',
+                items: [
+                    {
+                        label: 'Kanban Board',
+                        icon: 'pi pi-fw pi-table',
+                        routerLink: ['/kanban']
+                    }
+                ]
+            },
+            {
                 label: 'Learning Management',
                 icon: 'pi pi-fw pi-graduation-cap',
                 items: [
