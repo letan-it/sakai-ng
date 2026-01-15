@@ -12,7 +12,7 @@ import { DialogModule } from 'primeng/dialog';
     imports: [CommonModule, CardModule, TagModule, ButtonModule, DialogModule],
     template: `
         <div
-            class="task-card cursor-move rounded-lg bg-white dark:bg-surface-700 p-4 shadow-md hover:shadow-lg transition-shadow"
+            class="task-card cursor-move rounded-lg bg-white dark:bg-surface-700 p-4 shadow-md hover:shadow-lg transition-shadow mt-4"
             (click)="viewTaskDetails()"
         >
             <!-- Priority Badge -->
