@@ -30,9 +30,7 @@ import { ConfirmDialogComponent } from './confirm-dialog';
             </h4>
 
             <!-- Task Description -->
-            <p *ngIf="task.description" class="mb-3 text-sm text-surface-600 dark:text-surface-300 line-clamp-2">
-                {{ task.description }}
-            </p>
+            <div *ngIf="task.description" class="mb-3 text-sm text-surface-600 dark:text-surface-300 line-clamp-2" [innerHTML]="task.description"></div>
 
             <!-- Tags -->
             <div *ngIf="task.tags && task.tags.length > 0" class="mb-2 flex flex-wrap gap-1">
@@ -69,7 +67,7 @@ import { ConfirmDialogComponent } from './confirm-dialog';
                 <!-- Description -->
                 <div *ngIf="task.description">
                     <label class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">Mô tả</label>
-                    <p class="text-surface-600 dark:text-surface-300">{{ task.description }}</p>
+                    <div class="text-surface-600 dark:text-surface-300" [innerHTML]="task.description"></div>
                 </div>
 
                 <!-- Assignee -->
