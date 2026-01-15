@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Task } from '@/models/kanban.models';
 import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
@@ -30,7 +31,7 @@ import { ConfirmDialogComponent } from './confirm-dialog';
             </h4>
 
             <!-- Task Description -->
-            <div *ngIf="task.description" class="mb-3 text-sm text-surface-600 dark:text-surface-300 line-clamp-2" [innerHTML]="task.description"></div>
+            <div *ngIf="task.description" class="mb-3 text-sm text-surface-600 dark:text-surface-300 line-clamp-2" [innerHTML]="sanitizeHtml(task.description)"></div>
 
             <!-- Tags -->
             <div *ngIf="task.tags && task.tags.length > 0" class="mb-2 flex flex-wrap gap-1">
@@ -67,7 +68,7 @@ import { ConfirmDialogComponent } from './confirm-dialog';
                 <!-- Description -->
                 <div *ngIf="task.description">
                     <label class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">Mô tả</label>
-                    <div class="text-surface-600 dark:text-surface-300" [innerHTML]="task.description"></div>
+                    <div class="text-surface-600 dark:text-surface-300" [innerHTML]="sanitizeHtml(task.description)"></div>
                 </div>
 
                 <!-- Assignee -->
@@ -145,7 +146,10 @@ export class KanbanTaskCardComponent {
     editVisible = false;
     deleteDialogVisible = false;
 
-    constructor(private kanbanService: KanbanService) {}
+    constructor(
+        private kanbanService: KanbanService,
+        private sanitizer: DomSanitizer
+    ) {}
 
     get priorityLabel(): string {
         const labels = {
@@ -197,5 +201,13 @@ export class KanbanTaskCardComponent {
     onDeleteConfirmed(): void {
         this.kanbanService.deleteTask(this.task.id);
         this.deleteDialogVisible = false;
+    }
+
+    sanitizeHtml(html: string | undefined): SafeHtml {
+        if (!html) {
+            return '';
+        }
+
+        return this.sanitizer.sanitize(1, html) || '';
     }
 }
