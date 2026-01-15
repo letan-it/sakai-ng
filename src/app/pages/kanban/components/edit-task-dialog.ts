@@ -19,8 +19,10 @@ import { Task } from '@/models/kanban.models';
             (visibleChange)="visibleChange.emit($event)"
             header="Chỉnh sửa Task"
             [modal]="true"
+            [appendTo]="'body'"
+            [blockScroll]="true"
             [style]="{ width: '600px' }"
-          
+            maskStyleClass="backdrop-blur-sm"
             styleClass="!border-0"
         >
             <div class="space-y-4">

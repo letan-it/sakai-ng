@@ -12,7 +12,7 @@ import { Board, CreateBoardInput } from '@/models/kanban.models';
     selector: 'app-create-board-dialog',
     imports: [CommonModule, FormsModule, DialogModule, InputTextModule, TextareaModule, ButtonModule],
     template: `
-        <p-dialog [(visible)]="visible" (visibleChange)="visibleChange.emit($event)" header="Tạo Board Mới" [modal]="true" [style]="{ width: '500px' }" maskStyleClass="backdrop-blur-sm" styleClass="!border-0">
+        <p-dialog [(visible)]="visible" (visibleChange)="visibleChange.emit($event)" header="Tạo Board Mới" [modal]="true" [appendTo]="'body'" [blockScroll]="true" [style]="{ width: '500px' }" maskStyleClass="backdrop-blur-sm" styleClass="!border-0">
             <div class="space-y-4">
                 <!-- Board Name -->
                 <div>

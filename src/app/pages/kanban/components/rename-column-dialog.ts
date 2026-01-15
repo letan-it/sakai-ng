@@ -9,7 +9,7 @@ import { ButtonModule } from 'primeng/button';
     selector: 'app-rename-column-dialog',
     imports: [CommonModule, FormsModule, DialogModule, InputTextModule, ButtonModule],
     template: `
-        <p-dialog [(visible)]="visible" (visibleChange)="visibleChange.emit($event)" header="Đổi Tên Cột" [modal]="true" [style]="{ width: '450px' }" maskStyleClass="backdrop-blur-sm" styleClass="!border-0">
+        <p-dialog [(visible)]="visible" (visibleChange)="visibleChange.emit($event)" header="Đổi Tên Cột" [modal]="true" [appendTo]="'body'" [blockScroll]="true" [style]="{ width: '450px' }" maskStyleClass="backdrop-blur-sm" styleClass="!border-0">
             <div class="space-y-4">
                 <div>
                     <label for="newColumnName" class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200"> Tên cột mới <span class="text-red-500">*</span> </label>

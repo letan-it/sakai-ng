@@ -1,18 +1,16 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { KanbanService } from '@/services/kanban.service';
+import { KanbanDialogService } from '@/services/kanban-dialog.service';
 import { Board } from '@/models/kanban.models';
 import { KanbanBoardComponent } from './components/kanban-board';
-import { CreateBoardDialogComponent } from './components/create-board-dialog';
-import { CreateTaskDialogComponent } from './components/create-task-dialog';
 import { ButtonModule } from 'primeng/button';
-import { DialogModule } from 'primeng/dialog';
 import { SelectModule } from 'primeng/select';
 
 @Component({
     selector: 'app-kanban',
-    imports: [CommonModule, FormsModule, KanbanBoardComponent, CreateBoardDialogComponent, CreateTaskDialogComponent, ButtonModule, DialogModule, SelectModule],
+    imports: [CommonModule, FormsModule, KanbanBoardComponent, ButtonModule, SelectModule],
     template: `
         <div class="kanban-container">
             <!-- Header -->
@@ -39,21 +37,16 @@ import { SelectModule } from 'primeng/select';
 
             <!-- Kanban Board -->
             <app-kanban-board *ngIf="currentBoard" [board]="currentBoard" />
-
-            <!-- Create Board Dialog -->
-            <app-create-board-dialog [(visible)]="createBoardDialogVisible" (boardCreated)="onBoardCreated($event)" />
-
-            <!-- Create Task Dialog -->
-            <app-create-task-dialog *ngIf="currentBoard" [(visible)]="createTaskDialogVisible" [columns]="currentBoard.columns" (taskCreated)="onTaskCreated()" />
         </div>
     `
 })
 export class Kanban implements OnInit {
     selectedBoard: Board | null = null;
-    createBoardDialogVisible = false;
-    createTaskDialogVisible = false;
 
-    constructor(private kanbanService: KanbanService) {}
+    constructor(
+        private kanbanService: KanbanService,
+        private dialogService: KanbanDialogService
+    ) {}
 
     get boards() {
         return this.kanbanService.allBoards();
@@ -78,19 +71,12 @@ export class Kanban implements OnInit {
     }
 
     showCreateBoardDialog(): void {
-        this.createBoardDialogVisible = true;
+        this.dialogService.showCreateBoardDialog();
     }
 
     showCreateTaskDialog(): void {
-        this.createTaskDialogVisible = true;
-    }
-
-    onBoardCreated(board: Board): void {
-        this.selectedBoard = board;
-        this.createBoardDialogVisible = false;
-    }
-
-    onTaskCreated(): void {
-        this.createTaskDialogVisible = false;
+        if (this.currentBoard) {
+            this.dialogService.showCreateTaskDialog(this.currentBoard.columns);
+        }
     }
 }

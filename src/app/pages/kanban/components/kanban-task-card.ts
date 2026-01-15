@@ -6,15 +6,13 @@ import { CardModule } from 'primeng/card';
 import { TagModule } from 'primeng/tag';
 import { ButtonModule } from 'primeng/button';
 import { KanbanService } from '@/services/kanban.service';
+import { KanbanDialogService } from '@/services/kanban-dialog.service';
 import { DialogModule } from 'primeng/dialog';
 import { ChipModule } from 'primeng/chip';
-import { EditTaskDialogComponent } from './edit-task-dialog';
-import { ConfirmDialogComponent } from './confirm-dialog';
-
 
 @Component({
     selector: 'app-kanban-task-card',
-    imports: [CommonModule, CardModule, TagModule, ButtonModule, DialogModule, ChipModule, EditTaskDialogComponent, ConfirmDialogComponent],
+    imports: [CommonModule, CardModule, TagModule, ButtonModule, DialogModule, ChipModule],
     template: `
         <div class="task-card cursor-move rounded-lg bg-white dark:bg-surface-700 p-4 shadow-md hover:shadow-lg transition-shadow mt-4">
             <!-- Priority Badge -->
@@ -33,15 +31,15 @@ import { ConfirmDialogComponent } from './confirm-dialog';
 
             <!-- Task Description -->
             <div *ngIf="task.description" class="mb-3 text-sm text-surface-600 dark:text-surface-300 line-clamp-2" [innerHTML]="sanitizeHtml(task.description)" (click)="viewTaskDetails()"></div>
-           
+
             <!-- Tags -->
-            <div *ngIf="task.tags && task. tags.length > 0" class="mb-2 flex flex-wrap gap-1">
+            <div *ngIf="task.tags && task.tags.length > 0" class="mb-2 flex flex-wrap gap-1">
                 <p-chip *ngFor="let tag of task.tags" [label]="'#' + tag" styleClass="text-xs" />
             </div>
 
             <!-- Mentions -->
             <div *ngIf="task.mentions && task.mentions.length > 0" class="mb-2 flex flex-wrap gap-1">
-                <p-chip *ngFor="let mention of task.mentions" [label]="'@' + mention" styleClass="text-xs bg-blue-100 dark: bg-blue-900" />
+                <p-chip *ngFor="let mention of task.mentions" [label]="'@' + mention" styleClass="text-xs bg-blue-100 dark:bg-blue-900" />
             </div>
 
             <!-- Task Meta -->
@@ -52,19 +50,21 @@ import { ConfirmDialogComponent } from './confirm-dialog';
                 </span>
                 <span *ngIf="task.dueDate" class="flex items-center gap-1">
                     <i class="pi pi-calendar"></i>
-                    {{ task.dueDate | date:  'dd/MM/yyyy' }}
+                    {{ task.dueDate | date: 'dd/MM/yyyy' }}
                 </span>
             </div>
         </div>
 
-        <!-- Task Details Dialog -->
+        <!-- Task Details Dialog (kept local as it's view-only and specific to this card) -->
         <p-dialog
             [(visible)]="detailsVisible"
             header="Chi tiết Task"
             [modal]="true"
+            [appendTo]="'body'"
+            [blockScroll]="true"
             [style]="{ width: '600px' }"
             maskStyleClass="backdrop-blur-sm"
-            styleClass="! border-0"
+            styleClass="!border-0"
         >
             <div class="space-y-4">
                 <!-- Title -->
@@ -92,7 +92,7 @@ import { ConfirmDialogComponent } from './confirm-dialog';
                 </div>
 
                 <!-- Due Date -->
-                <div *ngIf="task. dueDate">
+                <div *ngIf="task.dueDate">
                     <label class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">Hạn chót</label>
                     <p class="text-surface-600 dark:text-surface-300">{{ task.dueDate | date: 'dd/MM/yyyy' }}</p>
                 </div>
@@ -106,7 +106,7 @@ import { ConfirmDialogComponent } from './confirm-dialog';
                 </div>
 
                 <!-- Mentions -->
-                <div *ngIf="task.mentions && task. mentions.length > 0">
+                <div *ngIf="task.mentions && task.mentions.length > 0">
                     <label class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">Mentions</label>
                     <div class="flex flex-wrap gap-2">
                         <p-chip *ngFor="let mention of task.mentions" [label]="'@' + mention" styleClass="bg-blue-100 dark:bg-blue-900" />
@@ -121,12 +121,6 @@ import { ConfirmDialogComponent } from './confirm-dialog';
                 </div>
             </ng-template>
         </p-dialog>
-
-        <!-- Edit Task Dialog -->
-        <app-edit-task-dialog [(visible)]="editVisible" [task]="task" (taskUpdated)="onTaskUpdated()" />
-
-        <!-- Delete Confirmation Dialog -->
-        <app-confirm-dialog [(visible)]="deleteDialogVisible" header="Xác nhận xóa task" [message]="deleteConfirmMessage" confirmLabel="Xóa" severity="danger" (confirmed)="onDeleteConfirmed()" />
     `,
     styles: [
         `
@@ -151,20 +145,20 @@ export class KanbanTaskCardComponent {
     @Input() task!: Task;
 
     detailsVisible = false;
-    editVisible = false;
-    deleteDialogVisible = false;
 
     constructor(
         private kanbanService: KanbanService,
+        private dialogService: KanbanDialogService,
         private sanitizer: DomSanitizer
     ) {}
 
     get priorityLabel(): string {
-        const labels:  Record<string, string> = {
+        const labels: Record<string, string> = {
             low: 'Thấp',
             medium: 'Trung bình',
             high: 'Cao'
         };
+
         return labels[this.task.priority] || this.task.priority;
     }
 
@@ -174,11 +168,8 @@ export class KanbanTaskCardComponent {
             medium: 'warn',
             high: 'danger'
         };
-        return severities[this. task.priority] || 'warn';
-    }
 
-    get deleteConfirmMessage(): string {
-        return `Bạn có chắc muốn xóa task "${this.task.title}"? `;
+        return severities[this.task.priority] || 'warn';
     }
 
     sanitizeHtml(html: string): SafeHtml {
@@ -190,30 +181,29 @@ export class KanbanTaskCardComponent {
     }
 
     closeDetails(): void {
-        this. detailsVisible = false;
+        this.detailsVisible = false;
     }
 
     editFromDetails(): void {
         this.detailsVisible = false;
-        this.editVisible = true;
+        this.dialogService.showEditTaskDialog(this.task);
     }
 
     editTask(event: Event): void {
         event.stopPropagation();
-        this.editVisible = true;
+        this.dialogService.showEditTaskDialog(this.task);
     }
 
     deleteTask(event: Event): void {
         event.stopPropagation();
-        this.deleteDialogVisible = true;
-    }
-
-    onTaskUpdated(): void {
-        this.editVisible = false;
-    }
-
-    onDeleteConfirmed(): void {
-        this.kanbanService.deleteTask(this. task.id);
-        this.deleteDialogVisible = false;
+        this.dialogService.showConfirmDialog({
+            header: 'Xác nhận xóa task',
+            message: `Bạn có chắc muốn xóa task "${this.task.title}"?`,
+            confirmLabel: 'Xóa',
+            severity: 'danger',
+            onConfirm: () => {
+                this.kanbanService.deleteTask(this.task.id);
+            }
+        });
     }
 }

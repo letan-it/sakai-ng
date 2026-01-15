@@ -19,6 +19,8 @@ import { Column, CreateTaskInput, Task } from '@/models/kanban.models';
             (visibleChange)="visibleChange.emit($event)"
             header="Tạo Task Mới"
             [modal]="true"
+            [appendTo]="'body'"
+            [blockScroll]="true"
             [style]="{ width: '600px' }"
             maskStyleClass="backdrop-blur-sm"
             styleClass="!border-0"
