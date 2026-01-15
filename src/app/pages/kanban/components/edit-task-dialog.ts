@@ -45,15 +45,8 @@ import { Task } from '@/models/kanban.models';
                     <label for="editTaskDescription" class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">
                         Mô tả
                     </label>
-                    <p-editor [(ngModel)]="editedTask.description" [style]="{ height: '320px' }" placeholder="Mô tả chi tiết về task...">
-                        <ng-template #header>
-                            <span class="ql-formats">
-                                <button type="button" class="ql-bold" aria-label="Bold"></button>
-                                <button type="button" class="ql-italic" aria-label="Italic"></button>
-                                <button type="button" class="ql-underline" aria-label="Underline"></button>
-                            </span>
-                        </ng-template>
-                    </p-editor>
+                    <p-editor [(ngModel)]="editedTask.description" [style]="{ height: '320px' }" placeholder="Mô tả chi tiết về task..."/>
+                    
                                        
                 </div>
 
