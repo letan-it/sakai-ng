@@ -16,50 +16,63 @@ import { ConfirmDialogComponent } from './confirm-dialog';
     selector: 'app-kanban-task-card',
     imports: [CommonModule, CardModule, TagModule, ButtonModule, DialogModule, ChipModule, EditTaskDialogComponent, ConfirmDialogComponent],
     template: `
-        <div class="task-card cursor-move rounded-lg bg-white dark:bg-surface-700 p-4 shadow-md hover:shadow-lg transition-shadow mt-4" (click)="viewTaskDetails()">
+        <div class="task-card cursor-move rounded-lg bg-white dark:bg-surface-700 p-4 shadow-md hover:shadow-lg transition-shadow mt-4">
             <!-- Priority Badge -->
             <div class="mb-2 flex items-center justify-between">
                 <p-tag [value]="priorityLabel" [severity]="prioritySeverity" />
-                <div class="flex gap-1">
+                <div class="flex gap-1" (click)="$event.stopPropagation()">
                     <p-button icon="pi pi-pencil" [text]="true" [rounded]="true" severity="secondary" size="small" (onClick)="editTask($event)" />
                     <p-button icon="pi pi-trash" [text]="true" [rounded]="true" severity="danger" size="small" (onClick)="deleteTask($event)" />
                 </div>
             </div>
 
             <!-- Task Title -->
-            <h4 class="mb-2 text-base font-semibold text-surface-900 dark:text-surface-0">
+            <h4 class="mb-2 text-base font-semibold text-surface-900 dark:text-surface-0" (click)="viewTaskDetails()">
                 {{ task.title }}
             </h4>
 
             <!-- Task Description -->
-            <div *ngIf="task.description" class="mb-3 text-sm text-surface-600 dark:text-surface-300 line-clamp-2" [innerHTML]="sanitizeHtml(task.description)"></div>
+            <div *ngIf="task.description" class="mb-3 text-sm text-surface-600 dark:text-surface-300 line-clamp-2" [innerHTML]="sanitizeHtml(task.description)" (click)="viewTaskDetails()"></div>
            
             <!-- Tags -->
-            <div *ngIf="task.tags && task.tags.length > 0" class="mb-2 flex flex-wrap gap-1">
+            <div *ngIf="task.tags && task. tags.length > 0" class="mb-2 flex flex-wrap gap-1">
                 <p-chip *ngFor="let tag of task.tags" [label]="'#' + tag" styleClass="text-xs" />
             </div>
 
             <!-- Mentions -->
             <div *ngIf="task.mentions && task.mentions.length > 0" class="mb-2 flex flex-wrap gap-1">
-                <p-chip *ngFor="let mention of task.mentions" [label]="'@' + mention" styleClass="text-xs bg-blue-100 dark:bg-blue-900" />
+                <p-chip *ngFor="let mention of task.mentions" [label]="'@' + mention" styleClass="text-xs bg-blue-100 dark: bg-blue-900" />
             </div>
 
             <!-- Task Meta -->
             <div class="flex items-center justify-between text-xs text-surface-500 dark:text-surface-400">
-                <div *ngIf="task.assignee" class="flex items-center gap-1">
+                <span *ngIf="task.assignee" class="flex items-center gap-1">
                     <i class="pi pi-user"></i>
-                    <span>{{ task.assignee }}</span>
-                </div>
-                <div *ngIf="task.dueDate" class="flex items-center gap-1">
+                    {{ task.assignee }}
+                </span>
+                <span *ngIf="task.dueDate" class="flex items-center gap-1">
                     <i class="pi pi-calendar"></i>
-                    <span>{{ task.dueDate | date: 'dd/MM/yyyy' }}</span>
-                </div>
+                    {{ task.dueDate | date:  'dd/MM/yyyy' }}
+                </span>
             </div>
         </div>
 
         <!-- Task Details Dialog -->
-        <p-dialog [(visible)]="detailsVisible" [header]="task.title" [modal]="true" [style]="{ width: '600px' }" maskStyleClass="backdrop-blur-sm" styleClass="!border-0">
+        <p-dialog
+            [(visible)]="detailsVisible"
+            header="Chi tiết Task"
+            [modal]="true"
+            [style]="{ width: '600px' }"
+            maskStyleClass="backdrop-blur-sm"
+            styleClass="! border-0"
+        >
             <div class="space-y-4">
+                <!-- Title -->
+                <div>
+                    <label class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">Tiêu đ���</label>
+                    <h3 class="text-lg font-semibold text-surface-900 dark:text-surface-0">{{ task.title }}</h3>
+                </div>
+
                 <!-- Priority -->
                 <div>
                     <label class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">Độ ưu tiên</label>
@@ -79,38 +92,32 @@ import { ConfirmDialogComponent } from './confirm-dialog';
                 </div>
 
                 <!-- Due Date -->
-                <div *ngIf="task.dueDate">
+                <div *ngIf="task. dueDate">
                     <label class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">Hạn chót</label>
                     <p class="text-surface-600 dark:text-surface-300">{{ task.dueDate | date: 'dd/MM/yyyy' }}</p>
                 </div>
 
                 <!-- Tags -->
                 <div *ngIf="task.tags && task.tags.length > 0">
-                    <label class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">Hashtags</label>
+                    <label class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">Tags</label>
                     <div class="flex flex-wrap gap-2">
                         <p-chip *ngFor="let tag of task.tags" [label]="'#' + tag" />
                     </div>
                 </div>
 
                 <!-- Mentions -->
-                <div *ngIf="task.mentions && task.mentions.length > 0">
-                    <label class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">Người theo dõi</label>
+                <div *ngIf="task.mentions && task. mentions.length > 0">
+                    <label class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">Mentions</label>
                     <div class="flex flex-wrap gap-2">
                         <p-chip *ngFor="let mention of task.mentions" [label]="'@' + mention" styleClass="bg-blue-100 dark:bg-blue-900" />
                     </div>
-                </div>
-
-                <!-- Created At -->
-                <div>
-                    <label class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">Ngày tạo</label>
-                    <p class="text-surface-600 dark:text-surface-300">{{ task.createdAt | date: 'dd/MM/yyyy HH:mm' }}</p>
                 </div>
             </div>
 
             <ng-template #footer>
                 <div class="flex justify-end gap-2">
-                    <p-button label="Chỉnh sửa" severity="secondary" (onClick)="editTaskFromDetails()" />
-                    <p-button label="Đóng" severity="secondary" (onClick)="detailsVisible = false" />
+                    <p-button label="Đóng" severity="secondary" (onClick)="closeDetails()" />
+                    <p-button label="Chỉnh sửa" (onClick)="editFromDetails()" />
                 </div>
             </ng-template>
         </p-dialog>
@@ -153,31 +160,42 @@ export class KanbanTaskCardComponent {
     ) {}
 
     get priorityLabel(): string {
-        const labels = {
+        const labels:  Record<string, string> = {
             low: 'Thấp',
             medium: 'Trung bình',
             high: 'Cao'
         };
-
-        return labels[this.task.priority];
+        return labels[this.task.priority] || this.task.priority;
     }
 
     get prioritySeverity(): 'success' | 'warn' | 'danger' {
-        const severities = {
-            low: 'success' as const,
-            medium: 'warn' as const,
-            high: 'danger' as const
+        const severities: Record<string, 'success' | 'warn' | 'danger'> = {
+            low: 'success',
+            medium: 'warn',
+            high: 'danger'
         };
-
-        return severities[this.task.priority];
+        return severities[this. task.priority] || 'warn';
     }
 
     get deleteConfirmMessage(): string {
-        return `Bạn có chắc muốn xóa task "${this.task.title}"?`;
+        return `Bạn có chắc muốn xóa task "${this.task.title}"? `;
+    }
+
+    sanitizeHtml(html: string): SafeHtml {
+        return this.sanitizer.sanitize(1, html) || '';
     }
 
     viewTaskDetails(): void {
         this.detailsVisible = true;
+    }
+
+    closeDetails(): void {
+        this. detailsVisible = false;
+    }
+
+    editFromDetails(): void {
+        this.detailsVisible = false;
+        this.editVisible = true;
     }
 
     editTask(event: Event): void {
@@ -185,30 +203,17 @@ export class KanbanTaskCardComponent {
         this.editVisible = true;
     }
 
-    editTaskFromDetails(): void {
-        this.detailsVisible = false;
-        this.editVisible = true;
+    deleteTask(event: Event): void {
+        event.stopPropagation();
+        this.deleteDialogVisible = true;
     }
 
     onTaskUpdated(): void {
         this.editVisible = false;
     }
 
-    deleteTask(event: Event): void {
-        event.stopPropagation();
-        this.deleteDialogVisible = true;
-    }
-
     onDeleteConfirmed(): void {
-        this.kanbanService.deleteTask(this.task.id);
+        this.kanbanService.deleteTask(this. task.id);
         this.deleteDialogVisible = false;
-    }
-
-    sanitizeHtml(html: string | undefined): SafeHtml {
-        if (!html) {
-            return '';
-        }
-
-        return this.sanitizer.sanitize(1, html) || '';
     }
 }
