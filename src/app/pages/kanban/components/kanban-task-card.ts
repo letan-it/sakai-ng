@@ -150,7 +150,7 @@ import { ConfirmDialogComponent } from './confirm-dialog';
         <app-confirm-dialog
             [(visible)]="deleteDialogVisible"
             header="Xác nhận xóa task"
-            [message]="'Bạn có chắc muốn xóa task \"' + task.title + '\"?'"
+            [message]="deleteConfirmMessage"
             confirmLabel="Xóa"
             severity="danger"
             (confirmed)="onDeleteConfirmed()"
@@ -202,6 +202,10 @@ export class KanbanTaskCardComponent {
         };
 
         return severities[this.task.priority];
+    }
+
+    get deleteConfirmMessage(): string {
+        return `Bạn có chắc muốn xóa task "${this.task.title}"?`;
     }
 
     viewTaskDetails(): void {

@@ -60,7 +60,7 @@ import { ConfirmDialogComponent } from './confirm-dialog';
         <app-confirm-dialog
             [(visible)]="deleteDialogVisible"
             header="Xác nhận xóa cột"
-            [message]="'Bạn có chắc muốn xóa cột \"' + column.name + '\"? Tất cả tasks trong cột sẽ bị xóa.'"
+            [message]="deleteConfirmMessage"
             confirmLabel="Xóa"
             severity="danger"
             (confirmed)="onDeleteConfirmed()"
@@ -117,6 +117,10 @@ export class KanbanColumnComponent implements OnInit {
 
     get columnColor(): string {
         return this.colors[this.colorIndex % this.colors.length];
+    }
+
+    get deleteConfirmMessage(): string {
+        return `Bạn có chắc muốn xóa cột "${this.column.name}"? Tất cả tasks trong cột sẽ bị xóa.`;
     }
 
     onDrop(event: CdkDragDrop<Task[]>): void {
