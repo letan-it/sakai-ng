@@ -7,12 +7,11 @@ import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
 import { MenuItem } from 'primeng/api';
 import { KanbanService } from '@/services/kanban.service';
-import { RenameColumnDialogComponent } from './rename-column-dialog';
-import { ConfirmDialogComponent } from './confirm-dialog';
+import { KanbanDialogService } from '@/services/kanban-dialog.service';
 
 @Component({
     selector: 'app-kanban-column',
-    imports: [CommonModule, DragDropModule, KanbanTaskCardComponent, ButtonModule, MenuModule, RenameColumnDialogComponent, ConfirmDialogComponent],
+    imports: [CommonModule, DragDropModule, KanbanTaskCardComponent, ButtonModule, MenuModule],
     template: `
         <div class="kanban-column min-w-[320px] flex flex-col" style="height: 70vh;">
             <!-- Column Header - Fixed -->
@@ -46,12 +45,6 @@ import { ConfirmDialogComponent } from './confirm-dialog';
                 </div>
             </div>
         </div>
-
-        <!-- Rename Column Dialog -->
-        <app-rename-column-dialog [(visible)]="renameDialogVisible" [currentName]="column.name" (columnRenamed)="onColumnRenamed($event)" />
-
-        <!-- Delete Confirmation Dialog -->
-        <app-confirm-dialog [(visible)]="deleteDialogVisible" header="Xác nhận xóa cột" [message]="deleteConfirmMessage" confirmLabel="Xóa" severity="danger" (confirmed)="onDeleteConfirmed()" />
     `,
     styles: [
         `
@@ -80,12 +73,13 @@ export class KanbanColumnComponent implements OnInit {
     @Output() taskMoved = new EventEmitter<{ drop: CdkDragDrop<Task[]>; columnId: string }>();
 
     menuItems: MenuItem[] = [];
-    renameDialogVisible = false;
-    deleteDialogVisible = false;
 
     private colors = ['#635FC7', '#49C4E5', '#67E2AE', '#8471F2', '#FF6B9D'];
 
-    constructor(private kanbanService: KanbanService) {}
+    constructor(
+        private kanbanService: KanbanService,
+        private dialogService: KanbanDialogService
+    ) {}
 
     ngOnInit(): void {
         this.menuItems = [
@@ -106,29 +100,23 @@ export class KanbanColumnComponent implements OnInit {
         return this.colors[this.colorIndex % this.colors.length];
     }
 
-    get deleteConfirmMessage(): string {
-        return `Bạn có chắc muốn xóa cột "${this.column.name}"? Tất cả tasks trong cột sẽ bị xóa.`;
-    }
-
     onDrop(event: CdkDragDrop<Task[]>): void {
         this.taskMoved.emit({ drop: event, columnId: this.column.id });
     }
 
     renameColumn(): void {
-        this.renameDialogVisible = true;
-    }
-
-    onColumnRenamed(newName: string): void {
-        this.kanbanService.updateColumn(this.column.id, newName);
-        this.renameDialogVisible = false;
+        this.dialogService.showRenameColumnDialog(this.column.id, this.column.name);
     }
 
     deleteColumn(): void {
-        this.deleteDialogVisible = true;
-    }
-
-    onDeleteConfirmed(): void {
-        this.kanbanService.deleteColumn(this.column.id);
-        this.deleteDialogVisible = false;
+        this.dialogService.showConfirmDialog({
+            header: 'Xác nhận xóa cột',
+            message: `Bạn có chắc muốn xóa cột "${this.column.name}"? Tất cả tasks trong cột sẽ bị xóa.`,
+            confirmLabel: 'Xóa',
+            severity: 'danger',
+            onConfirm: () => {
+                this.kanbanService.deleteColumn(this.column.id);
+            }
+        });
     }
 }

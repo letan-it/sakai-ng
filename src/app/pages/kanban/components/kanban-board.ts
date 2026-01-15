@@ -1,15 +1,15 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
-import { Board, Column, Task } from '@/models/kanban.models';
+import { Board, Task } from '@/models/kanban.models';
 import { KanbanService } from '@/services/kanban.service';
+import { KanbanDialogService } from '@/services/kanban-dialog.service';
 import { KanbanColumnComponent } from './kanban-column';
 import { ButtonModule } from 'primeng/button';
-import { AddColumnDialogComponent } from './add-column-dialog';
 
 @Component({
     selector: 'app-kanban-board',
-    imports: [CommonModule, DragDropModule, KanbanColumnComponent, ButtonModule, AddColumnDialogComponent],
+    imports: [CommonModule, DragDropModule, KanbanColumnComponent, ButtonModule],
     template: `
         <div class="kanban-board overflow-x-auto">
             <div class="flex gap-6 pb-4" cdkDropListGroup>
@@ -23,9 +23,6 @@ import { AddColumnDialogComponent } from './add-column-dialog';
                 </div>
             </div>
         </div>
-
-        <!-- Add Column Dialog -->
-        <app-add-column-dialog [(visible)]="addColumnDialogVisible" (columnAdded)="onColumnAdded($event)" />
     `,
     styles: [
         `
@@ -38,9 +35,10 @@ import { AddColumnDialogComponent } from './add-column-dialog';
 export class KanbanBoardComponent {
     @Input() board!: Board;
 
-    addColumnDialogVisible = false;
-
-    constructor(private kanbanService: KanbanService) {}
+    constructor(
+        private kanbanService: KanbanService,
+        private dialogService: KanbanDialogService
+    ) {}
 
     onTaskMoved(event: { drop: CdkDragDrop<Task[]>; columnId: string }): void {
         const { drop, columnId } = event;
@@ -57,11 +55,6 @@ export class KanbanBoardComponent {
     }
 
     addNewColumn(): void {
-        this.addColumnDialogVisible = true;
-    }
-
-    onColumnAdded(columnName: string): void {
-        this.kanbanService.addColumn(columnName);
-        this.addColumnDialogVisible = false;
+        this.dialogService.showAddColumnDialog();
     }
 }
