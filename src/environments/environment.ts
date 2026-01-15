@@ -1,6 +1,6 @@
 /**
  * Cấu hình môi trường development
- * 
+ *
  * LƯU Ý BẢO MẬT:
  * - Sử dụng Google Client ID riêng cho development environment
  * - KHÔNG commit Client ID vào public repository

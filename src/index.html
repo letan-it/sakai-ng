@@ -20,15 +20,17 @@
             2. Loại bỏ 'unsafe-eval' nếu có thể
             3. Giới hạn script-src chỉ còn những domains cần thiết
         -->
-        <meta http-equiv="Content-Security-Policy" 
-              content="default-src 'self'; 
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="default-src 'self'; 
                        script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://apis.google.com; 
                        style-src 'self' 'unsafe-inline' https://fonts.cdnfonts.com; 
                        font-src 'self' https://fonts.cdnfonts.com; 
                        img-src 'self' data: https: blob:; 
                        connect-src 'self' https://accounts.google.com https://www.googleapis.com https://basemaps.cartocdn.com https://overpass-api.de https://*.tile.openstreetmap.org; 
                        frame-src https://accounts.google.com; 
-                       worker-src 'self' blob:;" />
+                       worker-src 'self' blob:;"
+        />
         <link rel="preconnect" href="https://primefaces.org" />
         <link rel="preconnect" href="https://accounts.google.com" />
         <link rel="icon" type="image/x-icon" href="https://primefaces.org/cdn/primeng/images/favicon.png" />

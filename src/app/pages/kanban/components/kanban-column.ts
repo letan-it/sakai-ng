@@ -19,9 +19,7 @@ import { ConfirmDialogComponent } from './confirm-dialog';
             <div class="mb-4 flex items-center justify-between flex-shrink-0">
                 <div class="flex items-center gap-2">
                     <span class="h-4 w-4 rounded-full" [style.background-color]="columnColor"></span>
-                    <h3 class="text-sm font-bold uppercase tracking-wider text-surface-500 dark:text-surface-400">
-                        {{ column.name }} ({{ column.tasks.length }})
-                    </h3>
+                    <h3 class="text-sm font-bold uppercase tracking-wider text-surface-500 dark:text-surface-400">{{ column.name }} ({{ column.tasks.length }})</h3>
                 </div>
                 <p-button icon="pi pi-ellipsis-v" [text]="true" severity="secondary" size="small" (onClick)="menu.toggle($event)" />
                 <p-menu #menu [model]="menuItems" [popup]="true" />
@@ -50,21 +48,10 @@ import { ConfirmDialogComponent } from './confirm-dialog';
         </div>
 
         <!-- Rename Column Dialog -->
-        <app-rename-column-dialog
-            [(visible)]="renameDialogVisible"
-            [currentName]="column.name"
-            (columnRenamed)="onColumnRenamed($event)"
-        />
+        <app-rename-column-dialog [(visible)]="renameDialogVisible" [currentName]="column.name" (columnRenamed)="onColumnRenamed($event)" />
 
         <!-- Delete Confirmation Dialog -->
-        <app-confirm-dialog
-            [(visible)]="deleteDialogVisible"
-            header="Xác nhận xóa cột"
-            [message]="deleteConfirmMessage"
-            confirmLabel="Xóa"
-            severity="danger"
-            (confirmed)="onDeleteConfirmed()"
-        />
+        <app-confirm-dialog [(visible)]="deleteDialogVisible" header="Xác nhận xóa cột" [message]="deleteConfirmMessage" confirmLabel="Xóa" severity="danger" (confirmed)="onDeleteConfirmed()" />
     `,
     styles: [
         `

@@ -85,7 +85,7 @@ import { GoogleUserProfile } from '../../models/google-user-profile.model';
                     </button>
                 </div>
             </div>
-            
+
             <!-- Profile Popover -->
             <p-popover #profilePopover maskStyleClass="backdrop-blur-sm" styleClass="!border-0">
                 @if (userProfile) {
@@ -98,7 +98,7 @@ import { GoogleUserProfile } from '../../models/google-user-profile.model';
                                 <p class="text-muted-color text-sm">{{ userProfile.email }}</p>
                             </div>
                         </div>
-                        
+
                         <!-- Chi tiết thông tin -->
                         <div class="flex flex-col gap-3">
                             <div class="flex items-start gap-2">
@@ -109,16 +109,10 @@ import { GoogleUserProfile } from '../../models/google-user-profile.model';
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Nút đăng xuất -->
                         <div class="pt-3 border-t border-surface-200 dark:border-surface-700">
-                            <p-button 
-                                label="Đăng xuất" 
-                                icon="pi pi-sign-out" 
-                                severity="danger" 
-                                (onClick)="handleLogout()"
-                                [fluid]="true"
-                            />
+                            <p-button label="Đăng xuất" icon="pi pi-sign-out" severity="danger" (onClick)="handleLogout()" [fluid]="true" />
                         </div>
                     </div>
                 }
@@ -127,7 +121,7 @@ import { GoogleUserProfile } from '../../models/google-user-profile.model';
     </div>`
 })
 export class AppTopbar implements OnInit {
-     items!: MenuItem[];
+    items!: MenuItem[];
 
     userProfile: GoogleUserProfile | null = null;
 
@@ -151,7 +145,7 @@ export class AppTopbar implements OnInit {
     loadUserProfile() {
         try {
             const profileStr = localStorage.getItem('googleUserProfile');
-            
+
             if (profileStr) {
                 this.userProfile = JSON.parse(profileStr);
             }

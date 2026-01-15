@@ -72,7 +72,7 @@ export class OverpassService {
      * Thực hiện truy vấn Overpass
      * @param query Chuỗi truy vấn Overpass QL
      * @returns Observable của GeoJSON FeatureCollection
-     * 
+     *
      * Note: Sử dụng GET request với URL-encoded parameters.
      * URL có giới hạn độ dài (thường ~2048 chars trên browser).
      * Các query trong app này thường ngắn, nhưng nếu cần query dài hơn

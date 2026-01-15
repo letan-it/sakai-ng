@@ -14,30 +14,13 @@ import { ConfirmDialogComponent } from './confirm-dialog';
     selector: 'app-kanban-task-card',
     imports: [CommonModule, CardModule, TagModule, ButtonModule, DialogModule, ChipModule, EditTaskDialogComponent, ConfirmDialogComponent],
     template: `
-        <div
-            class="task-card cursor-move rounded-lg bg-white dark:bg-surface-700 p-4 shadow-md hover:shadow-lg transition-shadow mt-4"
-            (click)="viewTaskDetails()"
-        >
+        <div class="task-card cursor-move rounded-lg bg-white dark:bg-surface-700 p-4 shadow-md hover:shadow-lg transition-shadow mt-4" (click)="viewTaskDetails()">
             <!-- Priority Badge -->
             <div class="mb-2 flex items-center justify-between">
                 <p-tag [value]="priorityLabel" [severity]="prioritySeverity" />
                 <div class="flex gap-1">
-                    <p-button
-                        icon="pi pi-pencil"
-                        [text]="true"
-                        [rounded]="true"
-                        severity="secondary"
-                        size="small"
-                        (onClick)="editTask($event)"
-                    />
-                    <p-button
-                        icon="pi pi-trash"
-                        [text]="true"
-                        [rounded]="true"
-                        severity="danger"
-                        size="small"
-                        (onClick)="deleteTask($event)"
-                    />
+                    <p-button icon="pi pi-pencil" [text]="true" [rounded]="true" severity="secondary" size="small" (onClick)="editTask($event)" />
+                    <p-button icon="pi pi-trash" [text]="true" [rounded]="true" severity="danger" size="small" (onClick)="deleteTask($event)" />
                 </div>
             </div>
 
@@ -75,14 +58,7 @@ import { ConfirmDialogComponent } from './confirm-dialog';
         </div>
 
         <!-- Task Details Dialog -->
-        <p-dialog
-            [(visible)]="detailsVisible"
-            [header]="task.title"
-            [modal]="true"
-            [style]="{ width: '600px' }"
-            maskStyleClass="backdrop-blur-sm"
-            styleClass="!border-0"
-        >
+        <p-dialog [(visible)]="detailsVisible" [header]="task.title" [modal]="true" [style]="{ width: '600px' }" maskStyleClass="backdrop-blur-sm" styleClass="!border-0">
             <div class="space-y-4">
                 <!-- Priority -->
                 <div>
@@ -140,21 +116,10 @@ import { ConfirmDialogComponent } from './confirm-dialog';
         </p-dialog>
 
         <!-- Edit Task Dialog -->
-        <app-edit-task-dialog
-            [(visible)]="editVisible"
-            [task]="task"
-            (taskUpdated)="onTaskUpdated()"
-        />
+        <app-edit-task-dialog [(visible)]="editVisible" [task]="task" (taskUpdated)="onTaskUpdated()" />
 
         <!-- Delete Confirmation Dialog -->
-        <app-confirm-dialog
-            [(visible)]="deleteDialogVisible"
-            header="Xác nhận xóa task"
-            [message]="deleteConfirmMessage"
-            confirmLabel="Xóa"
-            severity="danger"
-            (confirmed)="onDeleteConfirmed()"
-        />
+        <app-confirm-dialog [(visible)]="deleteDialogVisible" header="Xác nhận xóa task" [message]="deleteConfirmMessage" confirmLabel="Xóa" severity="danger" (confirmed)="onDeleteConfirmed()" />
     `,
     styles: [
         `

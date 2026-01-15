@@ -9,29 +9,11 @@ import { ButtonModule } from 'primeng/button';
     selector: 'app-add-column-dialog',
     imports: [CommonModule, FormsModule, DialogModule, InputTextModule, ButtonModule],
     template: `
-        <p-dialog
-            [(visible)]="visible"
-            (visibleChange)="visibleChange.emit($event)"
-            header="Thêm Cột Mới"
-            [modal]="true"
-            [style]="{ width: '450px' }"
-            maskStyleClass="backdrop-blur-sm"
-            styleClass="!border-0"
-        >
+        <p-dialog [(visible)]="visible" (visibleChange)="visibleChange.emit($event)" header="Thêm Cột Mới" [modal]="true" [style]="{ width: '450px' }" maskStyleClass="backdrop-blur-sm" styleClass="!border-0">
             <div class="space-y-4">
                 <div>
-                    <label for="columnName" class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">
-                        Tên cột <span class="text-red-500">*</span>
-                    </label>
-                    <input
-                        pInputText
-                        id="columnName"
-                        [(ngModel)]="columnName"
-                        placeholder="Ví dụ: In Progress"
-                        class="w-full"
-                        [class.ng-invalid]="submitted && !columnName"
-                        (keyup.enter)="confirm()"
-                    />
+                    <label for="columnName" class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200"> Tên cột <span class="text-red-500">*</span> </label>
+                    <input pInputText id="columnName" [(ngModel)]="columnName" placeholder="Ví dụ: In Progress" class="w-full" [class.ng-invalid]="submitted && !columnName" (keyup.enter)="confirm()" />
                     <small *ngIf="submitted && !columnName" class="text-red-500">Tên cột là bắt buộc</small>
                 </div>
             </div>

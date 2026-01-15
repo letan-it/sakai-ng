@@ -22,19 +22,13 @@ import { Router } from '@angular/router';
             <div class="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 py-12">
                 <!-- Badge -->
                 <div class="mb-8 animate-pulse">
-                    <span class="inline-block bg-white/80 text-purple-700 px-6 py-3 rounded-full text-lg font-bold shadow-lg backdrop-blur-sm border-4 border-yellow-300">
-                        🎉 Trang Web Vui Nhộn 🎉
-                    </span>
+                    <span class="inline-block bg-white/80 text-purple-700 px-6 py-3 rounded-full text-lg font-bold shadow-lg backdrop-blur-sm border-4 border-yellow-300"> 🎉 Trang Web Vui Nhộn 🎉 </span>
                 </div>
 
                 <!-- Main meme text -->
                 <div class="text-center mb-8">
-                    <h1 class="text-6xl md:text-8xl lg:text-9xl font-black text-white mb-4 animate-wiggle" style="text-shadow: 4px 4px 0 #ff00ff, 8px 8px 0 #00ffff, 12px 12px 0 #ffff00;">
-                        TÔI BỊ NGU
-                    </h1>
-                    <div class="text-3xl md:text-4xl font-bold text-yellow-300 mb-4" style="text-shadow: 2px 2px 0 #000;">
-                        😂 Nhưng tôi vui! 😂
-                    </div>
+                    <h1 class="text-6xl md:text-8xl lg:text-9xl font-black text-white mb-4 animate-wiggle" style="text-shadow: 4px 4px 0 #ff00ff, 8px 8px 0 #00ffff, 12px 12px 0 #ffff00;">TÔI BỊ NGU</h1>
+                    <div class="text-3xl md:text-4xl font-bold text-yellow-300 mb-4" style="text-shadow: 2px 2px 0 #000;">😂 Nhưng tôi vui! 😂</div>
                 </div>
 
                 <!-- Fun emoji grid -->
@@ -72,14 +66,10 @@ import { Router } from '@angular/router';
                 <!-- Fun messages -->
                 <div class="max-w-3xl mx-auto mb-12">
                     <div class="bg-white/80 backdrop-blur-lg rounded-3xl shadow-2xl p-8 border-4 border-dashed border-purple-400">
-                        <p class="text-2xl md:text-3xl font-bold text-gray-800 text-center mb-4">
-                            🌟 Đừng lo lắng! 🌟
-                        </p>
+                        <p class="text-2xl md:text-3xl font-bold text-gray-800 text-center mb-4">🌟 Đừng lo lắng! 🌟</p>
                         <p class="text-lg md:text-xl text-gray-700 text-center leading-relaxed">
-                            Dù bạn có <span class="font-black text-pink-600">NGU</span> hay không thì cuộc sống vẫn phải 
-                            <span class="font-black text-yellow-600">VUI VẺ</span> và 
-                            <span class="font-black text-purple-600">HÀI HƯỚC</span>! 
-                            Hãy cười thật nhiều và tận hưởng mỗi khoảnh khắc! 😄
+                            Dù bạn có <span class="font-black text-pink-600">NGU</span> hay không thì cuộc sống vẫn phải <span class="font-black text-yellow-600">VUI VẺ</span> và <span class="font-black text-purple-600">HÀI HƯỚC</span>! Hãy cười thật
+                            nhiều và tận hưởng mỗi khoảnh khắc! 😄
                         </p>
                     </div>
                 </div>
@@ -111,9 +101,7 @@ import { Router } from '@angular/router';
 
                 <!-- Footer fun text -->
                 <div class="mt-16 text-center">
-                    <p class="text-white text-xl md:text-2xl font-bold" style="text-shadow: 2px 2px 0 #000;">
-                        Made with 💜 and lots of 😂 by Team Sakai-NG
-                    </p>
+                    <p class="text-white text-xl md:text-2xl font-bold" style="text-shadow: 2px 2px 0 #000;">Made with 💜 and lots of 😂 by Team Sakai-NG</p>
                 </div>
             </div>
 
@@ -128,24 +116,34 @@ import { Router } from '@angular/router';
 
         <style>
             @keyframes wiggle {
-                0%, 100% { transform: rotate(-3deg); }
-                50% { transform: rotate(3deg); }
+                0%,
+                100% {
+                    transform: rotate(-3deg);
+                }
+                50% {
+                    transform: rotate(3deg);
+                }
             }
 
             @keyframes float {
-                0%, 100% { 
+                0%,
+                100% {
                     transform: translateY(0) rotate(0deg);
                     opacity: 0.8;
                 }
-                50% { 
+                50% {
                     transform: translateY(-30px) rotate(10deg);
                     opacity: 1;
                 }
             }
 
             @keyframes spin-slow {
-                from { transform: rotate(0deg); }
-                to { transform: rotate(360deg); }
+                from {
+                    transform: rotate(0deg);
+                }
+                to {
+                    transform: rotate(360deg);
+                }
             }
 
             .animate-wiggle {

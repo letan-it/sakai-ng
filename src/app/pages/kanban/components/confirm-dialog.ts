@@ -7,15 +7,7 @@ import { ButtonModule } from 'primeng/button';
     selector: 'app-confirm-dialog',
     imports: [CommonModule, DialogModule, ButtonModule],
     template: `
-        <p-dialog
-            [(visible)]="visible"
-            (visibleChange)="visibleChange.emit($event)"
-            [header]="header"
-            [modal]="true"
-            [style]="{ width: '450px' }"
-            maskStyleClass="backdrop-blur-sm"
-            styleClass="!border-0"
-        >
+        <p-dialog [(visible)]="visible" (visibleChange)="visibleChange.emit($event)" [header]="header" [modal]="true" [style]="{ width: '450px' }" maskStyleClass="backdrop-blur-sm" styleClass="!border-0">
             <div class="space-y-4">
                 <p class="text-surface-700 dark:text-surface-300">{{ message }}</p>
             </div>

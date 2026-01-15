@@ -12,7 +12,7 @@ export class KanbanService {
     readonly allBoards = this.boards.asReadonly();
     readonly currentBoard = computed(() => {
         const boardId = this.currentBoardId();
-        
+
         return boardId ? this.boards().find((b) => b.id === boardId) || null : null;
     });
 

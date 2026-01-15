@@ -13,33 +13,19 @@ import { AddColumnDialogComponent } from './add-column-dialog';
     template: `
         <div class="kanban-board overflow-x-auto">
             <div class="flex gap-6 pb-4" cdkDropListGroup>
-                <app-kanban-column
-                    *ngFor="let column of board.columns; let i = index"
-                    [column]="column"
-                    [colorIndex]="i"
-                    (taskMoved)="onTaskMoved($event)"
-                />
+                <app-kanban-column *ngFor="let column of board.columns; let i = index" [column]="column" [colorIndex]="i" (taskMoved)="onTaskMoved($event)" />
 
                 <!-- Add Column Button -->
                 <div class="min-w-[320px]">
                     <div class="rounded-lg bg-surface-50 dark:bg-surface-800 p-6 h-full flex items-center justify-center">
-                        <p-button
-                            label="+ Thêm Cột"
-                            [text]="true"
-                            severity="secondary"
-                            (onClick)="addNewColumn()"
-                            styleClass="text-lg font-semibold"
-                        />
+                        <p-button label="+ Thêm Cột" [text]="true" severity="secondary" (onClick)="addNewColumn()" styleClass="text-lg font-semibold" />
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Add Column Dialog -->
-        <app-add-column-dialog
-            [(visible)]="addColumnDialogVisible"
-            (columnAdded)="onColumnAdded($event)"
-        />
+        <app-add-column-dialog [(visible)]="addColumnDialogVisible" (columnAdded)="onColumnAdded($event)" />
     `,
     styles: [
         `
