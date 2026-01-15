@@ -69,7 +69,7 @@ import { ConfirmDialogComponent } from './confirm-dialog';
             <div class="space-y-4">
                 <!-- Title -->
                 <div>
-                    <label class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">Tiêu đ���</label>
+                    <label class="mb-2 block text-sm font-semibold text-surface-700 dark:text-surface-200">Tiêu đề</label>
                     <h3 class="text-lg font-semibold text-surface-900 dark:text-surface-0">{{ task.title }}</h3>
                 </div>
 
