@@ -1,0 +1,26 @@
+{
+    "LOGIN": {
+        "WELCOME": "Chào mừng",
+        "SUBTITLE": "Đăng nhập vào tài khoản để tiếp tục",
+        "EMAIL": "Địa chỉ Email",
+        "PASSWORD": "Mật khẩu",
+        "REMEMBER_ME": "Ghi nhớ tôi",
+        "FORGOT_PASSWORD": "Quên mật khẩu?",
+        "SIGN_IN": "ĐĂNG NHẬP",
+        "OR": "HOẶC",
+        "SIGN_IN_GOOGLE": "Đăng nhập với Google",
+        "NO_ACCOUNT": "Bạn chưa có tài khoản?",
+        "SIGN_UP_NOW": "Đăng ký ngay"
+    },
+    "TOPBAR": {
+        "CALENDAR": "Lịch",
+        "MESSAGES": "Tin nhắn",
+        "PROFILE": "Hồ sơ",
+        "LOGOUT": "Đăng xuất",
+        "USER_ID": "ID người dùng"
+    },
+    "COMMON": {
+        "SEARCH": "Tìm kiếm...",
+        "NOTIFICATION": "Thông báo"
+    }
+}

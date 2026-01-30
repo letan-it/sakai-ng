@@ -8,11 +8,13 @@ import { ButtonModule } from 'primeng/button';
 import { AppConfigurator } from './app.configurator';
 import { LayoutService } from '../service/layout.service';
 import { GoogleUserProfile } from '../../models/google-user-profile.model';
+import { LanguageService } from '../../services/language.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-topbar',
     standalone: true,
-    imports: [RouterModule, CommonModule, StyleClassModule, PopoverModule, ButtonModule, AppConfigurator],
+    imports: [RouterModule, CommonModule, StyleClassModule, PopoverModule, ButtonModule, AppConfigurator, TranslateModule],
     template: ` <div class="layout-topbar">
         <div class="layout-topbar-logo-container">
             <button class="layout-menu-button layout-topbar-action" (click)="layoutService.onMenuToggle()">
@@ -45,6 +47,10 @@ import { GoogleUserProfile } from '../../models/google-user-profile.model';
                 <button type="button" class="layout-topbar-action" (click)="toggleDarkMode()">
                     <i [ngClass]="{ 'pi ': true, 'pi-moon': layoutService.isDarkTheme(), 'pi-sun': !layoutService.isDarkTheme() }"></i>
                 </button>
+                <button type="button" class="layout-topbar-action flex items-center gap-2 !p-2" (click)="switchLanguage()">
+                    <img [src]="languageService.getCurrentLanguage() === 'vi' ? '/assets/image/flag_VN.png' : '/assets/image/flag_EN.png'" class="w-6 h-4 border border-surface-200 dark:border-surface-700 shadow-sm" [alt]="languageService.getCurrentLanguage()" />
+                    <span class="font-bold text-sm">{{ languageService.getCurrentLanguage() === 'vi' ? 'VI' : 'EN' }}</span>
+                </button>
                 <div class="relative">
                     <button
                         class="layout-topbar-action layout-topbar-action-highlight"
@@ -69,11 +75,11 @@ import { GoogleUserProfile } from '../../models/google-user-profile.model';
                 <div class="layout-topbar-menu-content">
                     <button type="button" class="layout-topbar-action">
                         <i class="pi pi-calendar"></i>
-                        <span>Calendar</span>
+                        <span>{{ 'TOPBAR.CALENDAR' | translate }}</span>
                     </button>
                     <button type="button" class="layout-topbar-action">
                         <i class="pi pi-inbox"></i>
-                        <span>Messages</span>
+                        <span>{{ 'TOPBAR.MESSAGES' | translate }}</span>
                     </button>
                     <button type="button" class="layout-topbar-action" (click)="profilePopover.toggle($event)">
                         @if (userProfile && userProfile.imageUrl) {
@@ -81,7 +87,7 @@ import { GoogleUserProfile } from '../../models/google-user-profile.model';
                         } @else {
                             <i class="pi pi-user"></i>
                         }
-                        <span>Profile</span>
+                        <span>{{ 'TOPBAR.PROFILE' | translate }}</span>
                     </button>
                 </div>
             </div>
@@ -103,8 +109,8 @@ import { GoogleUserProfile } from '../../models/google-user-profile.model';
                         <div class="flex flex-col gap-3">
                             <div class="flex items-start gap-2">
                                 <i class="pi pi-id-card text-primary mt-1"></i>
-                                <div>
-                                    <p class="text-xs text-muted-color font-medium mb-1">User ID</p>
+                                 <div>
+                                    <p class="text-xs text-muted-color font-medium mb-1">{{ 'TOPBAR.USER_ID' | translate }}</p>
                                     <p class="text-sm text-surface-900 dark:text-surface-0 font-mono">{{ userProfile.id }}</p>
                                 </div>
                             </div>
@@ -112,7 +118,7 @@ import { GoogleUserProfile } from '../../models/google-user-profile.model';
 
                         <!-- Nút đăng xuất -->
                         <div class="pt-3 border-t border-surface-200 dark:border-surface-700">
-                            <p-button label="Đăng xuất" icon="pi pi-sign-out" severity="danger" (onClick)="handleLogout()" [fluid]="true" />
+                            <p-button [label]="'TOPBAR.LOGOUT' | translate" icon="pi pi-sign-out" severity="danger" (onClick)="handleLogout()" [fluid]="true" />
                         </div>
                     </div>
                 }
@@ -127,8 +133,14 @@ export class AppTopbar implements OnInit {
 
     constructor(
         public layoutService: LayoutService,
+        public languageService: LanguageService,
         private router: Router
     ) {}
+
+    switchLanguage() {
+        const newLang = this.languageService.getCurrentLanguage() === 'vi' ? 'en' : 'vi';
+        this.languageService.changeLanguage(newLang);
+    }
 
     ngOnInit() {
         // Load theme from localStorage when the component initializes
@@ -172,7 +184,6 @@ export class AppTopbar implements OnInit {
     }
 
     toggleDarkMode() {
-        // Toggle theme and update both layout state and localStorage
         const updatedTheme = !this.layoutService.isDarkTheme();
         this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: updatedTheme }));
         localStorage.setItem('isDarkTheme', updatedTheme.toString());

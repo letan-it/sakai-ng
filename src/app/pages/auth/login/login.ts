@@ -7,6 +7,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
+import { TranslateModule } from '@ngx-translate/core';
 import { AppFloatingConfigurator } from '../../../layout/component/app.floatingconfigurator';
 
 // Định nghĩa interface cho Google Identity Services
@@ -23,7 +24,7 @@ interface GoogleUserProfile {
 @Component({
     selector: 'app-login',
     standalone: true,
-    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, AppFloatingConfigurator],
+    imports: [ButtonModule, CheckboxModule, InputTextModule, PasswordModule, FormsModule, RouterModule, RippleModule, AppFloatingConfigurator, TranslateModule],
     templateUrl: './login.html',
     styleUrls: ['./login.scss']
 })

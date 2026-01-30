@@ -1,0 +1,26 @@
+{
+    "LOGIN": {
+        "WELCOME": "Welcome",
+        "SUBTITLE": "Login to your account to continue",
+        "EMAIL": "Email Address",
+        "PASSWORD": "Password",
+        "REMEMBER_ME": "Remember me",
+        "FORGOT_PASSWORD": "Forgot password?",
+        "SIGN_IN": "SIGN IN",
+        "OR": "OR",
+        "SIGN_IN_GOOGLE": "Sign in with Google",
+        "NO_ACCOUNT": "Don't have an account?",
+        "SIGN_UP_NOW": "Sign up now"
+    },
+    "TOPBAR": {
+        "CALENDAR": "Calendar",
+        "MESSAGES": "Messages",
+        "PROFILE": "Profile",
+        "LOGOUT": "Logout",
+        "USER_ID": "User ID"
+    },
+    "COMMON": {
+        "SEARCH": "Search...",
+        "NOTIFICATION": "Notification"
+    }
+}

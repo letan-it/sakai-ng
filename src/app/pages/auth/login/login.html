@@ -33,22 +33,22 @@
         <!-- Right Section: Form -->
         <div class="flex-1 flex flex-col justify-center p-8 sm:p-12 md:p-16 bg-surface-0 dark:bg-surface-900">
             <div class="mb-10 text-center md:text-left">
-                <h2 class="text-4xl font-bold text-primary mb-2">Welcome</h2>
-                <p class="text-muted-color">Đăng nhập vào tài khoản để tiếp tục</p>
+                <h2 class="text-4xl font-bold text-primary mb-2">{{ 'LOGIN.WELCOME' | translate }}</h2>
+                <p class="text-muted-color">{{ 'LOGIN.SUBTITLE' | translate }}</p>
             </div>
 
             <div class="flex flex-col gap-6">
                 <div>
                     <span class="p-input-icon-left w-full group">
                         <i class="pi pi-envelope text-muted-color group-focus-within:text-primary transition-colors"></i>
-                        <input pInputText id="email1" type="text" placeholder="Địa chỉ Email" class="w-full !rounded-full !py-4 !pl-12 !bg-blue-50/50 dark:!bg-surface-800 !border-0 focus:!ring-2 focus:!ring-primary/20" [(ngModel)]="email" />
+                        <input pInputText id="email1" type="text" [placeholder]="'LOGIN.EMAIL' | translate" class="w-full !rounded-full !py-4 !pl-12 !bg-blue-50/50 dark:!bg-surface-800 !border-0 focus:!ring-2 focus:!ring-primary/20" [(ngModel)]="email" />
                     </span>
                 </div>
 
                 <div>
                     <span class="p-input-icon-left w-full group">
                         <i class="pi pi-lock text-muted-color z-10 group-focus-within:text-primary transition-colors"></i>
-                        <p-password id="password1" [(ngModel)]="password" placeholder="Mật khẩu" [toggleMask]="true" [fluid]="true" [feedback]="false" 
+                        <p-password id="password1" [(ngModel)]="password" [placeholder]="'LOGIN.PASSWORD' | translate" [toggleMask]="true" [fluid]="true" [feedback]="false" 
                             inputStyleClass="w-full !rounded-full !py-4 !pl-12 !bg-blue-50/50 dark:!bg-surface-800 !border-0 focus:!ring-2 focus:!ring-primary/20" 
                             styleClass="w-full"></p-password>
                     </span>
@@ -57,19 +57,19 @@
                 <div class="flex items-center justify-between">
                     <div class="flex items-center">
                         <p-checkbox [(ngModel)]="checked" id="rememberme1" binary inputId="rememberme1" class="mr-2"></p-checkbox>
-                        <label for="rememberme1" class="text-sm cursor-pointer select-none">Ghi nhớ tôi</label>
+                        <label for="rememberme1" class="text-sm cursor-pointer select-none">{{ 'LOGIN.REMEMBER_ME' | translate }}</label>
                     </div>
-                    <a class="text-sm font-semibold text-primary hover:underline cursor-pointer">Quên mật khẩu?</a>
+                    <a class="text-sm font-semibold text-primary hover:underline cursor-pointer">{{ 'LOGIN.FORGOT_PASSWORD' | translate }}</a>
                 </div>
 
-                <p-button label="ĐĂNG NHẬP" styleClass="w-full !rounded-full !py-4 !font-bold !bg-gradient-to-r !from-blue-600 !to-blue-400 !border-0 hover:!opacity-90 shadow-lg active:scale-95 transition-all" routerLink="/"></p-button>
+                <p-button [label]="'LOGIN.SIGN_IN' | translate" styleClass="w-full !rounded-full !py-4 !font-bold !bg-gradient-to-r !from-blue-600 !to-blue-400 !border-0 hover:!opacity-90 shadow-lg active:scale-95 transition-all" routerLink="/"></p-button>
 
                 <div class="relative my-4">
                     <div class="absolute inset-0 flex items-center">
                         <div class="w-full border-t border-surface-200 dark:border-surface-700"></div>
                     </div>
                     <div class="relative flex justify-center text-sm">
-                        <span class="px-3 bg-surface-0 dark:bg-surface-900 text-muted-color font-medium">HOẶC</span>
+                        <span class="px-3 bg-surface-0 dark:bg-surface-900 text-muted-color font-medium">{{ 'LOGIN.OR' | translate }}</span>
                     </div>
                 </div>
 
@@ -88,13 +88,13 @@
                         <path d="M3.96409 10.71C3.78409 10.17 3.68182 9.59318 3.68182 9C3.68182 8.40682 3.78409 7.83 3.96409 7.29V4.95818H0.957275C0.347727 6.17318 0 7.54773 0 9C0 10.4523 0.347727 11.8268 0.957275 13.0418L3.96409 10.71Z" fill="#FBBC05" />
                         <path d="M9 3.57955C10.3214 3.57955 11.5077 4.03364 12.4405 4.92545L15.0218 2.34409C13.4632 0.891818 11.4259 0 9 0C5.48182 0 2.43818 2.01682 0.957275 4.95818L3.96409 7.29C4.67182 5.16273 6.65591 3.57955 9 3.57955Z" fill="#EA4335" />
                     </svg>
-                    <span>Đăng nhập với Google</span>
+                    <span>{{ 'LOGIN.SIGN_IN_GOOGLE' | translate }}</span>
                 </button>
             </div>
 
             <div class="mt-8 text-center text-sm">
-                <span class="text-muted-color">Bạn chưa có tài khoản? </span>
-                <a class="text-primary font-bold hover:underline cursor-pointer">Đăng ký ngay</a>
+                <span class="text-muted-color">{{ 'LOGIN.NO_ACCOUNT' | translate }} </span>
+                <a class="text-primary font-bold hover:underline cursor-pointer">{{ 'LOGIN.SIGN_UP_NOW' | translate }}</a>
             </div>
         </div>
     </div>
