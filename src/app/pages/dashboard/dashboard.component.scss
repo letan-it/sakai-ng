@@ -1,0 +1,253 @@
+.hr-dashboard {
+    // Màu chủ đạo
+    $primary-color: #14beaf;
+    $secondary-color: #f1638c;
+    $success-color: #14beaf;
+    $danger-color: #f1638c;
+    $warning-color: #ffc107;
+
+    // Bộ lọc
+    .filter-section {
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        padding: 1.5rem;
+    }
+
+    // Thống kê cards
+    .stat-card {
+        padding: 1.5rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        transition: transform 0.2s, box-shadow 0.2s;
+
+        &:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            flex-shrink: 0;
+        }
+
+        .stat-content {
+            flex: 1;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-color-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        &.card-primary {
+            background: linear-gradient(135deg, $primary-color 0%, #10a89c 100%);
+
+            .stat-icon {
+                background: rgba(255, 255, 255, 0.2);
+                color: white;
+            }
+
+            .stat-label,
+            .stat-value {
+                color: white;
+            }
+        }
+
+        &.card-success {
+            background: linear-gradient(135deg, #14beaf 0%, #10a89c 100%);
+
+            .stat-icon {
+                background: rgba(255, 255, 255, 0.2);
+                color: white;
+            }
+
+            .stat-label,
+            .stat-value {
+                color: white;
+            }
+        }
+
+        &.card-danger {
+            background: linear-gradient(135deg, $secondary-color 0%, #d9527a 100%);
+
+            .stat-icon {
+                background: rgba(255, 255, 255, 0.2);
+                color: white;
+            }
+
+            .stat-label,
+            .stat-value {
+                color: white;
+            }
+        }
+
+        &.card-warning {
+            background: linear-gradient(135deg, $warning-color 0%, #e6ad00 100%);
+
+            .stat-icon {
+                background: rgba(255, 255, 255, 0.2);
+                color: white;
+            }
+
+            .stat-label,
+            .stat-value {
+                color: white;
+            }
+        }
+    }
+
+    // Biểu đồ cards
+    .chart-card {
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+
+        .chart-header {
+            padding: 1.5rem 1.5rem 1rem;
+            border-bottom: 1px solid var(--surface-border);
+        }
+
+        .chart-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin: 0;
+        }
+
+        .chart-body {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+
+    // Bảng thông tin cards
+    .table-card {
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+
+        .table-header {
+            padding: 1.5rem 1.5rem 1rem;
+            border-bottom: 1px solid var(--surface-border);
+        }
+
+        .table-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            align-items: center;
+
+            i {
+                color: $primary-color;
+            }
+        }
+
+        .table-body {
+            flex: 1;
+            overflow: auto;
+            max-height: 500px;
+
+            ::ng-deep {
+                .p-datatable {
+                    .p-datatable-wrapper {
+                        border-radius: 0;
+                    }
+
+                    .p-datatable-tbody > tr > td {
+                        padding: 1rem;
+                        border: none;
+                        border-bottom: 1px solid var(--surface-border);
+                    }
+
+                    .p-datatable-tbody > tr:last-child > td {
+                        border-bottom: none;
+                    }
+
+                    .p-datatable-tbody > tr:hover {
+                        background: var(--surface-hover);
+                    }
+                }
+            }
+        }
+
+        .employee-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+
+            .employee-details {
+                flex: 1;
+            }
+
+            .employee-name {
+                font-weight: 600;
+                color: var(--text-color);
+                margin-bottom: 0.25rem;
+            }
+
+            .employee-position {
+                font-size: 0.875rem;
+                color: var(--text-color-secondary);
+                margin-bottom: 0.25rem;
+            }
+
+            .employee-meta {
+                font-size: 0.75rem;
+                color: var(--text-color-secondary);
+            }
+        }
+    }
+
+    // Custom colors cho charts
+    ::ng-deep {
+        .p-chart {
+            canvas {
+                max-height: 300px;
+            }
+        }
+    }
+
+    // Responsive
+    @media (max-width: 768px) {
+        .stat-card {
+            .stat-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.5rem;
+            }
+
+            .stat-value {
+                font-size: 1.5rem;
+            }
+        }
+
+        .table-card .table-body {
+            max-height: 400px;
+        }
+    }
+}
