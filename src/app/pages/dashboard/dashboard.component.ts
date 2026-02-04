@@ -167,8 +167,9 @@ export class Dashboard implements OnInit, OnDestroy {
             ]
         };
 
-        this.departmentChartOptions = {
+       this.departmentChartOptions = {
             maintainAspectRatio: false,
+            responsive: true,
             aspectRatio: 0.8,
             plugins: {
                 legend: {
@@ -199,6 +200,7 @@ export class Dashboard implements OnInit, OnDestroy {
                 }
             }
         };
+
 
         // Biểu đồ cấp bậc (Doughnut)
         this.levelChartData = {
@@ -275,6 +277,7 @@ export class Dashboard implements OnInit, OnDestroy {
 
         this.trendChartOptions = {
             maintainAspectRatio: false,
+            responsive: true,
             aspectRatio: 0.6,
             plugins: {
                 legend: {
