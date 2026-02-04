@@ -1,0 +1,255 @@
+<div class="hr-dashboard">
+    <!-- Bộ lọc -->
+    <div class="filter-section card mb-6">
+        <div class="grid grid-cols-12 gap-4 items-end">
+            <div class="col-span-12 md:col-span-4">
+                <label class="block text-sm font-medium mb-2">Năm</label>
+                <p-select
+                    [(ngModel)]="selectedYear"
+                    [options]="years"
+                    (onChange)="onFilterChange()"
+                    placeholder="Chọn năm"
+                    styleClass="w-full"
+                />
+            </div>
+            <div class="col-span-12 md:col-span-4">
+                <label class="block text-sm font-medium mb-2">Tháng</label>
+                <p-select
+                    [(ngModel)]="selectedMonth"
+                    [options]="months"
+                    optionLabel="label"
+                    (onChange)="onFilterChange()"
+                    placeholder="Chọn tháng"
+                    styleClass="w-full"
+                />
+            </div>
+            <div class="col-span-12 md:col-span-4">
+                <label class="block text-sm font-medium mb-2">Nơi làm việc</label>
+                <p-select
+                    [(ngModel)]="selectedWorkplace"
+                    [options]="workplaces"
+                    optionLabel="label"
+                    (onChange)="onFilterChange()"
+                    placeholder="Chọn nơi làm việc"
+                    styleClass="w-full"
+                />
+            </div>
+        </div>
+    </div>
+
+    <!-- Thống kê tổng quan -->
+    <div class="grid grid-cols-12 gap-6 mb-6">
+        <div class="col-span-12 md:col-span-6 lg:col-span-3">
+            <div class="stat-card card-primary">
+                <div class="stat-icon">
+                    <i class="pi pi-users"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">Tổng nhân viên</div>
+                    <div class="stat-value">{{ totalEmployees }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-span-12 md:col-span-6 lg:col-span-3">
+            <div class="stat-card card-success">
+                <div class="stat-icon">
+                    <i class="pi pi-user-plus"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">Tuyển mới</div>
+                    <div class="stat-value">{{ newHires }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-span-12 md:col-span-6 lg:col-span-3">
+            <div class="stat-card card-danger">
+                <div class="stat-icon">
+                    <i class="pi pi-user-minus"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">Nghỉ việc</div>
+                    <div class="stat-value">{{ resignations }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-span-12 md:col-span-6 lg:col-span-3">
+            <div class="stat-card card-warning">
+                <div class="stat-icon">
+                    <i class="pi pi-percentage"></i>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">Tỷ lệ nghỉ việc</div>
+                    <div class="stat-value">{{ turnoverRate }}%</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Các biểu đồ -->
+    <div class="grid grid-cols-12 gap-6 mb-6">
+        <!-- Biểu đồ giới tính -->
+        <div class="col-span-12 lg:col-span-6 xl:col-span-4">
+            <div class="chart-card card">
+                <div class="chart-header">
+                    <h3 class="chart-title">Phân bổ theo giới tính</h3>
+                </div>
+                <div class="chart-body">
+                    <p-chart type="doughnut" [data]="genderChartData" [options]="genderChartOptions"></p-chart>
+                </div>
+            </div>
+        </div>
+
+        <!-- Biểu đồ cấp bậc -->
+        <div class="col-span-12 lg:col-span-6 xl:col-span-4">
+            <div class="chart-card card">
+                <div class="chart-header">
+                    <h3 class="chart-title">Phân bổ theo cấp bậc</h3>
+                </div>
+                <div class="chart-body">
+                    <p-chart type="doughnut" [data]="levelChartData" [options]="levelChartOptions"></p-chart>
+                </div>
+            </div>
+        </div>
+
+        <!-- Biểu đồ trình độ -->
+        <div class="col-span-12 lg:col-span-6 xl:col-span-4">
+            <div class="chart-card card">
+                <div class="chart-header">
+                    <h3 class="chart-title">Phân bổ theo trình độ</h3>
+                </div>
+                <div class="chart-body">
+                    <p-chart type="doughnut" [data]="educationChartData" [options]="educationChartOptions"></p-chart>
+                </div>
+            </div>
+        </div>
+
+        <!-- Biểu đồ phòng ban -->
+        <div class="col-span-12 lg:col-span-6">
+            <div class="chart-card card">
+                <div class="chart-header">
+                    <h3 class="chart-title">Phân bổ theo phòng ban</h3>
+                </div>
+                <div class="chart-body" style="height: 300px">
+                    <p-chart type="bar" [data]="departmentChartData" [options]="departmentChartOptions"></p-chart>
+                </div>
+            </div>
+        </div>
+
+        <!-- Biểu đồ xu hướng -->
+        <div class="col-span-12 lg:col-span-6">
+            <div class="chart-card card">
+                <div class="chart-header">
+                    <h3 class="chart-title">Xu hướng theo tháng</h3>
+                </div>
+                <div class="chart-body" style="height: 300px">
+                    <p-chart type="line" [data]="trendChartData" [options]="trendChartOptions"></p-chart>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Các bảng thông tin -->
+    <div class="grid grid-cols-12 gap-6">
+        <!-- Nhân viên có sinh nhật trong tháng -->
+        <div class="col-span-12 xl:col-span-4">
+            <div class="table-card card">
+                <div class="table-header">
+                    <h3 class="table-title">
+                        <i class="pi pi-calendar mr-2"></i>
+                        Sinh nhật tháng này
+                    </h3>
+                </div>
+                <div class="table-body">
+                    <p-table [value]="birthdayEmployees" [tableStyle]="{ 'min-width': '100%' }">
+                        <ng-template pTemplate="body" let-employee>
+                            <tr>
+                                <td>
+                                    <div class="employee-info">
+                                        <p-avatar
+                                            [image]="employee.avatar"
+                                            shape="circle"
+                                            size="large"
+                                        />
+                                        <div class="employee-details">
+                                            <div class="employee-name">{{ employee.name }}</div>
+                                            <div class="employee-position">{{ employee.position }}</div>
+                                            <div class="employee-meta">{{ employee.birthday }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nhân viên mới -->
+        <div class="col-span-12 xl:col-span-4">
+            <div class="table-card card">
+                <div class="table-header">
+                    <h3 class="table-title">
+                        <i class="pi pi-user-plus mr-2"></i>
+                        Nhân viên mới
+                    </h3>
+                </div>
+                <div class="table-body">
+                    <p-table [value]="newEmployees" [tableStyle]="{ 'min-width': '100%' }">
+                        <ng-template pTemplate="body" let-employee>
+                            <tr>
+                                <td>
+                                    <div class="employee-info">
+                                        <p-avatar
+                                            [image]="employee.avatar"
+                                            shape="circle"
+                                            size="large"
+                                        />
+                                        <div class="employee-details">
+                                            <div class="employee-name">{{ employee.name }}</div>
+                                            <div class="employee-position">{{ employee.position }}</div>
+                                            <div class="employee-meta">Ngày vào: {{ employee.joinDate }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nhân viên nghỉ việc -->
+        <div class="col-span-12 xl:col-span-4">
+            <div class="table-card card">
+                <div class="table-header">
+                    <h3 class="table-title">
+                        <i class="pi pi-user-minus mr-2"></i>
+                        Nhân viên nghỉ việc
+                    </h3>
+                </div>
+                <div class="table-body">
+                    <p-table [value]="resignedEmployees" [tableStyle]="{ 'min-width': '100%' }">
+                        <ng-template pTemplate="body" let-employee>
+                            <tr>
+                                <td>
+                                    <div class="employee-info">
+                                        <p-avatar
+                                            [image]="employee.avatar"
+                                            shape="circle"
+                                            size="large"
+                                        />
+                                        <div class="employee-details">
+                                            <div class="employee-name">{{ employee.name }}</div>
+                                            <div class="employee-position">{{ employee.position }}</div>
+                                            <div class="employee-meta">{{ employee.resignDate }} - {{ employee.reason }}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
