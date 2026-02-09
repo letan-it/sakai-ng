@@ -9,5 +9,5 @@
 export const environment = {
     production: false,
     // TODO: Thay thế bằng Client ID riêng cho development của bạn
-    googleClientId: '478210539-cfbfeaorngqplsad1agd078rs5e8nudr.apps.googleusercontent.com'
+    googleClientId: '491059873053-tmgn1brvnhn77h70fm4l4qa2t46m72f3.apps.googleusercontent.com'
 };

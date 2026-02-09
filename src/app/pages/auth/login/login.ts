@@ -9,6 +9,7 @@ import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
 import { TranslateModule } from '@ngx-translate/core';
 import { AppFloatingConfigurator } from '../../../layout/component/app.floatingconfigurator';
+import { environment } from '../../../../environments/environment';
 
 // Định nghĩa interface cho Google Identity Services
 declare const google: any;
@@ -41,7 +42,7 @@ export class Login implements OnInit, AfterViewInit {
 
     private platformId = inject(PLATFORM_ID);
 
-    private readonly GOOGLE_CLIENT_ID = '478210539-cfbfeaorngqplsad1agd078rs5e8nudr.apps.googleusercontent.com';
+    private readonly GOOGLE_CLIENT_ID = environment.googleClientId;
 
     private initAttempts = 0;
 
