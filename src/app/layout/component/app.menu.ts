@@ -86,6 +86,11 @@ export class AppMenu {
                         label: 'Recruitment ATS',
                         icon: 'pi pi-fw pi-users',
                         routerLink: ['/pages/recruitment']
+                    },
+                    {
+                        label: 'Quét CCCD (eKYC)',
+                        icon: 'pi pi-fw pi-id-card',
+                        routerLink: ['/pages/cccd']
                     }
                 ]
             }
