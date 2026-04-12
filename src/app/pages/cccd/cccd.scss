@@ -1,0 +1,39 @@
+.preview-placeholder {
+    min-height: 280px;
+    padding: 2rem;
+}
+
+.preview-container {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--surface-ground);
+    min-height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cccd-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    object-fit: contain;
+}
+
+.processing-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+}
