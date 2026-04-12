@@ -236,6 +236,25 @@ export class Login implements OnInit, AfterViewInit {
     }
 
     /**
+     * Xử lý đăng nhập bằng email/password
+     */
+    login() {
+        const userProfile = {
+            id: 'local-user',
+            name: this.email,
+            email: this.email,
+            imageUrl: '',
+            token: 'local-token'
+        };
+
+        localStorage.setItem('googleUserProfile', JSON.stringify(userProfile));
+        localStorage.setItem('isAuthenticated', 'true');
+        localStorage.setItem('authMethod', 'local');
+
+        this.router.navigate(['/']);
+    }
+
+    /**
      * Xử lý response từ Google sau khi đăng nhập thành công
      */
     handleGoogleCallback(response: any) {
