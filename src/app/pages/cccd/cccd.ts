@@ -21,8 +21,30 @@ interface CccdInfo {
     address: string;
 }
 
+// Tên cơ quan cấp mặc định khi phát hiện "cục cảnh sát"
+const DEFAULT_ISSUE_PLACE = 'CỤC CSQLHC VỀ TTXH';
+
+// Bảng chuyển đổi ký tự tiếng Việt thường sang hoa
+const VIETNAMESE_LOWER_TO_UPPER: Record<string, string> = {
+    à: 'À', á: 'Á', â: 'Â', ã: 'Ã', ä: 'Ä',
+    è: 'È', é: 'É', ê: 'Ê', ë: 'Ë',
+    ì: 'Ì', í: 'Í', î: 'Î', ï: 'Ï',
+    ò: 'Ò', ó: 'Ó', ô: 'Ô', õ: 'Õ',
+    ù: 'Ù', ú: 'Ú', û: 'Û',
+    ă: 'Ă', đ: 'Đ', ĩ: 'Ĩ', ũ: 'Ũ',
+    ơ: 'Ơ', ư: 'Ư',
+    ả: 'Ả', ấ: 'Ấ', ầ: 'Ầ', ẩ: 'Ẩ', ẫ: 'Ẫ', ậ: 'Ậ',
+    ắ: 'Ắ', ằ: 'Ằ', ẳ: 'Ẳ', ẵ: 'Ẵ', ặ: 'Ặ',
+    ẻ: 'Ẻ', ẽ: 'Ẽ', ế: 'Ế', ề: 'Ề', ể: 'Ể', ễ: 'Ễ', ệ: 'Ệ',
+    ỉ: 'Ỉ', ị: 'Ị',
+    ỏ: 'Ỏ', ố: 'Ố', ồ: 'Ồ', ổ: 'Ổ', ỗ: 'Ỗ', ộ: 'Ộ',
+    ớ: 'Ớ', ờ: 'Ờ', ở: 'Ở', ỡ: 'Ỡ', ợ: 'Ợ',
+    ụ: 'Ụ', ủ: 'Ủ', ứ: 'Ứ', ừ: 'Ừ', ử: 'Ử', ữ: 'Ữ', ự: 'Ự',
+    ỳ: 'Ỳ', ý: 'Ý', ỷ: 'Ỷ', ỹ: 'Ỹ', ỵ: 'Ỵ'
+};
+
 @Component({
-    selector: 'app-cccd',
+    selector: 'app-cccd-scanner',
     standalone: true,
     imports: [CommonModule, FormsModule, ButtonModule, InputTextModule, TextareaModule, FileUploadModule, CardModule, ProgressBarModule, DividerModule, ToastModule, TagModule],
     providers: [MessageService],
@@ -179,7 +201,6 @@ export class CccdScanner implements OnDestroy {
      * Trích xuất họ và tên
      */
     private extractFullName(text: string): string {
-        // Tìm sau "họ và tên" hoặc "họ tên"
         const patterns = [
             /họ\s+và\s+tên[:\s]*([^\n]+)/i,
             /họ\s+tên[:\s]*([^\n]+)/i,
@@ -198,7 +219,9 @@ export class CccdScanner implements OnDestroy {
     }
 
     /**
-     * Trích xuất ngày cấp (định dạng dd/mm/yyyy)
+     * Trích xuất ngày cấp (định dạng dd/mm/yyyy).
+     * Lưu ý: độ chính xác phụ thuộc vào chất lượng ảnh và bố cục CCCD.
+     * Người dùng cần kiểm tra lại kết quả.
      */
     private extractIssueDate(text: string): string {
         // Tìm gần từ khóa "ngày cấp" hoặc "date of issue"
@@ -208,11 +231,10 @@ export class CccdScanner implements OnDestroy {
             return contextMatch[1].replace(/[-.]/g, '/');
         }
 
-        // Fallback: tìm bất kỳ ngày hợp lệ nào
+        // Fallback: tìm ngày cuối cùng (thường là ngày cấp trên CCCD)
         const dates = text.match(/\d{2}[\/\-.]\d{2}[\/\-.]\d{4}/g);
 
         if (dates && dates.length > 0) {
-            // Ưu tiên ngày cuối cùng thường là ngày cấp
             return dates[dates.length - 1].replace(/[-.]/g, '/');
         }
 
@@ -223,12 +245,10 @@ export class CccdScanner implements OnDestroy {
      * Trích xuất nơi cấp
      */
     private extractIssuePlace(text: string): string {
-        // Kiểm tra nếu có "cục cảnh sát"
         if (/c[uụ]c\s+c[aả]nh\s+s[aá]t/i.test(text)) {
-            return 'CỤC CSQLHC VỀ TTXH';
+            return DEFAULT_ISSUE_PLACE;
         }
 
-        // Tìm sau "nơi cấp" hoặc "place of issue"
         const patterns = [/n[oơ]i\s+c[aấ]p[:\s]*([^\n]+)/i, /issued\s+by[:\s]*([^\n]+)/i];
 
         for (const pattern of patterns) {
@@ -267,25 +287,7 @@ export class CccdScanner implements OnDestroy {
      * Chuyển đổi chuỗi thành chữ hoa (hỗ trợ tiếng Việt)
      */
     private toUpperCaseVietnamese(text: string): string {
-        const vietnameseMap: Record<string, string> = {
-            à: 'À', á: 'Á', â: 'Â', ã: 'Ã', ä: 'Ä',
-            è: 'È', é: 'É', ê: 'Ê', ë: 'Ë',
-            ì: 'Ì', í: 'Í', î: 'Î', ï: 'Ï',
-            ò: 'Ò', ó: 'Ó', ô: 'Ô', õ: 'Õ',
-            ù: 'Ù', ú: 'Ú', û: 'Û',
-            ă: 'Ă', đ: 'Đ', ĩ: 'Ĩ', ũ: 'Ũ',
-            ơ: 'Ơ', ư: 'Ư',
-            ả: 'Ả', ấ: 'Ấ', ầ: 'Ầ', ẩ: 'Ẩ', ẫ: 'Ẫ', ậ: 'Ậ',
-            ắ: 'Ắ', ằ: 'Ằ', ẳ: 'Ẳ', ẵ: 'Ẵ', ặ: 'Ặ',
-            ẻ: 'Ẻ', ẽ: 'Ẽ', ế: 'Ế', ề: 'Ề', ể: 'Ể', ễ: 'Ễ', ệ: 'Ệ',
-            ỉ: 'Ỉ', ị: 'Ị',
-            ỏ: 'Ỏ', ố: 'Ố', ồ: 'Ồ', ổ: 'Ổ', ỗ: 'Ỗ', ộ: 'Ộ',
-            ớ: 'Ớ', ờ: 'Ờ', ở: 'Ở', ỡ: 'Ỡ', ợ: 'Ợ',
-            ụ: 'Ụ', ủ: 'Ủ', ứ: 'Ứ', ừ: 'Ừ', ử: 'Ử', ữ: 'Ữ', ự: 'Ự',
-            ỳ: 'Ỳ', ý: 'Ý', ỷ: 'Ỷ', ỹ: 'Ỹ', ỵ: 'Ỵ'
-        };
-
-        return text.replace(/[àáâãäèéêëìíîïòóôõùúûăđĩũơưảấầẩẫậắằẳẵặẻẽếềểễệỉịỏốồổỗộớờởỡợụủứừửữựỳýỷỹỵ]/g, (c) => vietnameseMap[c] || c).toUpperCase();
+        return text.replace(/[àáâãäèéêëìíîïòóôõùúûăđĩũơưảấầẩẫậắằẳẵặẻẽếềểễệỉịỏốồổỗộớờởỡợụủứừửữựỳýỷỹỵ]/g, (c) => VIETNAMESE_LOWER_TO_UPPER[c] || c).toUpperCase();
     }
 
     /**
