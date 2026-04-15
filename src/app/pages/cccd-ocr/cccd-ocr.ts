@@ -179,18 +179,20 @@ export class CccdOcrDemo implements OnDestroy {
     }
 
     /**
-     * Trích xuất số CCCD (12 chữ số liên tiếp hoặc có khoảng trắng/xuống dòng)
+     * Trích xuất số CCCD (12 chữ số liên tiếp hoặc có khoảng trắng/xuống dòng).
+     * Sử dụng word boundary `\b` để tránh match một phần trong dãy số dài hơn.
      */
     private extractIdNumber(text: string): string {
-        // khớp 12 chữ số liên tiếp
-        const direct = text.match(/\b(\d{12})\b/);
+        // khớp 12 chữ số liên tiếp, đảm bảo không phải phần của dãy dài hơn
+        const direct = text.match(/(?<!\d)(\d{12})(?!\d)/);
 
         if (direct) {
             return direct[1];
         }
 
         // khớp 12 chữ số có thể bị ngắt bởi khoảng trắng/xuống dòng
-        const spaced = text.match(/(\d[\s\n]*){12}/);
+        // Regex đảm bảo chính xác 12 chữ số (không nhiều hơn)
+        const spaced = text.match(/(?<!\d)(?:\d[\s\n]*?){12}(?!\d)/);
 
         if (spaced) {
             const digits = spaced[0].replace(/\s/g, '');
@@ -243,7 +245,9 @@ export class CccdOcrDemo implements OnDestroy {
     /**
      * Trích xuất ngày sinh (dd/mm/yyyy).
      * Ưu tiên ngữ cảnh: "ngày sinh", "sinh ngày", "date of birth"
-     * Fallback: lấy ngày đầu tiên trong văn bản
+     * Fallback: lấy ngày đầu tiên trong văn bản.
+     * Lưu ý: pattern chỉ là heuristic (dd: 01-39, mm: 01-19) để phù hợp
+     * với nhiễu OCR; cần validation bổ sung nếu dùng thực tế.
      */
     private extractDob(text: string): string {
         const datePattern = '[0-3]\\d[/\\-\\.][01]\\d[/\\-\\.](?:19|20)\\d{2}';
@@ -272,7 +276,8 @@ export class CccdOcrDemo implements OnDestroy {
     }
 
     /**
-     * Trích xuất giới tính: chuẩn hoá thành 'NAM' hoặc 'NU'
+     * Trích xuất giới tính: chuẩn hoá thành 'NAM' hoặc 'NU'.
+     * Dùng Unicode normalize để xử lý các biến thể dấu của ký tự tiếng Việt.
      */
     private extractGender(text: string): 'NAM' | 'NU' | '' {
         const m = text.match(/\b(nam|n[ữu])\b/i);
@@ -281,9 +286,13 @@ export class CccdOcrDemo implements OnDestroy {
             return '';
         }
 
-        const g = m[1].toLowerCase().replace('ữ', 'u');
+        // chuẩn hoá: bỏ dấu, chuyển thường để so sánh
+        const normalized = m[1]
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .toLowerCase();
 
-        return g === 'nam' ? 'NAM' : 'NU';
+        return normalized === 'nam' ? 'NAM' : 'NU';
     }
 
     /**
