@@ -1,0 +1,251 @@
+<p-toast />
+
+<!-- Header -->
+<div class="flex align-items-center justify-content-between mb-4">
+    <div>
+        <h2 class="text-2xl font-bold text-900 m-0">OCR CCCD Demo</h2>
+        <p class="text-muted-color mt-1 mb-0">Trích xuất thông tin CCCD bằng OCR (tesseract.js — tiếng Việt)</p>
+    </div>
+    <p-tag value="Demo" severity="info" icon="pi pi-info-circle" />
+</div>
+
+<div class="grid grid-cols-12 gap-6">
+    <!-- Cột 1: Upload & điều khiển -->
+    <div class="col-span-12 lg:col-span-4">
+        <p-card styleClass="h-full">
+            <ng-template #header>
+                <div class="flex align-items-center gap-2 p-4 pb-0">
+                    <i class="pi pi-upload text-primary text-xl"></i>
+                    <span class="font-semibold text-lg">Upload Ảnh CCCD</span>
+                </div>
+            </ng-template>
+
+            <div class="flex flex-col gap-4">
+                <!-- Upload -->
+                <p-fileUpload
+                    mode="basic"
+                    accept="image/jpeg,image/png,image/webp"
+                    [maxFileSize]="10000000"
+                    chooseLabel="Chọn ảnh CCCD"
+                    chooseIcon="pi pi-camera"
+                    [auto]="true"
+                    (onSelect)="onFileSelect($event)"
+                    [disabled]="isProcessing"
+                    styleClass="w-full"
+                />
+
+                <p class="text-sm text-muted-color m-0">
+                    <i class="pi pi-info-circle mr-1"></i>
+                    Hỗ trợ: JPG, PNG, WEBP. Tối đa 10MB.
+                </p>
+
+                <p-divider />
+
+                <!-- Tiến trình OCR -->
+                <div *ngIf="isProcessing" class="flex flex-col gap-2">
+                    <div class="flex justify-content-between align-items-center">
+                        <span class="text-sm font-medium">{{ ocrStatus }}</span>
+                        <span class="text-sm text-muted-color">{{ ocrProgress }}%</span>
+                    </div>
+                    <p-progressBar [value]="ocrProgress" [showValue]="false" styleClass="h-2" />
+                </div>
+
+                <!-- Hoàn thành -->
+                <div
+                    *ngIf="!isProcessing && hasExtractedInfo"
+                    class="flex align-items-center gap-2 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg"
+                >
+                    <i class="pi pi-check-circle text-green-600 dark:text-green-400 text-xl"></i>
+                    <span class="text-sm text-green-700 dark:text-green-300 font-medium">Nhận dạng hoàn tất!</span>
+                </div>
+
+                <!-- Nút xóa -->
+                <p-button
+                    *ngIf="previewUrl"
+                    label="Xóa & Thử lại"
+                    icon="pi pi-trash"
+                    severity="danger"
+                    [outlined]="true"
+                    (onClick)="clearAll()"
+                    [disabled]="isProcessing"
+                    styleClass="w-full"
+                />
+
+                <!-- Ghi chú -->
+                <div class="p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-lg">
+                    <p class="text-xs text-yellow-800 dark:text-yellow-200 m-0 font-semibold mb-1">
+                        <i class="pi pi-exclamation-triangle mr-1"></i>Lưu ý
+                    </p>
+                    <ul class="text-xs text-yellow-700 dark:text-yellow-300 m-0 pl-4">
+                        <li>Độ chính xác đạt ~70-85%</li>
+                        <li>Cần kiểm tra lại thủ công</li>
+                        <li>Không dùng cho mục đích pháp lý</li>
+                        <li>Xử lý hoàn toàn trên trình duyệt</li>
+                    </ul>
+                </div>
+            </div>
+        </p-card>
+    </div>
+
+    <!-- Cột 2: Xem trước ảnh -->
+    <div class="col-span-12 lg:col-span-4">
+        <p-card styleClass="h-full">
+            <ng-template #header>
+                <div class="flex align-items-center gap-2 p-4 pb-0">
+                    <i class="pi pi-image text-primary text-xl"></i>
+                    <span class="font-semibold text-lg">Xem Trước Ảnh</span>
+                </div>
+            </ng-template>
+
+            <div class="flex flex-col gap-4">
+                <!-- Placeholder -->
+                <div
+                    *ngIf="!previewUrl"
+                    class="preview-placeholder flex flex-col align-items-center justify-content-center gap-3 border-2 border-dashed border-surface-300 dark:border-surface-600 rounded-xl"
+                >
+                    <i class="pi pi-id-card text-5xl text-muted-color"></i>
+                    <div class="text-center">
+                        <p class="text-muted-color font-medium m-0">Chưa có ảnh</p>
+                        <p class="text-sm text-muted-color mt-1 mb-0">Upload ảnh CCCD để xem trước</p>
+                    </div>
+                </div>
+
+                <!-- Preview ảnh -->
+                <div *ngIf="previewUrl" class="preview-container">
+                    <img [src]="previewUrl" alt="CCCD Preview" class="cccd-image" />
+
+                    <!-- Loading overlay -->
+                    <div *ngIf="isProcessing" class="processing-overlay">
+                        <div class="flex flex-col align-items-center gap-3">
+                            <i class="pi pi-spin pi-spinner text-white text-4xl"></i>
+                            <span class="text-white font-semibold text-sm">Đang xử lý OCR...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Raw OCR text (có thể thu gọn) -->
+                <div *ngIf="rawText" class="flex flex-col gap-2">
+                    <p-divider />
+                    <div
+                        class="flex align-items-center gap-2 cursor-pointer"
+                        (click)="showRawText = !showRawText"
+                        (keydown.enter)="showRawText = !showRawText"
+                        tabindex="0"
+                        role="button"
+                        [attr.aria-expanded]="showRawText"
+                    >
+                        <i class="pi text-sm text-muted-color" [class.pi-chevron-down]="showRawText" [class.pi-chevron-right]="!showRawText"></i>
+                        <span class="text-sm font-semibold text-muted-color">Văn bản OCR thô</span>
+                    </div>
+                    <div *ngIf="showRawText">
+                        <textarea
+                            pTextarea
+                            [ngModel]="rawText"
+                            rows="8"
+                            class="w-full text-xs font-mono raw-text-panel"
+                            readonly
+                        ></textarea>
+                    </div>
+                </div>
+            </div>
+        </p-card>
+    </div>
+
+    <!-- Cột 3: Kết quả trích xuất -->
+    <div class="col-span-12 lg:col-span-4">
+        <p-card styleClass="h-full">
+            <ng-template #header>
+                <div class="flex align-items-center justify-content-between p-4 pb-0">
+                    <div class="flex align-items-center gap-2">
+                        <i class="pi pi-list text-primary text-xl"></i>
+                        <span class="font-semibold text-lg">Thông Tin CCCD</span>
+                    </div>
+                    <p-tag
+                        *ngIf="hasExtractedInfo"
+                        value="Đã trích xuất"
+                        severity="success"
+                        icon="pi pi-check"
+                    />
+                </div>
+            </ng-template>
+
+            <div class="flex flex-col gap-4">
+                <!-- Số CCCD -->
+                <div class="field">
+                    <label class="block text-sm font-semibold mb-2">
+                        <i class="pi pi-hashtag mr-1 text-primary"></i>
+                        Số CCCD (12 chữ số)
+                    </label>
+                    <input
+                        pInputText
+                        [(ngModel)]="cccdInfo.idNumber"
+                        placeholder="12 chữ số"
+                        class="w-full font-mono text-lg tracking-wider"
+                        [class.border-green-400]="cccdInfo.idNumber"
+                    />
+                </div>
+
+                <!-- Họ và tên -->
+                <div class="field">
+                    <label class="block text-sm font-semibold mb-2">
+                        <i class="pi pi-user mr-1 text-primary"></i>
+                        Họ và Tên
+                    </label>
+                    <input
+                        pInputText
+                        [(ngModel)]="cccdInfo.fullName"
+                        placeholder="Nhập họ và tên"
+                        class="w-full"
+                        [class.border-green-400]="cccdInfo.fullName"
+                    />
+                </div>
+
+                <!-- Ngày sinh -->
+                <div class="field">
+                    <label class="block text-sm font-semibold mb-2">
+                        <i class="pi pi-calendar mr-1 text-primary"></i>
+                        Ngày Sinh
+                    </label>
+                    <input
+                        pInputText
+                        [(ngModel)]="cccdInfo.dob"
+                        placeholder="dd/mm/yyyy"
+                        class="w-full"
+                        [class.border-green-400]="cccdInfo.dob"
+                    />
+                </div>
+
+                <!-- Giới tính -->
+                <div class="field">
+                    <label class="block text-sm font-semibold mb-2">
+                        <i class="pi pi-users mr-1 text-primary"></i>
+                        Giới Tính
+                    </label>
+                    <input
+                        pInputText
+                        [(ngModel)]="cccdInfo.gender"
+                        placeholder="NAM / NỮ"
+                        class="w-full"
+                        [class.border-green-400]="cccdInfo.gender"
+                    />
+                </div>
+
+                <!-- Địa chỉ thường trú -->
+                <div class="field">
+                    <label class="block text-sm font-semibold mb-2">
+                        <i class="pi pi-map-marker mr-1 text-primary"></i>
+                        Địa Chỉ Thường Trú
+                    </label>
+                    <textarea
+                        pTextarea
+                        [(ngModel)]="cccdInfo.address"
+                        placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố"
+                        rows="3"
+                        class="w-full"
+                        [class.border-green-400]="cccdInfo.address"
+                    ></textarea>
+                </div>
+            </div>
+        </p-card>
+    </div>
+</div>
